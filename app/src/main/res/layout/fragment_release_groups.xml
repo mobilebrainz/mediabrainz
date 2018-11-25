@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app.mediabrainz.ui.SmartNestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/official_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/release_group_official"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/paged_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:scrollbars="vertical"/>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <include
+                android:id="@+id/item_network_state"
+                layout="@layout/item_network_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</app.mediabrainz.ui.SmartNestedScrollView>

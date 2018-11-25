@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/recording_nav_lyrics"
+        android:icon="@drawable/ic_track_24"
+        android:title="@string/title_recording_lyrics"/>
+
+    <item
+        android:id="@+id/recording_nav_info"
+        android:icon="@drawable/ic_info_24"
+        android:title="@string/title_recording_info"/>
+
+    <item
+        android:id="@+id/recording_nav_releases"
+        android:icon="@drawable/ic_album_24"
+        android:title="@string/title_recording_releases"/>
+
+    <item
+        android:id="@+id/recording_nav_ratings"
+        android:icon="@drawable/ic_star_24"
+        android:title="@string/title_recording_ratings"/>
+
+    <item
+        android:id="@+id/recording_nav_tags"
+        android:icon="@drawable/ic_tag_24"
+        android:title="@string/title_recording_tags"/>
+
+</menu>

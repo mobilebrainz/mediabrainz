@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="?android:attr/actionModeWebSearchDrawable"
+        android:orderInCategory="1"
+        android:title="@string/action_search_artist"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom"/>
+
+    <item
+        android:id="@+id/action_user_profile"
+        android:icon="@drawable/ic_person_24"
+        android:orderInCategory="2"
+        android:title="@string/action_user_profile"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_scan_barcode"
+        android:icon="@drawable/ic_barcode_scan_24"
+        android:orderInCategory="3"
+        android:title="@string/action_scan_barcode"
+        app:showAsAction="ifRoom"/>
+
+</menu>

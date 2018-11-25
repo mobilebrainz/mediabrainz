@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- app style colors -->
+    <color name="textColor">@color/md_blue_grey_800</color>
+    <color name="textColorPrimary">@color/md_blue_grey_800</color>
+    <color name="textColorSecondary">@color/md_blue_grey_500</color>
+    <color name="textColorHint">@color/md_blue_grey_300</color>
+
+    <color name="textColorOnDark">@color/md_white_1000</color>
+    <color name="textColorSecondaryOnDark">@color/md_blue_grey_200</color>
+
+
+    <color name="colorPrimary">@color/md_blue_grey_800</color>
+    <color name="colorPrimaryDark">@color/md_blue_grey_900</color>
+    <color name="colorAccent">@color/md_orange_700</color>
+    <color name="colorListViewDivider">@color/md_blue_grey_100</color>
+    <color name="actionMenuTextColor">@color/md_white_1000</color>
+
+    <!-- app colors -->
+    <color name="colorPrimaryLight">@color/md_blue_grey_500</color>
+    <color name="colorPrimaryUltraLight">@color/md_blue_grey_300</color>
+    <color name="app_background">@color/md_blue_grey_50</color>
+    <color name="colorSecondary">@color/md_orange_700</color>
+    <color name="card_background">@color/md_white_1000</color>
+    <color name="button_text_color">@color/md_white_1000</color>
+
+
+    <!-- old colors -->
+    <color name="tab_background">@color/md_indigo_400</color>
+
+    <color name="card_text_font">@color/md_indigo_900</color>
+    <color name="card_title_font">@color/md_orange_800</color>
+    <color name="card_divider_background">@color/md_indigo_200</color>
+
+    <color name="link">@color/md_blue_A700</color>
+
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+            android:hint="@string/search_artist_hint"
+            android:label="@string/app_name"
+            android:searchSuggestThreshold="2"
+            android:searchSuggestSelection = " ?"
+            android:textColorHint="@color/md_grey_50"
+            android:searchSuggestIntentAction="android.intent.action.SEARCH">
+</searchable>

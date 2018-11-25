@@ -1,0 +1,367 @@
+<resources>
+    <string name="app_name">MediaBrainz</string>
+
+    <string name="delete_alert_message">Are you sure you want to delete?</string>
+    <string name="rating_text">%1$.2f (%2$d)</string>
+    <string name="no_ratings">0 ratings</string>
+    <string name="retry">Retry</string>
+    <string name="unknown">Unknown</string>
+
+    <string name="select_items">Select items</string>
+    <string name="select_item">Select item</string>
+    <string name="select_all">Select all</string>
+
+    <string name="choose_email_client">Choose email client and send message</string>
+    <string name="send_mail_error">There are no email clients installed.</string>
+
+    <!-- Strings related to login -->
+    <string name="login">Log In</string>
+    <string name="login_title">Sign in</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_create_account">Create Account</string>
+    <string name="action_forgot_username">Forgot Username</string>
+    <string name="action_forgot_password">Forgot Password</string>
+    <string name="action_sign_in_short" translatable="false">Sign in</string>
+    <string name="error_invalid_username">This username is invalid</string>
+    <string name="error_invalid_password">This password is invalid</string>
+    <string name="error_field_required">This field is required</string>
+
+    <!-- ReleaseGroupsPagerAdapter -->
+    <string name="release_group_albums">Albums</string>
+    <string name="release_group_eps">EPs</string>
+    <string name="release_group_lives">Lives</string>
+    <string name="release_group_compilations">Compilations</string>
+    <string name="release_group_singles">Singles</string>
+    <string name="release_group_official">Show only official release groups</string>
+
+    <!-- Ratings nad Tags -->
+    <string name="vote_tag">Vote Tag</string>
+    <string name="rate_entity">Rate: %1$s</string>
+    <string name="edit_login">You must log in before you can edit!</string>
+    <string name="tag_hint">Tag (genre)</string>
+
+    <!-- MainActivity -->
+    <string name="description_search">Search</string>
+    <string name="log_in_btn">LOG IN</string>
+
+    <!-- SearchFragment -->
+    <string name="artist_field_hint">Artist</string>
+    <string name="album_field_hint">Album</string>
+    <string name="track_field_hint">Track</string>
+    <string name="search_btn">SEARCH</string>
+
+    <!-- SearchActivity -->
+    <string name="search_artist_title">Search Artist</string>
+    <string name="search_album_title">Search Album</string>
+    <string name="search_track_title">Search Track</string>
+    <string name="search_tag_title">Search Tag (genre)</string>
+    <string name="search_user_title">Search User</string>
+    <string name="search_barcode_title">Search Barcode</string>
+    <string name="no_results">No results found</string>
+    <string name="connection_error">Could not connect to server…</string>
+    <string name="connection_error_retry">Retry</string>
+    <string name="search_track_artist_name">Artist: %1$s</string>
+    <string name="search_track_album_name">Album: %1$s</string>
+    <string name="searchtype_user">User</string>
+    <string name="searchtype_tag">Tag (genre)</string>
+    <string name="searchtype_barcode">Barcode</string>
+    <string name="search_hint">Search field</string>
+
+    <!-- AboutActivity -->
+    <string name="about_title">About</string>
+    <string name="version_text">Version</string>
+
+    <!-- Release group types -->
+    <string name="rt_album">Album</string>
+    <string name="rt_broadcast">Broadcast</string>
+    <string name="rt_single">Single</string>
+    <string name="rt_ep">EP</string>
+    <string name="rt_other">Other</string>
+    <string name="rt_dj_mix">Dj-Mix</string>
+    <string name="rt_compilation">Compilation</string>
+    <string name="rt_mixtape">Mixtape</string>
+    <string name="rt_soundtrack">Soundtrack</string>
+    <string name="rt_spokenword">Spoken word</string>
+    <string name="rt_interview">Interview</string>
+    <string name="rt_audiobook">Audio book</string>
+    <string name="rt_live">Live</string>
+    <string name="rt_remix">Remix</string>
+    <string name="rt_street">Street</string>
+    <string name="rt_unknown">Unknown</string>
+
+    <!-- Release formats -->
+    <string name="fm_cd">CD</string>
+    <string name="fm_dvd">DVD</string>
+    <string name="fm_sacd">SACD</string>
+    <string name="fm_dd">DualDisc</string>
+    <string name="fm_ld">LaserDisc</string>
+    <string name="fm_md">MiniDisc</string>
+    <string name="fm_vinyl">Vinyl</string>
+    <string name="fm_cassette">Cassette</string>
+    <string name="fm_cartridge">Cartridge</string>
+    <string name="fm_rtr">Reel-to-reel</string>
+    <string name="fm_dat">DAT</string>
+    <string name="fm_dm">Digital Media</string>
+    <string name="fm_other">Other</string>
+    <string name="fm_wax">Wax Cylinder</string>
+    <string name="fm_pr">Piano Roll</string>
+    <string name="fm_dcc">Digital Compact Cassette</string>
+    <string name="fm_vhs">VHS</string>
+    <string name="fm_vcd">Video-CD</string>
+    <string name="fm_svcd">Super Video-CD</string>
+    <string name="fm_bm">Betamax</string>
+    <string name="fm_hdcd">HD Compatible Digital</string>
+    <string name="fm_usb">USB Flash Drive</string>
+    <string name="fm_sm">SlotMusic</string>
+    <string name="fm_umd">Universal Media Disc</string>
+    <string name="fm_hddvd">HD-DVD</string>
+    <string name="fm_dvda">DVD-Audio</string>
+    <string name="fm_dvdv">DVD-Video</string>
+    <string name="fm_br">Blu-ray</string>
+    <string name="fm_unknown">Unknown format</string>
+
+    <!-- ReleaseAdapter -->
+    <string name="r_tracks">%1$s / %2$d tracks</string>
+    <string name="r_barcode">Barcode: %1$s</string>
+    <string name="r_status">Status: %1$s</string>
+    <string name="r_catalog">Catalog: %1$s</string>
+
+    <string name="rg_text">Choose a release</string>
+
+    <!-- ReleaseInformationFragment -->
+    <string name="release_info_title">Release Information</string>
+    <string name="release_info_format">Format:</string>
+    <string name="release_info_details">Details:</string>
+    <string name="release_info_details_template">%1$d tracks, %2$s</string>
+    <string name="release_info_label">Label:</string>
+    <string name="release_info_language">Language:</string>
+    <string name="release_info_released">Released:</string>
+    <string name="release_info_barcode">Barcode:</string>
+    <string name="release_info_asin">Asin:</string>
+
+    <!-- for collections -->
+    <string name="collection_add_to_new">Add to a new collection</string>
+    <string name="collection_added">Collection was added successfully!</string>
+
+    <!-- Collections -->
+    <string name="collections_areas">Areas</string>
+    <string name="collections_artists">Artists</string>
+    <string name="collections_events">Events</string>
+    <string name="collections_instruments">Instruments</string>
+    <string name="collections_labels">Labels</string>
+    <string name="collections_places">Places</string>
+    <string name="collections_recordings">Recordings</string>
+    <string name="collections_releases">Releases</string>
+    <string name="collections_release_groups">Release Groups</string>
+    <string name="collections_series">Series</string>
+    <string name="collections_works">Works</string>
+
+    <!-- Collections -->
+    <string name="collection_alert_title">Delete collection %1$s</string>
+    <string name="expand_all">Expand all</string>
+
+    <!-- CollectionCreate -->
+    <string name="collection_create_title">Add a New Collection</string>
+    <string name="collection_create_name">Name</string>
+    <string name="collection_create_description">Description</string>
+    <string name="collection_create_public">Allow other users to see this collection</string>
+    <string name="collection_create_btn">Create collection</string>
+    <string name="collection_create_exist_name">This collection already exists</string>
+
+    <!-- Collections -->
+    <string name="collection_delete_entity">Delete entity from collection</string>
+
+    <!-- CollectionEdit -->
+    <string name="collection_edit_title">Edit Collection</string>
+    <string name="collection_edit_btn">Edit collection</string>
+
+    <!-- CollectionsDialogFragment -->
+    <string name="collection_chooser_title">Choose a collection from the list.</string>
+
+    <string name="release_collection_selector">Select the type of collections</string>
+
+    <!-- ZXing integration -->
+    <string name="zx_title">Install Barcode Scanner?</string>
+    <string name="zx_message">This action requires Barcode Scanner. Would you like to install it?</string>
+    <string name="zx_pos">Install</string>
+    <string name="zx_neg">Cancel</string>
+
+    <!-- BarcodeDialog -->
+    <string name="barcode_header">Barcode %1$s not found!</string>
+    <string name="barcode_info_log">This barcode is not associated with a MusicBrainz release. Would you like to add it?</string>
+    <string name="barcode_info_nolog">This barcode is not associated with a MusicBrainz release. Log in to add it.</string>
+    <string name="barcode_btn">Add barcode</string>
+    <string name="barcode_cancel">Cancel</string>
+
+    <!-- SearchActivity -->
+    <string name="barcode_text_hint">Barcode</string>
+    <string name="barcode_release_hint">Release</string>
+    <string name="barcode_instructions">Search for release to add barcode.</string>
+    <string name="barcode_invalid_length">Expected 12 digits for UPC or 13 digits for EAN</string>
+    <string name="barcode_invalid_chars">Should only contain digits</string>
+    <string name="barcode_added">Barcode was added successfully!</string>
+    <string name="barcode_artist_text_hint">Artist</string>
+
+    <!-- ConfirmBarcode -->
+    <string name="barcode_add_header">Submit barcode?</string>
+    <string name="barcode_add_info">This will submit an edit for peer review. The barcode will not be added immediately.</string>
+    <string name="barcode_add_btn">Submit</string>
+
+    <!-- SettingsActivity -->
+    <string name="settings_title">Settings</string>
+
+    <!-- Toasts -->
+    <string name="toast_search_err">Add some text to search</string>
+    <string name="toast_search_cleared">Search history deleted</string>
+    <string name="toast_recommends_cleared">Recommends deleted</string>
+
+    <!-- Navigation -->
+    <string name="nav_search">Advanced Search</string>
+    <string name="nav_about">About</string>
+    <string name="nav_scan_barcode">Scan Barcode</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_user">User</string>
+    <string name="nav_user_profile">Profile</string>
+    <string name="nav_user_collections">Collections</string>
+    <string name="nav_user_ratings">Ratings</string>
+    <string name="nav_user_tags">Tags</string>
+    <string name="nav_user_recommends">Recommends</string>
+    <string name="nav_user_logout">Log Out</string>
+    <string name="nav_user_login">Log In</string>
+    <string name="nav_support">Support</string>
+    <string name="nav_feedback">Feedback</string>
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
+
+    <!-- Menus -->
+    <string name="action_user_profile">User Profile</string>
+    <string name="action_scan_barcode">Scan Barcode</string>
+    <string name="action_search_artist">Search artist</string>
+    <string name="search_artist_hint">Search artist</string>
+
+    <!-- Preferences -->
+    <string name="settings_search">Search</string>
+    <string name="settings_title_suggestions">Suggestions</string>
+    <string name="settings_summary_suggestions">Store and display search suggestions</string>
+    <string name="settings_clear_suggestions">Clear search history</string>
+    <string name="settings_clear_recommends">Clear recommends</string>
+    <string name="settings_title_images">Images</string>
+    <string name="settings_load_images">Load images</string>
+    <string name="settings_title_miscellanea">Miscellanea</string>
+
+    <!-- ImageActivity -->
+    <string name="error_image_loading">Error loading of image</string>
+
+    <!-- Rate & Tags -->
+    <string name="lastfm_listeners">last.fm listeners:</string>
+    <string name="lastfm_playcount">last.fm play count:</string>
+
+    <!-- ArtistArtistRelationType -->
+    <string name="rel_cuttent_member_of_band">Current Member Of Band</string>
+    <string name="rel_past_member_of_band">Past Member Of Band</string>
+    <string name="rel_subgroup">Subgroup</string>
+    <string name="rel_conductor_position">Conductor Position</string>
+    <string name="rel_founder">Founder</string>
+    <string name="rel_supporting_musician">Supporting Musician</string>
+    <string name="rel_vocal_supporting_musician">Vocal Supporting Musician</string>
+    <string name="rel_instrumental_supporting_musician">Instrumental Supporting Musician</string>
+    <string name="rel_tribute">Tribute</string>
+    <string name="rel_voice_actor">Voice Actor</string>
+    <string name="rel_collaboration">Collaboration</string>
+    <string name="rel_is_person">Is Person</string>
+    <string name="rel_teacher">Teacher</string>
+    <string name="rel_composer_in_residence">Composer In Residence</string>
+
+    <string name="rel_current_member_of_band_description">This indicates a person is a member of a group.</string>
+    <string name="rel_past_member_of_band_description">This indicates a person was a member of a group.</string>
+    <string name="rel_subgroup_description">This links a subgroup to the group from which it was created. This relationship type is the functional equivalent of the member of band type for group-group relationships.</string>
+    <string name="rel_conductor_position_description">This indicates that a person is, or was, a conductor for a group.</string>
+    <string name="rel_founder_description">This indicates an artist (generally a person) was the founder of a group.</string>
+    <string name="rel_supporting_musician_description">Indicates an artist doing long-time instrumental or vocal support for another one on albums and/or at concerts. This is a person-to-artist relationship that normally applies to well-known solo artists, although it can sometimes apply to groups.</string>
+    <string name="rel_vocal_supporting_musician_description">Indicates a musician doing long-time vocal support for another one on albums and/or at concerts. This is a person-to-artist relationship that normally applies to well-known solo artists, although it can sometimes apply to groups.</string>
+    <string name="rel_instrumental_supporting_musician_description">Indicates a musician doing long-time instrumental support for another one on albums and/or at concerts. This is a person-to-artist relationship that normally applies to well-known solo artists, although it can sometimes apply to groups.</string>
+    <string name="rel_tribute_description">This relationship specifies that an artist is a tribute to another specific artist/band; that is, it primarily performs covers of that artist. They may also be referred to as cover bands. Some tribute artists may name themselves, dress, and/or act similarly to the artists they pay tribute to.</string>
+    <string name="rel_voice_actor_description">This links an (fictional) artist to the person that voice acted it.</string>
+    <string name="rel_collaboration_description">This is used to specify that an artist collaborated on a short-term project, for cases where artist credits can\'t be used.</string>
+    <string name="rel_is_person_description">This links an artist\'s performance name (a stage name or alias) with their legal name.</string>
+    <string name="rel_teacher_description">This relationship indicates that a person was another\'s teacher/student.</string>
+    <string name="rel_composer_in_residence_description">This links a group (often an orchestra) to a composer who has a composer-in-residence position with the group.</string>
+
+    <!-- Ratings -->
+    <string name="ratings_tab_artists">Artists</string>
+    <string name="ratings_tab_releases">Releases</string>
+    <string name="ratings_tab_recordings">Recordings</string>
+
+    <!-- Tags -->
+    <string name="tag_tab_artists">Artists</string>
+    <string name="tag_tab_releases">Releases</string>
+    <string name="tag_tab_recordings">Recordings</string>
+    <string name="tags_tab_genres">Genres</string>
+    <string name="tags_tab_tags">Tags</string>
+
+    <!-- TagActivity -->
+    <string name="tag_title">Tag</string>
+    <string name="genre_title">Genre</string>
+
+    <string name="title_tags_genres">Tags/Genres</string>
+
+    <!-- UserActivity -->
+    <string name="title_user_profile">Profile</string>
+    <string name="title_user_collections">Collections</string>
+    <string name="title_user_ratings">Ratings</string>
+    <string name="title_user_tags">Tags</string>
+    <string name="title_user_recommends">Recommends</string>
+    <string name="title_create_collection">Create Collection</string>
+    <string name="title_edit_collection">Edit Collection</string>
+
+    <!-- UserProfileFragment -->
+    <string name="user_profile_user_type">User type: %1$s</string>
+    <string name="user_profile_age">Age: %1$s</string>
+    <string name="user_profile_gender">Gender: %1$s</string>
+    <string name="user_profile_location">Location: %1$s</string>
+    <string name="user_profile_member_since">Member since: %1$s</string>
+    <string name="user_profile_homepage">Homepage: %1$s</string>
+    <string name="user_profile_languages">Languages: %1$s</string>
+    <string name="user_profile_bio">Bio:\n%1$s</string>
+
+    <!-- ArtistActivity -->
+    <string name="no_releases">No releases found</string>
+    <string name="no_links">No links found</string>
+    <string name="no_coverarts">No cover arts found</string>
+    <string name="no_tracks">No tracks found</string>
+    <string name="title_artist_releases">Releases</string>
+    <string name="title_artist_info">Info</string>
+    <string name="title_artist_ratings">Ratings</string>
+    <string name="title_artist_tags">Tags</string>
+    <string name="artist_info_tab_wiki">Wiki</string>
+    <string name="artist_info_tab_relations">Relations</string>
+    <string name="artist_info_tab_links">Links</string>
+
+    <!-- ReleaseActivity -->
+    <string name="release_tracks_details">%1$s (%2$d)</string>
+    <string name="title_release_tracks">Tracks</string>
+    <string name="title_release_info">Info</string>
+    <string name="title_release_releases">Releases</string>
+    <string name="title_release_ratings">Ratings</string>
+    <string name="title_release_tags">Tags</string>
+    <string name="release_info_tab_bio">Bio</string>
+    <string name="release_info_tab_credits">Credits</string>
+    <string name="release_info_tab_cover_arts">Cover Arts</string>
+    <string name="release_info_tab_links">Links</string>
+
+    <!-- RecordingActivity -->
+    <string name="no_lyrics">No lyrics found</string>
+    <string name="lyrics_copyright">Lyrics are property and copyright of their owners. Lyrics provided for educational purposes and personal use only.</string>
+    <string name="lyrics_powered">Lyrics powered by</string>
+    <string name="title_recording_lyrics">Lyrics</string>
+    <string name="title_recording_info">Info</string>
+    <string name="title_recording_releases">Releases</string>
+    <string name="title_recording_ratings">Ratings</string>
+    <string name="title_recording_tags">Tags</string>
+    <string name="recording_info_tab_info">Info</string>
+    <string name="recording_info_tab_credits">Credits</string>
+    <string name="show_lyrics_site">Show full version http://lyrics.wikia.com</string>
+
+</resources>

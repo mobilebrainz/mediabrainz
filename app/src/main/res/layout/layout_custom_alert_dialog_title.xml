@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/title_view"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorPrimary"
+              android:orientation="vertical"
+              android:paddingLeft="24dp"
+              android:paddingRight="24dp">
+
+
+    <!-- https://material.io/design/components/dialogs.html#theming -->
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/actionMenuTextColor"/>
+
+</LinearLayout>

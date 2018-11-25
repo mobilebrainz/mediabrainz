@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:paddingEnd="6dp"
+            android:paddingStart="6dp">
+
+            <TextView
+                android:id="@+id/collection_edit_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="@string/collection_edit_title"
+                android:textSize="20sp"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/card_background">
+
+                <EditText
+                    android:id="@+id/collection_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/collection_create_name"
+                    android:imeOptions="actionDone"
+                    android:inputType="textFilter"
+                    android:maxLines="1"
+                    android:textSize="16sp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/card_background">
+
+                <EditText
+                    android:id="@+id/collection_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:hint="@string/collection_create_description"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:maxLines="4"
+                    android:textSize="16sp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/collection_public"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:checked="true"
+                android:text="@string/collection_create_public"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/collection_edit_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/colorPrimaryLight"
+                android:text="@string/collection_edit_btn"
+                android:textColor="@color/textColorOnDark"/>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/error"
+            layout="@layout/layout_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</android.support.v4.widget.NestedScrollView>

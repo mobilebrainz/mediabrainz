@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://material.io/design/components/lists.html#specs  -->
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginTop="0dp"
+    android:background="@color/card_background"
+    cardview:cardCornerRadius="0dp"
+    cardview:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
+
+        <TextView
+            android:id="@+id/collection_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_16"/>
+
+        <ImageView
+            android:id="@+id/collection_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:src="@drawable/ic_delete_forever_24"
+            android:tint="@color/colorPrimaryLight"/>
+
+        <TextView
+            android:id="@+id/collection_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="@dimen/text_size_16"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+
+

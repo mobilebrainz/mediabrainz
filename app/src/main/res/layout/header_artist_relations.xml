@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        cardview:cardBackgroundColor="@color/colorPrimaryLight"
+        cardview:cardCornerRadius="1dp"
+        cardview:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/expand_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="16dp"
+                android:paddingStart="12dp"
+                cardview:srcCompat="@drawable/ic_expand_more_24"/>
+
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/actionMenuTextColor"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                cardview:srcCompat="@drawable/ic_info_24"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

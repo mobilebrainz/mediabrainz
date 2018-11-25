@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/app_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:scrollbars="vertical"/>
+
+        <TextView
+            android:id="@+id/noresults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="64dp"
+            android:text="@string/no_results"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/error"
+            layout="@layout/layout_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</android.support.v4.widget.NestedScrollView>

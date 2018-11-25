@@ -1,0 +1,89 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:orientation="vertical">
+
+    <!-- https://material.io/design/components/dialogs.html#theming -->
+    <LinearLayout
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/collection_create_title"
+            android:textColor="@color/actionMenuTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/card_background">
+
+        <EditText
+            android:id="@+id/collection_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/collection_create_name"
+            android:imeOptions="actionDone"
+            android:inputType="textFilter"
+            android:singleLine="true"
+            android:textSize="16sp"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/card_background">
+
+        <EditText
+            android:id="@+id/collection_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/collection_create_description"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:maxLines="4"
+            android:textSize="16sp"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/collection_public"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:checked="true"
+        android:text="@string/collection_create_public"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/collection_create_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimaryLight"
+        android:text="@string/collection_create_btn"
+        android:textColor="@color/textColorOnDark"/>
+
+</LinearLayout>

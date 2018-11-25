@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- CreateCollectionFragment: type spinner -->
+    <string-array name="collection_type_spinner">
+        <item>Release</item>
+        <item>\u0020\u0020\u0020\u0020Owned music</item>
+        <item>\u0020\u0020\u0020\u0020Wishlist</item>
+        <item>Event</item>
+        <item>\u0020\u0020\u0020\u0020Attending</item>
+        <item>\u0020\u0020\u0020\u0020Maybe attending</item>
+        <item>Area</item>
+        <item>Artist</item>
+        <item>Instrument</item>
+        <item>Label</item>
+        <item>Place</item>
+        <item>Recording</item>
+        <item>Release group</item>
+        <item>Series</item>
+        <item>Work</item>
+    </string-array>
+
+    <string-array name="release_collection_types">
+        <item>Release Groups</item>
+        <item>Releases</item>
+    </string-array>
+
+    <!-- Collections -->
+    <string-array name="collection_title_array">
+        <item>Areas</item>
+        <item>Artists</item>
+        <item>Events</item>
+        <item>Instruments</item>
+        <item>Labels</item>
+        <item>Places</item>
+        <item>Recordings</item>
+        <item>Releases</item>
+        <item>Release Groups</item>
+        <item>Series</item>
+        <item>Works</item>
+    </string-array>
+
+    <string-array name="release_group_title_array">
+        <item>Albums</item>
+        <item>EPs</item>
+        <item>Lives</item>
+        <item>Compilations</item>
+        <item>Singles</item>
+        <item>Other</item>
+    </string-array>
+
+</resources>
