@@ -1,5 +1,8 @@
 package app.mediabrainz.apihandler;
 
+import java.util.List;
+import java.util.Map;
+
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.account.OAuth;
 import app.mediabrainz.api.browse.AreaBrowseService;
@@ -15,8 +18,8 @@ import app.mediabrainz.api.browse.SeriesBrowseService;
 import app.mediabrainz.api.browse.WorkBrowseService;
 import app.mediabrainz.api.coverart.CoverArtService;
 import app.mediabrainz.api.coverart.ReleaseCoverArt;
-import app.mediabrainz.api.lastfm.LastfmService;
-import app.mediabrainz.api.lastfm.model.LastfmResult;
+import app.mediabrainz.api.externalResources.lastfm.LastfmService;
+import app.mediabrainz.api.externalResources.lastfm.model.LastfmResult;
 import app.mediabrainz.api.lookup.ArtistLookupService;
 import app.mediabrainz.api.lookup.ArtistLookupService.ArtistIncType;
 import app.mediabrainz.api.lookup.CollectionLookupService;
@@ -27,9 +30,9 @@ import app.mediabrainz.api.lookup.ReleaseGroupLookupService;
 import app.mediabrainz.api.lookup.ReleaseGroupLookupService.ReleaseGroupIncType;
 import app.mediabrainz.api.lookup.ReleaseLookupService;
 import app.mediabrainz.api.lookup.WorkLookupService;
-import app.mediabrainz.api.lyrics.LyricsService;
-import app.mediabrainz.api.lyrics.model.LyricsApi;
-import app.mediabrainz.api.lyrics.model.LyricsResult;
+import app.mediabrainz.api.externalResources.lyrics.LyricsService;
+import app.mediabrainz.api.externalResources.lyrics.model.LyricsApi;
+import app.mediabrainz.api.externalResources.lyrics.model.LyricsResult;
 import app.mediabrainz.api.model.Area;
 import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.BaseLookupEntity;
@@ -65,14 +68,10 @@ import app.mediabrainz.api.site.TagService;
 import app.mediabrainz.api.site.TagServiceInterface;
 import app.mediabrainz.api.site.UserProfile;
 import app.mediabrainz.api.site.UserProfileService;
-import app.mediabrainz.api.wiki.WikiService;
-import app.mediabrainz.api.wiki.model.Wikipedia;
+import app.mediabrainz.api.externalResources.wiki.WikiService;
+import app.mediabrainz.api.externalResources.wiki.model.Wikipedia;
 import app.mediabrainz.functions.Consumer;
 import app.mediabrainz.functions.ErrorHandler;
-
-import java.util.List;
-import java.util.Map;
-
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 

@@ -14,6 +14,7 @@ public class Preferences {
     private interface PreferenceName {
         String SUGGESTIONS = "search_suggestions";
         String LOAD_IMAGES = "load_images";
+        String LOAD_RATINGS = "load_ratings";
     }
 
     public void clearData() {
@@ -37,6 +38,10 @@ public class Preferences {
 
     public boolean isLoadImagesEnabled() {
         return getDefaultPreferences().getBoolean(PreferenceName.LOAD_IMAGES, true);
+    }
+
+    public boolean isLoadRatingsEnabled() {
+        return getDefaultPreferences().getBoolean(PreferenceName.LOAD_RATINGS, true);
     }
 
     private SharedPreferences getDefaultPreferences() {

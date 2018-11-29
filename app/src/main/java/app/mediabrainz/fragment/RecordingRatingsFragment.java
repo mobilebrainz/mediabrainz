@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import app.mediabrainz.R;
-import app.mediabrainz.api.lastfm.model.Track;
+import app.mediabrainz.api.externalResources.lastfm.model.Track;
 import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.Rating;
 import app.mediabrainz.api.model.Recording;
@@ -62,7 +62,7 @@ public class RecordingRatingsFragment extends LazyFragment {
         loginWarning = layout.findViewById(R.id.login_warning);
         allRatingText = layout.findViewById(R.id.all_rating_text);
         userRatingBar = layout.findViewById(R.id.user_rating_bar);
-        lastfmTable = layout.findViewById(R.id.lastfm_table);
+        lastfmTable = layout.findViewById(R.id.ratings_table);
         lastfmListeners = layout.findViewById(R.id.lastfm_listeners);
         lastfmPlaycount = layout.findViewById(R.id.lastfm_playcount);
         lastfmListenersRatingBar = layout.findViewById(R.id.lastfm_listeners_rating_bar);

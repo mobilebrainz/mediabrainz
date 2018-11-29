@@ -15,16 +15,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingEnd="5dp">
 
             <TextView
                 android:id="@+id/login_warning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:text="@string/edit_login"
                 android:textColor="@color/colorAccent"
@@ -47,13 +47,14 @@
                 android:textSize="16sp"/>
 
             <TableLayout
-                android:id="@+id/lastfm_table"
+                android:id="@+id/ratings_table"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp">
 
-                <TableRow>
+                <TableRow
+                    android:id="@+id/lastfm_playcount_tableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -67,8 +68,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="4dp"
                         android:layout_marginStart="6dp"
+                        android:layout_marginEnd="4dp"
                         android:isIndicator="true"
                         android:numStars="5"/>
 
@@ -79,7 +80,8 @@
                         android:textSize="14sp"/>
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:id="@+id/lastfm_listeners_tableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -93,13 +95,92 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="4dp"
                         android:layout_marginStart="6dp"
+                        android:layout_marginEnd="4dp"
                         android:isIndicator="true"
                         android:numStars="5"/>
 
                     <TextView
                         android:id="@+id/lastfm_listeners"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rateyourmusic_tableRow"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rateyourmusic"
+                        android:textSize="16sp"/>
+
+                    <RatingBar
+                        android:id="@+id/rateyourmusic_rating_bar"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="4dp"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:visibility="gone"/>
+
+                    <ProgressBar
+                        android:id="@+id/rateyourmusic_loading"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:indeterminate="true"
+                        android:layout_gravity="center_vertical"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/rateyourmusic_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/progarchives_tableRow"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/progarchives"
+                        android:textSize="16sp"/>
+
+                    <RatingBar
+                        android:id="@+id/progarchives_rating_bar"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="4dp"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:visibility="gone"/>
+
+                    <ProgressBar
+                        android:id="@+id/progarchives_loading"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:indeterminate="true"
+                        android:layout_gravity="center_vertical"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/progarchives_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"/>

@@ -249,6 +249,7 @@
     <string name="settings_clear_recommends">Clear recommends</string>
     <string name="settings_title_images">Images</string>
     <string name="settings_load_images">Load images</string>
+    <string name="settings_load_ratings">Load ratings from external resources</string>
     <string name="settings_title_miscellanea">Miscellanea</string>
 
     <!-- ImageActivity -->
@@ -257,6 +258,8 @@
     <!-- Rate & Tags -->
     <string name="lastfm_listeners">last.fm listeners:</string>
     <string name="lastfm_playcount">last.fm play count:</string>
+    <string name="rateyourmusic">rateyourmusic.com:</string>
+    <string name="progarchives">progarchives.com:</string>
 
     <!-- ArtistArtistRelationType -->
     <string name="rel_cuttent_member_of_band">Current Member Of Band</string>

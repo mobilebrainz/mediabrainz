@@ -31,7 +31,11 @@
             android:key="clear_recommends"
             android:title="@string/settings_clear_recommends"/>
 
-    </PreferenceCategory>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="load_ratings"
+            android:title="@string/settings_load_ratings"/>
 
+    </PreferenceCategory>
 
 </PreferenceScreen>

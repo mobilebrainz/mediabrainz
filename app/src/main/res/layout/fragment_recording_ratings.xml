@@ -47,7 +47,7 @@
                 android:textSize="16sp"/>
 
             <TableLayout
-                android:id="@+id/lastfm_table"
+                android:id="@+id/ratings_table"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
