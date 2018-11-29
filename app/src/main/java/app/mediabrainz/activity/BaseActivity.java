@@ -5,12 +5,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -76,6 +79,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 navigationView.inflateMenu(R.menu.guest_drawer_nav);
             }
         }
+    }
+
+    protected boolean checkNetworkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean isNetworkConnected = (networkInfo != null && networkInfo.isConnected());
+        if (!isNetworkConnected) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.error_connect_title)
+                    .setMessage(R.string.error_connect_message)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                    .setIcon(android.R.drawable.ic_dialog_alert).show();
+        }
+        return isNetworkConnected;
     }
 
     @Override
