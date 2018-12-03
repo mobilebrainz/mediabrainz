@@ -15,6 +15,9 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.ReleaseNavigationPagerAdapter;
@@ -38,16 +41,13 @@ import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnTagCommunicator;
 import app.mediabrainz.communicator.SetWebViewCommunicator;
 import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
-import app.mediabrainz.data.DatabaseHelper;
+import app.mediabrainz.data.room.repository.RecommendRepository;
 import app.mediabrainz.dialog.CollectionsDialogFragment;
 import app.mediabrainz.dialog.CreateCollectionDialogFragment;
 import app.mediabrainz.fragment.ReleaseRatingsFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.util.ShowUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
@@ -184,10 +184,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                 release.setReleaseGroup(rg);
                                 configBottomNavigationPager();
 
-                                //todo: сделать асинхронно
-                                DatabaseHelper databaseHelper = new DatabaseHelper(this);
-                                databaseHelper.setRecommends(rg.getTags());
-                                databaseHelper.close();
+                                RecommendRepository recommendRepository = new RecommendRepository();
+                                recommendRepository.setRecommends(rg.getTags());
                             },
                             this::showConnectionWarning
                     );

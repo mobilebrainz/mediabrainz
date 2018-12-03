@@ -1,7 +1,6 @@
 package app.mediabrainz.fragment;
 
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.recycler.ArtistTagAdapter;
 import app.mediabrainz.adapter.recycler.EntityTagAdapter;
@@ -19,10 +21,7 @@ import app.mediabrainz.api.site.TagServiceInterface;
 import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
-import app.mediabrainz.data.DatabaseHelper;
-
-import java.util.ArrayList;
-import java.util.List;
+import app.mediabrainz.data.room.repository.RecommendRepository;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 
@@ -76,44 +75,38 @@ public class UserRecommendsTabFragment extends Fragment {
         recycler.setHasFixedSize(true);
     }
 
-    private void findTags() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        Cursor cursor = databaseHelper.selectAllTags();
-        if (cursor.moveToFirst()) {
-            primaryTag = cursor.getString(0);
-            int primaryNumber = cursor.getInt(1);
-            if (cursor.moveToNext()) {
-                secondaryTag = cursor.getString(0);
-                int secondaryNumber = cursor.getInt(1);
-                tagRate = primaryNumber / secondaryNumber;
-            }
-        }
-        cursor.close();
-        databaseHelper.close();
-    }
-
     private void load() {
         viewError(false);
         noresults.setVisibility(View.GONE);
 
         viewProgressLoading(true);
-        findTags();
-        if (primaryTag != null) {
-            api.getTagEntities(tagType, primaryTag, 1,
-                    primaryPage -> {
-                        if (secondaryTag != null) {
-                            api.getTagEntities(tagType, secondaryTag, 1,
-                                    secondaryPage -> handleResult(primaryPage, secondaryPage),
-                                    this::showConnectionWarning);
-                        } else {
-                            handleResult(primaryPage, null);
-                        }
-                    },
-                    this::showConnectionWarning);
-        } else {
-            viewProgressLoading(false);
-            noresults.setVisibility(View.VISIBLE);
-        }
+        RecommendRepository recommendRepository = new RecommendRepository();
+        recommendRepository.getAll(recommends -> {
+            if (!recommends.isEmpty()) {
+                primaryTag = recommends.get(0).getTag();
+                int primaryNumber = recommends.get(0).getNumber();
+                if (recommends.size() > 1) {
+                    secondaryTag = recommends.get(1).getTag();
+                    int secondaryNumber = recommends.get(1).getNumber();
+                    tagRate = primaryNumber / secondaryNumber;
+                }
+                api.getTagEntities(tagType, primaryTag, 1,
+                        primaryPage -> {
+                            if (secondaryTag != null) {
+                                api.getTagEntities(tagType, secondaryTag, 1,
+                                        secondaryPage -> handleResult(primaryPage, secondaryPage),
+                                        this::showConnectionWarning);
+                            } else {
+                                handleResult(primaryPage, null);
+                            }
+                        },
+                        this::showConnectionWarning);
+
+            } else {
+                viewProgressLoading(false);
+                noresults.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     // сделать общий список из соотношения тегов rateTags

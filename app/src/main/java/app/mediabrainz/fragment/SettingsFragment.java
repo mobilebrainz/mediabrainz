@@ -9,7 +9,7 @@ import android.provider.SearchRecentSuggestions;
 import android.widget.Toast;
 
 import app.mediabrainz.R;
-import app.mediabrainz.data.DatabaseHelper;
+import app.mediabrainz.data.room.repository.RecommendRepository;
 import app.mediabrainz.suggestion.SuggestionProvider;
 
 
@@ -59,10 +59,11 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     private void clearRecommends() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
-        databaseHelper.deleteAllTags();
-        databaseHelper.close();
-        Toast.makeText(getActivity(), R.string.toast_recommends_cleared, Toast.LENGTH_SHORT).show();
+        //todo: make progress
+        RecommendRepository recommendRepository = new RecommendRepository();
+        recommendRepository.deleteAll(() -> {
+            Toast.makeText(getActivity(), R.string.toast_recommends_cleared, Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -81,7 +82,6 @@ public class SettingsFragment extends PreferenceFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
     }
 
 }
