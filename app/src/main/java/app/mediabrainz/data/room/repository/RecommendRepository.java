@@ -100,8 +100,8 @@ public class RecommendRepository {
         private RecommendDao asyncRecommendDao;
         private Consumer<List<Recommend>> consumer;
 
-        private GetAllRecommendsTask(RecommendDao asyncRecommendDao, Consumer<List<Recommend>> consumer) {
-            this.asyncRecommendDao = asyncRecommendDao;
+        private GetAllRecommendsTask(RecommendDao recommendDao, Consumer<List<Recommend>> consumer) {
+            this.asyncRecommendDao = recommendDao;
             this.consumer = consumer;
         }
 

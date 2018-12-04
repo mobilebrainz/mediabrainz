@@ -5,12 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.provider.SearchRecentSuggestions;
 import android.widget.Toast;
 
 import app.mediabrainz.R;
 import app.mediabrainz.data.room.repository.RecommendRepository;
-import app.mediabrainz.suggestion.SuggestionProvider;
+import app.mediabrainz.data.room.repository.SuggestionRepository;
 
 
 public class SettingsFragment extends PreferenceFragment implements
@@ -52,14 +51,15 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     private void clearSuggestionHistory() {
-        SearchRecentSuggestions suggestions =
-                new SearchRecentSuggestions(getActivity(), SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-        suggestions.clearHistory();
-        Toast.makeText(getActivity(), R.string.toast_search_cleared, Toast.LENGTH_SHORT).show();
+        //todo: make progress?
+        SuggestionRepository suggestionRepository = new SuggestionRepository();
+        suggestionRepository.deleteAll(() -> {
+            Toast.makeText(getActivity(), R.string.toast_search_cleared, Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void clearRecommends() {
-        //todo: make progress
+        //todo: make progress?
         RecommendRepository recommendRepository = new RecommendRepository();
         recommendRepository.deleteAll(() -> {
             Toast.makeText(getActivity(), R.string.toast_recommends_cleared, Toast.LENGTH_SHORT).show();

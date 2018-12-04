@@ -6,15 +6,19 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import app.mediabrainz.data.room.dao.RecommendDao;
+import app.mediabrainz.data.room.dao.SuggestionDao;
 import app.mediabrainz.data.room.entity.Recommend;
+import app.mediabrainz.data.room.entity.Suggestion;
 
 
-@Database(entities = {Recommend.class}, version = 1, exportSchema = false)
+@Database(entities = {Recommend.class, Suggestion.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "mediabrainzdb";
 
     public abstract RecommendDao recommendDao();
+
+    public abstract SuggestionDao suggestionDao();
 
     private static volatile AppDatabase INSTANCE;
 

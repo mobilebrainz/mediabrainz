@@ -25,10 +25,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <provider
-            android:name="app.mediabrainz.suggestion.SuggestionProvider"
-            android:authorities="app.mediabrainz.SearchSuggestionProvider"/>
-
         <service android:name="app.mediabrainz.account.MediaBrainzAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>

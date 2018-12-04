@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
-import app.mediabrainz.suggestion.SuggestionHelper;
+import app.mediabrainz.data.room.entity.Suggestion;
+import app.mediabrainz.adapter.SuggestionListAdapter;
 
 
 public class SearchFragment extends Fragment {
@@ -21,8 +23,6 @@ public class SearchFragment extends Fragment {
     public interface SearchFragmentListener {
         void searchEntity(String artist, String album, String track);
     }
-
-    private SuggestionHelper suggestionHelper;
 
     private AutoCompleteTextView artistField;
     private AutoCompleteTextView albumField;
@@ -71,22 +71,16 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        suggestionHelper = new SuggestionHelper(getActivity());
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
-            artistField.setAdapter(suggestionHelper.getAdapter());
-            albumField.setAdapter(suggestionHelper.getAdapter());
-            trackField.setAdapter(suggestionHelper.getAdapter());
+            artistField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.ARTIST));
+            albumField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.ALBUM));
+            trackField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.TRACK));
         } else {
-            artistField.setAdapter(suggestionHelper.getEmptyAdapter());
-            albumField.setAdapter(suggestionHelper.getEmptyAdapter());
-            trackField.setAdapter(suggestionHelper.getEmptyAdapter());
+            artistField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
+            albumField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
+            trackField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
         }
     }
 

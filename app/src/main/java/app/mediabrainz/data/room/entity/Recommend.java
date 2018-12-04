@@ -14,13 +14,13 @@ public class Recommend {
     @ColumnInfo(name = "tag")
     private String tag;
 
+    @ColumnInfo(name = "number")
+    private int number;
+
     public Recommend(@NonNull String tag, int number) {
         this.tag = tag;
         this.number = number;
     }
-
-    @ColumnInfo(name = "number")
-    private int number;
 
     @NonNull
     public String getTag() {

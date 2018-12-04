@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -24,9 +23,10 @@ import android.widget.Toast;
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.apihandler.Api;
+import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.intent.zxing.IntentIntegrator;
-import app.mediabrainz.suggestion.SuggestionHelper;
+import app.mediabrainz.adapter.SuggestionListAdapter;
 import app.mediabrainz.util.MbUtils;
 
 import static app.mediabrainz.MediaBrainzApp.SUPPORT_MAIL;
@@ -89,7 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
             new AlertDialog.Builder(this)
                     .setTitle(R.string.error_connect_title)
                     .setMessage(R.string.error_connect_message)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {})
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    })
                     .setIcon(android.R.drawable.ic_dialog_alert).show();
         }
         return isNetworkConnected;
@@ -195,22 +196,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
         searchView.setIconifiedByDefault(false);
 
         if (MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
-            searchView.setSuggestionsAdapter(new SuggestionHelper(this).getAdapter());
-            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    Cursor cursor = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
-                    searchView.setQuery(cursor.getString(cursor.getColumnIndex(SuggestionHelper.COLUMN)), true);
-                    searchView.clearFocus();
-                    return true;
-                }
-
-                @Override
-                public boolean onSuggestionSelect(int position) {
-                    return true;
-                }
+            SearchView.SearchAutoComplete searchSrcTextView = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            searchSrcTextView.setThreshold(1);
+            searchSrcTextView.setAdapter(new SuggestionListAdapter(this, Suggestion.SuggestionField.ARTIST));
+            searchSrcTextView.setOnItemClickListener((adapterView, view, position, id) -> {
+                Suggestion suggestion = (Suggestion) adapterView.getItemAtPosition(position);
+                searchView.setQuery(suggestion.toString(), true);
+                searchView.clearFocus();
             });
-
         }
         return true;
     }
