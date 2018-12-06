@@ -60,6 +60,14 @@ public class ActivityFactory {
         context.startActivity(intent);
     }
 
+    public static void startUserActivity(Context context, String username, int userNavigationView, int userFragmentView) {
+        Intent intent = new Intent(context, UserActivity.class);
+        intent.putExtra(UserActivity.USERNAME, username);
+        intent.putExtra(UserActivity.NAV_VIEW, userNavigationView);
+        intent.putExtra(UserActivity.FRAGMENT_VIEW, userFragmentView);
+        context.startActivity(intent);
+    }
+
     public static void startLoginActivity(Context context) {
         context.startActivity(new Intent(context, LoginActivity.class));
     }

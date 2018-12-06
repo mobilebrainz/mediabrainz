@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.CollectionsPagerAdapter;
@@ -24,19 +26,21 @@ import app.mediabrainz.communicator.OnEditCollectionCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
+import app.mediabrainz.communicator.OnUserCommunicator;
 import app.mediabrainz.communicator.OnUserTagCommunicator;
 import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
+import app.mediabrainz.data.room.entity.User;
+import app.mediabrainz.data.room.repository.UserRepository;
 import app.mediabrainz.dialog.PagedReleaseDialogFragment;
 import app.mediabrainz.fragment.CollectionCreateFragment;
 import app.mediabrainz.fragment.CollectionEditFragment;
 import app.mediabrainz.fragment.CollectionFragment;
 import app.mediabrainz.fragment.CollectionsPagerFragment;
+import app.mediabrainz.fragment.UserProfilePagerFragment;
 import app.mediabrainz.fragment.UserTagPagerFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.util.ShowUtil;
-
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
@@ -59,7 +63,9 @@ public class UserActivity extends BaseBottomNavActivity implements
         OnCreateCollectionCommunicator,
         ShowFloatingActionButtonCommunicator,
         OnEditCollectionCommunicator,
-        CollectionsPagerFragment.CollectionTabOrdinalCommunicator {
+        CollectionsPagerFragment.CollectionTabOrdinalCommunicator,
+        OnUserCommunicator,
+        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator {
 
     public static final String USERNAME = "USERNAME";
     public static final int DEFAULT_USER_NAV_VIEW = R.id.user_navigation_profile;
@@ -83,7 +89,7 @@ public class UserActivity extends BaseBottomNavActivity implements
 
     @Override
     protected BaseFragmentPagerAdapter initBottomNavigationPagerAdapter() {
-        return new UserNavigationPagerAdapter(getSupportFragmentManager(), getResources());
+        return new UserNavigationPagerAdapter(getSupportFragmentManager(), getResources(), isPrivate);
     }
 
     @Override
@@ -112,6 +118,14 @@ public class UserActivity extends BaseBottomNavActivity implements
                 case R.id.user_navigation_profile:
                     viewPager.setCurrentItem(TAB_PROFILE_POS);
                     topTitle.setText(R.string.title_user_profile);
+
+                    if (!isPrivate && oauth.hasAccount()) {
+                        new UserRepository().findUser(username, user -> {
+                            if (user == null) {
+                                showFloatingActionButton(true, FloatingButtonType.ADD_TO_USERS);
+                            }
+                        });
+                    }
                     break;
 
                 case R.id.user_navigation_collections:
@@ -245,6 +259,17 @@ public class UserActivity extends BaseBottomNavActivity implements
             floatingActionButton.setImageResource(floatingButtonType.getImgResource());
 
             switch (floatingButtonType) {
+                case ADD_TO_USERS:
+                    floatingActionButton.setOnClickListener(v -> {
+                        viewProgressLoading(true);
+                        new UserRepository().insert(() -> {
+                                    viewProgressLoading(false);
+                                    floatingActionButton.setVisibility(View.GONE);
+                                    ShowUtil.showMessage(this, getString(R.string.user_added));
+                                },
+                                new User(username));
+                    });
+                    break;
                 case ADD_TO_COLLECTION:
                     floatingActionButton.setOnClickListener(v -> loadFragment(CollectionCreateFragment.newInstance()));
                     break;
@@ -324,5 +349,16 @@ public class UserActivity extends BaseBottomNavActivity implements
     @Override
     public int getCollectionTabOrdinal() {
         return collectionTabOrdinal;
+    }
+
+    @Override
+    public void onUser(String username) {
+        ActivityFactory.startUserActivity(this, username);
+    }
+
+    @Override
+    public int getUserProfileTabOrdinal() {
+        // get tab id
+        return getFragmentViewId();
     }
 }

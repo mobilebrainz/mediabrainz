@@ -74,7 +74,7 @@ public class SuggestionRepository {
 
         @Override
         protected Void doInBackground(Suggestion... suggestions) {
-            asyncSuggestionDao.insert(suggestions[0]);
+            asyncSuggestionDao.insert(suggestions);
             return null;
         }
 

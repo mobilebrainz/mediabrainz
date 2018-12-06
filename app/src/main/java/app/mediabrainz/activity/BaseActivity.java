@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
+import app.mediabrainz.adapter.pager.UserProfilePagerAdapter;
 import app.mediabrainz.apihandler.Api;
 import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.intent.ActivityFactory;
@@ -130,6 +131,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
             case R.id.nav_user_recommends:
                 startUserActivity(R.id.user_navigation_recommends);
                 break;
+            case R.id.nav_user_users:
+                startUserActivity(R.id.user_navigation_profile, UserProfilePagerAdapter.TAB_USERS_POS);
+                break;
+
             case R.id.nav_user_logout:
                 //todo: add confirm dialog?
                 oauth.logOut();
@@ -160,6 +165,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private void startUserActivity(int userNavigationView) {
         if (oauth.hasAccount()) {
             ActivityFactory.startUserActivity(this, oauth.getName(), userNavigationView);
+        } else {
+            ActivityFactory.startLoginActivity(this);
+        }
+    }
+
+    private void startUserActivity(int userNavigationView, int userFragmentView) {
+        if (oauth.hasAccount()) {
+            ActivityFactory.startUserActivity(this, oauth.getName(), userNavigationView, userFragmentView);
         } else {
             ActivityFactory.startLoginActivity(this);
         }

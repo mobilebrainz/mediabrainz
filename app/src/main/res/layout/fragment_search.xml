@@ -30,15 +30,21 @@
                     android:src="@drawable/ic_artist_24"
                     android:tint="@color/colorPrimary"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/artist_field"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/artist_field_hint"
-                    android:inputType="textAutoComplete"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:layout_weight="1">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/artist_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/artist_field_hint"
+                        android:inputType="textAutoComplete"
+                        android:maxLines="1"
+                        android:singleLine="true"/>
+
+                </android.support.design.widget.TextInputLayout>
 
             </TableRow>
 
@@ -52,15 +58,21 @@
                     android:src="@drawable/ic_album_24"
                     android:tint="@color/colorPrimary"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/album_field"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/album_field_hint"
-                    android:inputType="textAutoComplete"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:layout_weight="1">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/album_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/album_field_hint"
+                        android:inputType="textAutoComplete"
+                        android:maxLines="1"
+                        android:singleLine="true"/>
+
+                </android.support.design.widget.TextInputLayout>
 
             </TableRow>
 
@@ -74,15 +86,21 @@
                     android:src="@drawable/ic_track_24"
                     android:tint="@color/colorPrimary"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/track_field"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/track_field_hint"
-                    android:inputType="textAutoComplete"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:layout_weight="1">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/track_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/track_field_hint"
+                        android:inputType="textAutoComplete"
+                        android:maxLines="1"
+                        android:singleLine="true"/>
+
+                </android.support.design.widget.TextInputLayout>
 
             </TableRow>
 

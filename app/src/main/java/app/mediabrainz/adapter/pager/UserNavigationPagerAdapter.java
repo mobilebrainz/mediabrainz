@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import app.mediabrainz.fragment.CollectionsPagerFragment;
 import app.mediabrainz.fragment.LazyFragment;
 import app.mediabrainz.fragment.UserProfileFragment;
+import app.mediabrainz.fragment.UserProfilePagerFragment;
 import app.mediabrainz.fragment.UserRatingsPagerFragment;
 import app.mediabrainz.fragment.UserRecommendsPagerFragment;
 import app.mediabrainz.fragment.UserTagsPagerFragment;
@@ -20,15 +21,18 @@ public class UserNavigationPagerAdapter extends BaseFragmentPagerAdapter {
     public static final int TAB_TAGS_POS = 3;
     public static final int TAB_RECOMMENDS_POS = 4;
 
-    public UserNavigationPagerAdapter(FragmentManager fm, Resources resources) {
+    private boolean isPrivate;
+
+    public UserNavigationPagerAdapter(FragmentManager fm, Resources resources, boolean isPrivate) {
         super(PAGE_COUNT, fm, resources);
+        this.isPrivate = isPrivate;
     }
 
     @Override
     public LazyFragment getItem(int position) {
         switch (position) {
             case TAB_PROFILE_POS:
-                return UserProfileFragment.newInstance();
+                return isPrivate ? UserProfilePagerFragment.newInstance() : UserProfileFragment.newInstance();
             case TAB_COLLECTIONS_POS:
                 return CollectionsPagerFragment.newInstance();
             case TAB_RATINGS_POS:

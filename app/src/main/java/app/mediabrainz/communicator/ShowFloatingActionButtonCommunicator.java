@@ -9,7 +9,8 @@ public interface ShowFloatingActionButtonCommunicator {
 
     enum FloatingButtonType {
         ADD_TO_COLLECTION(R.drawable.ic_collection_add_24),
-        EDIT_COLLECTION(R.drawable.ic_collection_edit_24);
+        EDIT_COLLECTION(R.drawable.ic_collection_edit_24),
+        ADD_TO_USERS(R.drawable.ic_person_add_24);
 
         private int imgResource;
 

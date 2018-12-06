@@ -168,8 +168,7 @@ public class RecordingActivity extends BaseBottomNavActivity implements
                         viewProgressLoading(false);
                     }
 
-                    RecommendRepository recommendRepository = new RecommendRepository();
-                    recommendRepository.setRecommends(recording.getTags());
+                    new RecommendRepository().setRecommends(recording.getTags());
                 },
                 this::showConnectionWarning
         );

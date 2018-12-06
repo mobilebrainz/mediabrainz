@@ -56,11 +56,12 @@ public class Suggestion {
         this.word = word;
     }
 
+    @NonNull
     public String getField() {
         return field;
     }
 
-    public void setField(String field) {
+    public void setField(@NonNull String field) {
         this.field = field;
     }
 

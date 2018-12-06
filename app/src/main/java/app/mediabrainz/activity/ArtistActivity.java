@@ -156,8 +156,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
                     this.artist = artist;
                     configBottomNavigationPager();
 
-                    RecommendRepository recommendRepository = new RecommendRepository();
-                    recommendRepository.setRecommends(artist.getTags());
+                    new RecommendRepository().setRecommends(artist.getTags());
                 },
                 this::showConnectionWarning);
     }

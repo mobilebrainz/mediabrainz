@@ -48,7 +48,7 @@ public class UserTagListFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_user_tag_list, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         noresults = layout.findViewById(R.id.noresults);
         recycler = layout.findViewById(R.id.recycler);
 

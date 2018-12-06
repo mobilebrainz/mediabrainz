@@ -80,8 +80,7 @@ public class UserRecommendsTabFragment extends Fragment {
         noresults.setVisibility(View.GONE);
 
         viewProgressLoading(true);
-        RecommendRepository recommendRepository = new RecommendRepository();
-        recommendRepository.getAll(recommends -> {
+        new RecommendRepository().getAll(recommends -> {
             if (!recommends.isEmpty()) {
                 primaryTag = recommends.get(0).getTag();
                 int primaryNumber = recommends.get(0).getNumber();

@@ -14,7 +14,7 @@ import app.mediabrainz.data.room.entity.Suggestion;
 public interface SuggestionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Suggestion suggestion);
+    void insert(Suggestion... suggestions);
 
     @Query("DELETE FROM suggestions")
     void deleteAll();

@@ -52,16 +52,14 @@ public class SettingsFragment extends PreferenceFragment implements
 
     private void clearSuggestionHistory() {
         //todo: make progress?
-        SuggestionRepository suggestionRepository = new SuggestionRepository();
-        suggestionRepository.deleteAll(() -> {
+        new SuggestionRepository().deleteAll(() -> {
             Toast.makeText(getActivity(), R.string.toast_search_cleared, Toast.LENGTH_SHORT).show();
         });
     }
 
     private void clearRecommends() {
         //todo: make progress?
-        RecommendRepository recommendRepository = new RecommendRepository();
-        recommendRepository.deleteAll(() -> {
+        new RecommendRepository().deleteAll(() -> {
             Toast.makeText(getActivity(), R.string.toast_recommends_cleared, Toast.LENGTH_SHORT).show();
         });
     }

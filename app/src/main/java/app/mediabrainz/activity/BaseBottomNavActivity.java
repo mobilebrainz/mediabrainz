@@ -20,8 +20,10 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
         ShowTitleCommunicator {
 
     public static final String NAV_VIEW = "NAV_VIEW";
+    public static final String FRAGMENT_VIEW = "FRAGMENT_VIEW";
 
     protected int navViewId;
+    protected int fragmentViewId = -1; //or tab id
     protected boolean isLoading;
     protected boolean isError;
 
@@ -46,8 +48,10 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
 
         if (savedInstanceState != null) {
             navViewId = initDefaultNavViewId() != -1 ? savedInstanceState.getInt(NAV_VIEW, initDefaultNavViewId()) : savedInstanceState.getInt(NAV_VIEW);
+            fragmentViewId = savedInstanceState.getInt(NAV_VIEW, -1);
         } else {
             navViewId = initDefaultNavViewId() != -1 ? getIntent().getIntExtra(NAV_VIEW, initDefaultNavViewId()) : savedInstanceState.getInt(NAV_VIEW);
+            fragmentViewId = getIntent().getIntExtra(FRAGMENT_VIEW, -1);
         }
 
         error = findViewById(R.id.error);
@@ -82,6 +86,7 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_VIEW, navViewId);
+        outState.putInt(FRAGMENT_VIEW, fragmentViewId);
     }
 
     @Override
@@ -162,6 +167,9 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
         return navViewId;
     }
 
+    public int getFragmentViewId() {
+        return fragmentViewId;
+    }
     public BaseFragmentPagerAdapter getBottomNavigationPagerAdapter() {
         return bottomNavigationPagerAdapter;
     }

@@ -319,8 +319,14 @@
     <string name="title_user_ratings">Ratings</string>
     <string name="title_user_tags">Tags</string>
     <string name="title_user_recommends">Recommends</string>
+    <string name="title_user_users">Users</string>
     <string name="title_create_collection">Create Collection</string>
     <string name="title_edit_collection">Edit Collection</string>
+
+    <string name="user_profile_tab_profile">Profile</string>
+    <string name="user_profile_tab_users">Users</string>
+    <string name="user_added">User was added successfully!</string>
+    <string name="user_delete_user">Delete user from users</string>
 
     <!-- UserProfileFragment -->
     <string name="user_profile_user_type">User type: %1$s</string>

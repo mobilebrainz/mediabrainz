@@ -184,8 +184,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                 release.setReleaseGroup(rg);
                                 configBottomNavigationPager();
 
-                                RecommendRepository recommendRepository = new RecommendRepository();
-                                recommendRepository.setRecommends(rg.getTags());
+                                new RecommendRepository().setRecommends(rg.getTags());
                             },
                             this::showConnectionWarning
                     );
