@@ -318,6 +318,7 @@
     <string name="title_user_collections">Collections</string>
     <string name="title_user_ratings">Ratings</string>
     <string name="title_user_tags">Tags</string>
+    <string name="title_send_message">Send message</string>
     <string name="title_user_recommends">Recommends</string>
     <string name="title_user_users">Users</string>
     <string name="title_create_collection">Create Collection</string>
@@ -327,6 +328,13 @@
     <string name="user_profile_tab_users">Users</string>
     <string name="user_added">User was added successfully!</string>
     <string name="user_delete_user">Delete user from users</string>
+
+    <string name="send_email_subject_hint">Subject:</string>
+    <string name="send_email_message_hint">Message:</string>
+    <string name="send_email_send_btn">Send</string>
+    <string name="send_email_to_title">to %1$s</string>
+    <string name="send_email_reveal_email">Reveal my email address</string>
+    <string name="send_email_success">Your email has been successfully sent!</string>
 
     <!-- UserProfileFragment -->
     <string name="user_profile_user_type">User type: %1$s</string>

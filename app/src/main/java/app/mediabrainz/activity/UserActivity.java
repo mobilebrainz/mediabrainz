@@ -48,6 +48,7 @@ import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_COLLE
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_PROFILE_POS;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_RATINGS_POS;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_RECOMMENDS_POS;
+import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_SEND_MESSAGE;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_TAGS_POS;
 
 
@@ -67,6 +68,7 @@ public class UserActivity extends BaseBottomNavActivity implements
         OnUserCommunicator,
         UserProfilePagerFragment.UserProfileTabOrdinalCommunicator {
 
+    public static final String TAG = "UserActivity";
     public static final String USERNAME = "USERNAME";
     public static final int DEFAULT_USER_NAV_VIEW = R.id.user_navigation_profile;
 
@@ -149,6 +151,11 @@ public class UserActivity extends BaseBottomNavActivity implements
                 case R.id.user_navigation_recommends:
                     viewPager.setCurrentItem(TAB_RECOMMENDS_POS);
                     topTitle.setText(R.string.title_user_recommends);
+                    break;
+
+                case R.id.user_navigation_send_email:
+                    viewPager.setCurrentItem(TAB_SEND_MESSAGE);
+                    topTitle.setText(R.string.title_send_message);
                     break;
             }
             return true;
@@ -361,4 +368,5 @@ public class UserActivity extends BaseBottomNavActivity implements
         // get tab id
         return getFragmentViewId();
     }
+
 }

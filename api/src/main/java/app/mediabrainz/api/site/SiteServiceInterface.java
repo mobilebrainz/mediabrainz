@@ -18,4 +18,6 @@ public interface SiteServiceInterface {
     Flowable<Result<ResponseBody>> editCollection(String collectionId, String name, int typeFromSpinner, String description, int publ);
 
     Flowable<Result<ResponseBody>> createCollection(String name, int typeFromSpinner, String description, int publ);
+
+    Flowable<Result<ResponseBody>> sendEmail(String username, String subject, String message, boolean revealEmail);
 }

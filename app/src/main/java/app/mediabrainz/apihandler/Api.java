@@ -720,4 +720,10 @@ public class Api {
                 consumer, errorHandler);
     }
 
+    public Disposable sendEmail(String username, String subject, String message, boolean revealEmail, Consumer<ResponseBody> consumer, ErrorHandler errorHandler) {
+        return ApiHandler.subscribe(
+                getSiteService().sendEmail(username, subject, message, revealEmail),
+                consumer, errorHandler);
+    }
+
 }

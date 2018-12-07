@@ -124,4 +124,9 @@ public class SiteService implements SiteServiceInterface {
         return login(() -> webService.getRetrofitService().createCollection(cookie, name, typeFromSpinner, description, isPublic));
     }
 
+    @Override
+    public Flowable<Result<ResponseBody>> sendEmail(String username, String subject, String message, boolean revealEmail) {
+        return login(() -> webService.getRetrofitService().sendEmail(cookie, username, subject, message, revealEmail, false));
+    }
+
 }
