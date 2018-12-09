@@ -13,7 +13,7 @@ import app.mediabrainz.data.room.database.AppDatabase;
 
 public class MediaBrainzApp extends Application {
 
-    public static final String SUPPORT_MAIL = "algerd75@mail.ru";
+    public static final String SUPPORT_MAIL = "mobilebrainz@gmail.com";
 
     public static OAuth oauth;
     public static Api api;
