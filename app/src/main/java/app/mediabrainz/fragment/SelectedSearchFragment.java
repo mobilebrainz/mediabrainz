@@ -13,26 +13,27 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.activity.SearchType;
+import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.intent.ActivityFactory;
-import app.mediabrainz.suggestion.SuggestionHelper;
-
-import java.util.ArrayList;
-import java.util.List;
+import app.mediabrainz.adapter.SuggestionListAdapter;
 
 
 public class SelectedSearchFragment extends Fragment {
 
     public interface SelectedSearchFragmentListener {
         void searchType(SearchType searchType, String query);
+
         List<String> getGenres();
     }
 
     private List<String> genres = new ArrayList<>();
 
-    private SuggestionHelper suggestionHelper;
     private AutoCompleteTextView searchField;
     private Spinner searchTypeSpinner;
     private ArrayAdapter<String> adapter;
@@ -61,7 +62,6 @@ public class SelectedSearchFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupSearchTypeSpinner();
-        suggestionHelper = new SuggestionHelper(getActivity());
     }
 
     private void setupSearchTypeSpinner() {
@@ -89,16 +89,16 @@ public class SelectedSearchFragment extends Fragment {
                         searchField.setThreshold(1);
                         searchField.setAdapter(adapter);
                     }
+                } else if (SearchType.USER.ordinal() == pos && MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
+                    searchField.setThreshold(2);
+                    searchField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.USER));
                 } else {
-                    if (MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
-                        searchField.setThreshold(2);
-                        searchField.setAdapter(suggestionHelper.getAdapter());
-                    } else {
-                        searchField.setAdapter(suggestionHelper.getEmptyAdapter());
-                    }
+                    searchField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
                 }
             }
-            public void onNothingSelected(AdapterView<?> parent) { }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
     }

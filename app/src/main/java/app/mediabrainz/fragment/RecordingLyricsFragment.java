@@ -19,8 +19,8 @@ import app.mediabrainz.communicator.GetRecordingCommunicator;
 import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
-import static app.mediabrainz.api.lyrics.model.LyricsApi.LYRICS_INSTRUMENTAL;
-import static app.mediabrainz.api.lyrics.model.LyricsApi.LYRICS_NOT_FOUND;
+import static app.mediabrainz.api.externalResources.lyrics.model.LyricsApi.LYRICS_INSTRUMENTAL;
+import static app.mediabrainz.api.externalResources.lyrics.model.LyricsApi.LYRICS_NOT_FOUND;
 
 
 public class RecordingLyricsFragment extends LazyFragment {

@@ -80,4 +80,14 @@ public interface SiteRetrofitService {
             @Query("limit") int limit,
             @Query("method") String method
     );
+
+    @FormUrlEncoded
+    @POST("/user/{username}/contact")
+    Flowable<Result<ResponseBody>> sendEmail(
+            @Header("Cookie") String cookie,
+            @Path("username") String username,
+            @Field("contact.subject") String subject,
+            @Field("contact.body") String message,
+            @Field("contact.reveal_address") boolean revealEmail,
+            @Field("contact.send_to_self") boolean sendToSelf);
 }

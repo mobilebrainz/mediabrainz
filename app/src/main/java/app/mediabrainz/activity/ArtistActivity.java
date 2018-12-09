@@ -31,7 +31,7 @@ import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
 import app.mediabrainz.communicator.OnTagCommunicator;
 import app.mediabrainz.communicator.SetWebViewCommunicator;
 import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
-import app.mediabrainz.data.DatabaseHelper;
+import app.mediabrainz.data.room.repository.RecommendRepository;
 import app.mediabrainz.dialog.CollectionsDialogFragment;
 import app.mediabrainz.dialog.CreateCollectionDialogFragment;
 import app.mediabrainz.dialog.PagedReleaseDialogFragment;
@@ -155,10 +155,8 @@ public class ArtistActivity extends BaseBottomNavActivity implements
                     }
                     this.artist = artist;
                     configBottomNavigationPager();
-                    //todo: сделать асинхронно
-                    DatabaseHelper databaseHelper = new DatabaseHelper(this);
-                    databaseHelper.setRecommends(artist.getTags());
-                    databaseHelper.close();
+
+                    new RecommendRepository().setRecommends(artist.getTags());
                 },
                 this::showConnectionWarning);
     }

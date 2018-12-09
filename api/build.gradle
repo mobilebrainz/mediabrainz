@@ -3,13 +3,13 @@ apply plugin: 'java-library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation 'com.squareup.retrofit2:converter-moshi:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-simplexml:2.5.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
     implementation "io.reactivex.rxjava2:rxjava:2.2.0"
     implementation 'com.burgstaller:okhttp-digest:1.17'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'org.json:json:20180130'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    implementation 'org.json:json:20180813'
     implementation 'org.jsoup:jsoup:1.11.3'
 
 }

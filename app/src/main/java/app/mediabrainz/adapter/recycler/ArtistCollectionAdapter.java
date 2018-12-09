@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
-import app.mediabrainz.api.lastfm.model.Image;
+import app.mediabrainz.api.externalResources.lastfm.model.Image;
 import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.Rating;
 import app.mediabrainz.intent.ActivityFactory;

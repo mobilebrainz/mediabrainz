@@ -12,6 +12,12 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.ReleaseNavigationPagerAdapter;
@@ -27,6 +33,7 @@ import app.mediabrainz.api.site.SiteService;
 import app.mediabrainz.communicator.GetCollectionsCommunicator;
 import app.mediabrainz.communicator.GetReleaseCommunicator;
 import app.mediabrainz.communicator.GetReleaseGroupCommunicator;
+import app.mediabrainz.communicator.GetRequestQueueCommunicator;
 import app.mediabrainz.communicator.GetUrlsCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
@@ -34,15 +41,13 @@ import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnTagCommunicator;
 import app.mediabrainz.communicator.SetWebViewCommunicator;
 import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
-import app.mediabrainz.data.DatabaseHelper;
+import app.mediabrainz.data.room.repository.RecommendRepository;
 import app.mediabrainz.dialog.CollectionsDialogFragment;
 import app.mediabrainz.dialog.CreateCollectionDialogFragment;
+import app.mediabrainz.fragment.ReleaseRatingsFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.util.ShowUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
@@ -69,11 +74,14 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         GetReleaseCommunicator,
         GetReleaseGroupCommunicator,
         GetUrlsCommunicator,
-        SetWebViewCommunicator {
+        SetWebViewCommunicator,
+        GetRequestQueueCommunicator {
 
+    public static final String TAG = "ReleaseActivity";
     public static final String RELEASE_MBID = "RELEASE_MBID";
     public static final int DEFAULT_RELEASE_NAV_VIEW = R.id.release_nav_tracks;
 
+    private RequestQueue requestQueue;
     private String releaseMbid;
     private Release release;
     private ReleaseGroup releaseGroup;
@@ -93,6 +101,17 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         floatingActionButton = findViewById(R.id.floatin_action_btn);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
         showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.ADD_TO_COLLECTION);
+
+        requestQueue = Volley.newRequestQueue(this);
+    }
+
+    @Override
+    protected void onStop () {
+        super.onStop();
+        if (requestQueue != null) {
+            requestQueue.cancelAll(TAG);
+            requestQueue.cancelAll(ReleaseRatingsFragment.TAG);
+        }
     }
 
     @Override
@@ -165,10 +184,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                 release.setReleaseGroup(rg);
                                 configBottomNavigationPager();
 
-                                //todo: сделать асинхронно
-                                DatabaseHelper databaseHelper = new DatabaseHelper(this);
-                                databaseHelper.setRecommends(rg.getTags());
-                                databaseHelper.close();
+                                new RecommendRepository().setRecommends(rg.getTags());
                             },
                             this::showConnectionWarning
                     );
@@ -379,5 +395,10 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     @Override
     public String getReleaseGroupMbid() {
         return releaseGroup != null ? releaseGroup.getId() : null;
+    }
+
+    @Override
+    public RequestQueue getRequestQueue() {
+        return requestQueue;
     }
 }

@@ -5,12 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.provider.SearchRecentSuggestions;
 import android.widget.Toast;
 
 import app.mediabrainz.R;
-import app.mediabrainz.data.DatabaseHelper;
-import app.mediabrainz.suggestion.SuggestionProvider;
+import app.mediabrainz.data.room.repository.RecommendRepository;
+import app.mediabrainz.data.room.repository.SuggestionRepository;
 
 
 public class SettingsFragment extends PreferenceFragment implements
@@ -52,17 +51,17 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     private void clearSuggestionHistory() {
-        SearchRecentSuggestions suggestions =
-                new SearchRecentSuggestions(getActivity(), SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-        suggestions.clearHistory();
-        Toast.makeText(getActivity(), R.string.toast_search_cleared, Toast.LENGTH_SHORT).show();
+        //todo: make progress?
+        new SuggestionRepository().deleteAll(() -> {
+            Toast.makeText(getActivity(), R.string.toast_search_cleared, Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void clearRecommends() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
-        databaseHelper.deleteAllTags();
-        databaseHelper.close();
-        Toast.makeText(getActivity(), R.string.toast_recommends_cleared, Toast.LENGTH_SHORT).show();
+        //todo: make progress?
+        new RecommendRepository().deleteAll(() -> {
+            Toast.makeText(getActivity(), R.string.toast_recommends_cleared, Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -81,7 +80,6 @@ public class SettingsFragment extends PreferenceFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
     }
 
 }

@@ -1,13 +1,14 @@
 package app.mediabrainz.activity;
 
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.List;
 
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
@@ -23,16 +24,19 @@ import app.mediabrainz.api.model.ReleaseGroup;
 import app.mediabrainz.communicator.GetReleasesCommunicator;
 import app.mediabrainz.communicator.LoadingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
+import app.mediabrainz.data.room.entity.Suggestion;
+import app.mediabrainz.data.room.repository.SuggestionRepository;
 import app.mediabrainz.dialog.PagedReleaseDialogFragment;
 import app.mediabrainz.fragment.BarcodeSearchFragment;
 import app.mediabrainz.intent.ActivityFactory;
-import app.mediabrainz.suggestion.SuggestionProvider;
 import app.mediabrainz.util.ShowUtil;
-
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
+import static app.mediabrainz.data.room.entity.Suggestion.SuggestionField.ALBUM;
+import static app.mediabrainz.data.room.entity.Suggestion.SuggestionField.ARTIST;
+import static app.mediabrainz.data.room.entity.Suggestion.SuggestionField.TRACK;
+import static app.mediabrainz.data.room.entity.Suggestion.SuggestionField.USER;
 
 
 public class SearchActivity extends BaseActivity implements
@@ -374,11 +378,23 @@ public class SearchActivity extends BaseActivity implements
 
     private void saveQueryAsSuggestion() {
         if (MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
-            SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-            searchRecentSuggestions.saveRecentQuery(artistSearch, null);
-            searchRecentSuggestions.saveRecentQuery(albumSearch, null);
-            searchRecentSuggestions.saveRecentQuery(trackSearch, null);
-            searchRecentSuggestions.saveRecentQuery(searchQuery, null);
+            SuggestionRepository suggestionRepository = new SuggestionRepository();
+            if (!TextUtils.isEmpty(artistSearch)) {
+                suggestionRepository.insert(new Suggestion(artistSearch, ARTIST));
+            }
+            if (!TextUtils.isEmpty(albumSearch)) {
+                suggestionRepository.insert(new Suggestion(albumSearch, ALBUM));
+            }
+            if (!TextUtils.isEmpty(trackSearch)) {
+                suggestionRepository.insert(new Suggestion(trackSearch, TRACK));
+            }
+            if (!TextUtils.isEmpty(searchQuery)) {
+                if (searchType == SearchType.TAG.ordinal()) {
+                    suggestionRepository.insert(new Suggestion(searchQuery, Suggestion.SuggestionField.TAG));
+                } else if (searchType == SearchType.USER.ordinal()) {
+                    suggestionRepository.insert(new Suggestion(searchQuery, USER));
+                }
+            }
         }
     }
 

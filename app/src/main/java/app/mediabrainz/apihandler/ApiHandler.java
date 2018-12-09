@@ -1,18 +1,17 @@
 package app.mediabrainz.apihandler;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Consumer;
 
 import java.util.concurrent.TimeUnit;
 
+import app.mediabrainz.functions.ErrorHandler;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava2.Result;
-
-import app.mediabrainz.functions.Consumer;
-import app.mediabrainz.functions.ErrorHandler;
 
 
 public class ApiHandler {

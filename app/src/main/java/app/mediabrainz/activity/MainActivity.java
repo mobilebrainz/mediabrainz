@@ -3,13 +3,13 @@ package app.mediabrainz.activity;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.fragment.SearchFragment;
 import app.mediabrainz.fragment.SelectedSearchFragment;
 import app.mediabrainz.intent.ActivityFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
@@ -50,7 +50,13 @@ public class MainActivity extends BaseActivity implements
                 }
             });
         }
-        load();
+
+        if (checkNetworkConnection()) {
+            load();
+        } else {
+            viewError(true);
+            errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        }
     }
 
     private void load() {

@@ -1,8 +1,11 @@
 package app.mediabrainz.fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +13,27 @@ import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+
 import java.util.List;
 
+import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
-import app.mediabrainz.api.lastfm.model.Album;
+import app.mediabrainz.api.externalResources.progarchives.ProgarchivesResponse;
+import app.mediabrainz.api.externalResources.progarchives.ProgarchivesService;
+import app.mediabrainz.api.externalResources.rateyourmusic.RateyourmusicResponse;
+import app.mediabrainz.api.externalResources.rateyourmusic.RateyourmusicService;
+import app.mediabrainz.api.externalResources.lastfm.model.Album;
 import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.Rating;
 import app.mediabrainz.api.model.Release;
 import app.mediabrainz.api.model.ReleaseGroup;
+import app.mediabrainz.api.model.Url;
 import app.mediabrainz.communicator.GetReleaseCommunicator;
+import app.mediabrainz.communicator.GetRequestQueueCommunicator;
+import app.mediabrainz.communicator.GetUrlsCommunicator;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.ShowUtil;
 import app.mediabrainz.util.StringFormat;
@@ -29,10 +44,12 @@ import static app.mediabrainz.MediaBrainzApp.oauth;
 
 public class ReleaseRatingsFragment extends LazyFragment {
 
+    public static final String TAG = "ReleaseRatingsFragment";
     private final float LASTFM_ALBUM_LISTENERS_COEFF = 75;
     private final float LASTFM_ALBUM_PLAYCOUNT_COEFF = 300;
 
     private ReleaseGroup releaseGroup;
+    private boolean isLoadRatingsEnabled;
 
     private View content;
     private View error;
@@ -40,11 +57,25 @@ public class ReleaseRatingsFragment extends LazyFragment {
     private TextView loginWarning;
     private TextView allRatingText;
     private RatingBar userRatingBar;
-    private TableLayout lastfmTable;
+
+    private TableLayout ratingsTable;
+    private View lastfmPlaycountTableRow;
+    private View lastfmListenersTableRow;
     private TextView lastfmListeners;
     private TextView lastfmPlaycount;
     private RatingBar lastfmListenersRatingBar;
     private RatingBar lastfmPlaycountRatingBar;
+
+    private View rateyourmusicTableRow;
+    private RatingBar rateyourmusicRatingBar;
+    private TextView rateyourmusicNumber;
+    private View rateyourmusicLoading;
+
+    private View progarchivesTableRow;
+    private RatingBar progarchivesRatingBar;
+    private TextView progarchivesNumber;
+    private View progarchivesLoading;
+
 
     public static ReleaseRatingsFragment newInstance() {
         Bundle args = new Bundle();
@@ -63,11 +94,24 @@ public class ReleaseRatingsFragment extends LazyFragment {
         loginWarning = layout.findViewById(R.id.login_warning);
         allRatingText = layout.findViewById(R.id.all_rating_text);
         userRatingBar = layout.findViewById(R.id.user_rating_bar);
-        lastfmTable = layout.findViewById(R.id.lastfm_table);
+
+        ratingsTable = layout.findViewById(R.id.ratings_table);
+        lastfmPlaycountTableRow = layout.findViewById(R.id.lastfm_playcount_tableRow);
+        lastfmListenersTableRow = layout.findViewById(R.id.lastfm_listeners_tableRow);
         lastfmListeners = layout.findViewById(R.id.lastfm_listeners);
         lastfmPlaycount = layout.findViewById(R.id.lastfm_playcount);
         lastfmListenersRatingBar = layout.findViewById(R.id.lastfm_listeners_rating_bar);
         lastfmPlaycountRatingBar = layout.findViewById(R.id.lastfm_playcount_rating_bar);
+
+        rateyourmusicTableRow = layout.findViewById(R.id.rateyourmusic_tableRow);
+        rateyourmusicRatingBar = layout.findViewById(R.id.rateyourmusic_rating_bar);
+        rateyourmusicNumber = layout.findViewById(R.id.rateyourmusic_number);
+        rateyourmusicLoading = layout.findViewById(R.id.rateyourmusic_loading);
+
+        progarchivesTableRow = layout.findViewById(R.id.progarchives_tableRow);
+        progarchivesRatingBar = layout.findViewById(R.id.progarchives_rating_bar);
+        progarchivesNumber = layout.findViewById(R.id.progarchives_number);
+        progarchivesLoading = layout.findViewById(R.id.progarchives_loading);
 
         setEditListeners();
         loadView();
@@ -79,6 +123,9 @@ public class ReleaseRatingsFragment extends LazyFragment {
     public void onStart() {
         super.onStart();
         loginWarning.setVisibility(oauth.hasAccount() ? View.GONE : View.VISIBLE);
+        if (isLoadRatingsEnabled != MediaBrainzApp.getPreferences().isLoadRatingsEnabled()) {
+            lazyLoad();
+        }
     }
 
     private void setEditListeners() {
@@ -106,7 +153,16 @@ public class ReleaseRatingsFragment extends LazyFragment {
             releaseGroup = release.getReleaseGroup();
             setUserRating();
             setAllRating();
-            setLastfmInfo();
+
+            isLoadRatingsEnabled = MediaBrainzApp.getPreferences().isLoadRatingsEnabled();
+            if (isLoadRatingsEnabled) {
+                ratingsTable.setVisibility(View.VISIBLE);
+                setLastfmInfo();
+                setRateyourmusicRating();
+                setProgarchivesRating();
+            } else {
+                ratingsTable.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -132,6 +188,90 @@ public class ReleaseRatingsFragment extends LazyFragment {
         }
     }
 
+    private void setRateyourmusicRating() {
+        rateyourmusicTableRow.setVisibility(View.GONE);
+        List<Url> urls = ((GetUrlsCommunicator) getContext()).getUrls();
+
+        if (urls != null && !urls.isEmpty()) {
+            for (Url url : urls) {
+                String res = url.getResource();
+                if (res.contains("rateyourmusic")) {
+
+                    rateyourmusicTableRow.setVisibility(View.VISIBLE);
+                    rateyourmusicLoading.setVisibility(View.VISIBLE);
+                    rateyourmusicRatingBar.setVisibility(View.GONE);
+
+                    RequestQueue requestQueue = ((GetRequestQueueCommunicator) getContext()).getRequestQueue();
+                    String httpsRes = res.replace("http:", "https:");
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, httpsRes,
+                            response -> {
+                                RateyourmusicResponse rateyourmusicResponse = new RateyourmusicService().parseResponse(response);
+                                String avgRating = rateyourmusicResponse.getAvgRating();
+                                String numRating = rateyourmusicResponse.getNumRating();
+
+                                if (!TextUtils.isEmpty(avgRating) && !TextUtils.isEmpty(numRating)) {
+                                    rateyourmusicRatingBar.setRating(Float.valueOf(avgRating));
+                                    rateyourmusicNumber.setText(avgRating + "(" + numRating + ")");
+                                    rateyourmusicLoading.setVisibility(View.GONE);
+                                    rateyourmusicRatingBar.setVisibility(View.VISIBLE);
+                                    rateyourmusicTableRow.setOnClickListener(
+                                            v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(httpsRes))));
+                                } else {
+                                    rateyourmusicTableRow.setVisibility(View.GONE);
+                                }
+                            },
+                            error -> rateyourmusicTableRow.setVisibility(View.GONE));
+
+                    stringRequest.setTag(TAG);
+                    requestQueue.add(stringRequest);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void setProgarchivesRating() {
+        progarchivesTableRow.setVisibility(View.GONE);
+        List<Url> urls = ((GetUrlsCommunicator) getContext()).getUrls();
+
+        if (urls != null && !urls.isEmpty()) {
+            for (Url url : urls) {
+                String res = url.getResource();
+                if (res.contains("progarchives")) {
+
+                    progarchivesTableRow.setVisibility(View.VISIBLE);
+                    progarchivesLoading.setVisibility(View.VISIBLE);
+                    progarchivesRatingBar.setVisibility(View.GONE);
+
+                    RequestQueue requestQueue = ((GetRequestQueueCommunicator) getContext()).getRequestQueue();
+                    String httpsRes = res.replace("http:", "https:");
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, httpsRes,
+                            response -> {
+                                ProgarchivesResponse progarchivesResponse = new ProgarchivesService().parseResponse(response);
+                                String avgRating = progarchivesResponse.getAvgRating();
+                                String numRating = progarchivesResponse.getNumRating();
+
+                                if (!TextUtils.isEmpty(avgRating) && !TextUtils.isEmpty(numRating)) {
+                                    progarchivesRatingBar.setRating(Float.valueOf(avgRating));
+                                    progarchivesNumber.setText(avgRating + "(" + numRating + ")");
+                                    progarchivesLoading.setVisibility(View.GONE);
+                                    progarchivesRatingBar.setVisibility(View.VISIBLE);
+                                    progarchivesTableRow.setOnClickListener(
+                                            v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(httpsRes))));
+                                } else {
+                                    progarchivesTableRow.setVisibility(View.GONE);
+                                }
+                            },
+                            error -> progarchivesTableRow.setVisibility(View.GONE));
+
+                    stringRequest.setTag(TAG);
+                    requestQueue.add(stringRequest);
+                    break;
+                }
+            }
+        }
+    }
+
     private void setLastfmInfo() {
         List<Artist.ArtistCredit> artistCredit = releaseGroup.getArtistCredit();
         if (artistCredit != null && !artistCredit.isEmpty()) {
@@ -142,7 +282,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
                         viewProgressLoading(false);
                         Album album = info.getAlbum();
                         if (album != null) {
-                            lastfmTable.setVisibility(View.VISIBLE);
+                            lastfmPlaycountTableRow.setVisibility(View.VISIBLE);
+                            lastfmListenersTableRow.setVisibility(View.VISIBLE);
 
                             int listeners = album.getListeners();
                             int playCount = album.getPlaycount();
@@ -153,16 +294,19 @@ public class ReleaseRatingsFragment extends LazyFragment {
                             lastfmListenersRatingBar.setRating((float) Math.sqrt(listeners) / LASTFM_ALBUM_LISTENERS_COEFF);
                             lastfmPlaycountRatingBar.setRating((float) Math.sqrt(playCount) / LASTFM_ALBUM_PLAYCOUNT_COEFF);
                         } else {
-                            lastfmTable.setVisibility(View.GONE);
+                            lastfmPlaycountTableRow.setVisibility(View.GONE);
+                            lastfmListenersTableRow.setVisibility(View.GONE);
                         }
                     },
                     t -> {
-                        lastfmTable.setVisibility(View.GONE);
+                        lastfmPlaycountTableRow.setVisibility(View.GONE);
+                        lastfmListenersTableRow.setVisibility(View.GONE);
                         showConnectionWarning(t);
                     }
             );
         } else {
-            lastfmTable.setVisibility(View.GONE);
+            lastfmPlaycountTableRow.setVisibility(View.GONE);
+            lastfmListenersTableRow.setVisibility(View.GONE);
         }
     }
 

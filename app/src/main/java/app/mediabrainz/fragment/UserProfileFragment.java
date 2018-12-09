@@ -72,7 +72,6 @@ public class UserProfileFragment extends LazyFragment {
         return layout;
     }
 
-
     @Override
     protected void lazyLoad() {
         viewError(false);

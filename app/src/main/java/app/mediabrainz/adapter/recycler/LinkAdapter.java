@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.api.model.Url;
-
-import java.util.List;
 
 
 public class LinkAdapter extends BaseRecyclerViewAdapter<LinkAdapter.LinkViewHolder> {
@@ -55,10 +55,10 @@ public class LinkAdapter extends BaseRecyclerViewAdapter<LinkAdapter.LinkViewHol
                     iconId = R.drawable.ic_film_24;
                     break;
                 case "fanpage":
-                    iconId = R.drawable.ic_community_24;
+                    iconId = R.drawable.ic_community_24_dark;
                     break;
                 case "online community":
-                    iconId = R.drawable.ic_community_24;
+                    iconId = R.drawable.ic_community_24_dark;
                     break;
                 case "wikipedia":
                     iconId = R.drawable.ic_wikipedia_24;

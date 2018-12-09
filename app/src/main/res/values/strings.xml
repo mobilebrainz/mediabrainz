@@ -7,6 +7,9 @@
     <string name="retry">Retry</string>
     <string name="unknown">Unknown</string>
 
+    <string name="error_connect_title">No Internet Connection</string>
+    <string name="error_connect_message">Please check your internet connection and try again</string>
+
     <string name="select_items">Select items</string>
     <string name="select_item">Select item</string>
     <string name="select_all">Select all</string>
@@ -249,6 +252,7 @@
     <string name="settings_clear_recommends">Clear recommends</string>
     <string name="settings_title_images">Images</string>
     <string name="settings_load_images">Load images</string>
+    <string name="settings_load_ratings">Load ratings from external resources</string>
     <string name="settings_title_miscellanea">Miscellanea</string>
 
     <!-- ImageActivity -->
@@ -257,6 +261,8 @@
     <!-- Rate & Tags -->
     <string name="lastfm_listeners">last.fm listeners:</string>
     <string name="lastfm_playcount">last.fm play count:</string>
+    <string name="rateyourmusic">rateyourmusic.com:</string>
+    <string name="progarchives">progarchives.com:</string>
 
     <!-- ArtistArtistRelationType -->
     <string name="rel_cuttent_member_of_band">Current Member Of Band</string>
@@ -312,9 +318,23 @@
     <string name="title_user_collections">Collections</string>
     <string name="title_user_ratings">Ratings</string>
     <string name="title_user_tags">Tags</string>
+    <string name="title_send_message">Send message</string>
     <string name="title_user_recommends">Recommends</string>
+    <string name="title_user_users">Users</string>
     <string name="title_create_collection">Create Collection</string>
     <string name="title_edit_collection">Edit Collection</string>
+
+    <string name="user_profile_tab_profile">Profile</string>
+    <string name="user_profile_tab_users">Users</string>
+    <string name="user_added">User was added successfully!</string>
+    <string name="user_delete_user">Delete user from users</string>
+
+    <string name="send_email_subject_hint">Subject:</string>
+    <string name="send_email_message_hint">Message:</string>
+    <string name="send_email_send_btn">Send</string>
+    <string name="send_email_to_title">to %1$s</string>
+    <string name="send_email_reveal_email">Reveal my email address</string>
+    <string name="send_email_success">Your email has been successfully sent!</string>
 
     <!-- UserProfileFragment -->
     <string name="user_profile_user_type">User type: %1$s</string>

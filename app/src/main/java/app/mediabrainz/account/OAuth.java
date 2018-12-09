@@ -5,18 +5,18 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Consumer;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import app.mediabrainz.apihandler.ApiHandler;
 import app.mediabrainz.api.Config;
 import app.mediabrainz.api.oauth.OAuthCredential;
 import app.mediabrainz.api.oauth.OAuthService;
+import app.mediabrainz.apihandler.ApiHandler;
 import app.mediabrainz.functions.Action;
-import app.mediabrainz.functions.Consumer;
 import app.mediabrainz.functions.DisposableAction;
 import app.mediabrainz.functions.ErrorHandler;
 import app.mediabrainz.util.ShowUtil;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import static app.mediabrainz.account.MediaBrainzAccount.ACCESS_TOKEN;
 import static app.mediabrainz.account.MediaBrainzAccount.ACCOUNT_TYPE;
