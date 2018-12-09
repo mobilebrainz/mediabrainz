@@ -18,6 +18,7 @@ import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.data.room.repository.SuggestionRepository;
 
 
+@SuppressWarnings("unchecked")
 public class SuggestionListAdapter extends ArrayAdapter {
 
     private static final int LAYOUT_ID = R.layout.layout_dropdown_item;
@@ -32,7 +33,7 @@ public class SuggestionListAdapter extends ArrayAdapter {
         this(context, new ArrayList<>(), suggestionField);
     }
 
-    public SuggestionListAdapter(Context context, List<Suggestion> dataList, Suggestion.SuggestionField suggestionField) {
+    private SuggestionListAdapter(Context context, List<Suggestion> dataList, Suggestion.SuggestionField suggestionField) {
         super(context, LAYOUT_ID, dataList);
         this.dataList = dataList;
         this.suggestionField = suggestionField;
@@ -48,6 +49,7 @@ public class SuggestionListAdapter extends ArrayAdapter {
         return dataList.get(position);
     }
 
+    @NonNull
     @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
         if (view == null) {
@@ -65,7 +67,7 @@ public class SuggestionListAdapter extends ArrayAdapter {
     }
 
     public class ListFilter extends Filter {
-        private Object lock = new Object();
+        private final Object lock = new Object();
 
         @Override
         protected FilterResults performFiltering(CharSequence prefix) {
