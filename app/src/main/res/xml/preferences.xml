@@ -25,6 +25,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_title_tags_and_genres">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="propagate_artist_tags"
+            android:title="@string/settings_propagate_artist_tags"/>
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_title_miscellanea">
 
         <Preference

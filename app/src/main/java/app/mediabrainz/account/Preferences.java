@@ -15,6 +15,7 @@ public class Preferences {
         String SUGGESTIONS = "search_suggestions";
         String LOAD_IMAGES = "load_images";
         String LOAD_RATINGS = "load_ratings";
+        String PROPAGATE_ARTIST_TAGS = "propagate_artist_tags";
     }
 
     public void clearData() {
@@ -42,6 +43,10 @@ public class Preferences {
 
     public boolean isLoadRatingsEnabled() {
         return getDefaultPreferences().getBoolean(PreferenceName.LOAD_RATINGS, true);
+    }
+
+    public boolean isPropagateArtistTags() {
+        return getDefaultPreferences().getBoolean(PreferenceName.PROPAGATE_ARTIST_TAGS, false);
     }
 
     private SharedPreferences getDefaultPreferences() {

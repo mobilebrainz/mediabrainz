@@ -3,9 +3,8 @@ package app.mediabrainz.api.other;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Flowable;
-import retrofit2.adapter.rxjava2.Result;
 import app.mediabrainz.api.Config;
+import app.mediabrainz.api.core.BaseWebService;
 import app.mediabrainz.api.model.xml.ArtistXML;
 import app.mediabrainz.api.model.xml.IsrcXML;
 import app.mediabrainz.api.model.xml.Metadata;
@@ -13,7 +12,8 @@ import app.mediabrainz.api.model.xml.RecordingXML;
 import app.mediabrainz.api.model.xml.ReleaseGroupXML;
 import app.mediabrainz.api.model.xml.ReleaseXML;
 import app.mediabrainz.api.model.xml.UserTagXML;
-import app.mediabrainz.api.core.BaseWebService;
+import io.reactivex.Flowable;
+import retrofit2.adapter.rxjava2.Result;
 
 
 public class PostWebService extends BaseWebService implements PostWebServiceInterface {
@@ -112,6 +112,39 @@ public class PostWebService extends BaseWebService implements PostWebServiceInte
         releaseGroupXML.addUserTags(tags);
         Metadata metadata = new Metadata();
         metadata.addReleaseGroups(releaseGroupXML);
+        return getXmlRetrofitService().postMetadata(PathType.TAG.toString(), metadata, map);
+    }
+
+    @Override
+    public Flowable<Result<Metadata>> postTagToArtists(UserTagXML tag, String... artistIds) {
+        Metadata metadata = new Metadata();
+        for (String artistId : artistIds) {
+            ArtistXML artistXML = new ArtistXML(artistId);
+            artistXML.addUserTags(tag);
+            metadata.addArtists(artistXML);
+        }
+        return getXmlRetrofitService().postMetadata(PathType.TAG.toString(), metadata, map);
+    }
+
+    @Override
+    public Flowable<Result<Metadata>> postTagToReleaseGroups(UserTagXML tag, String... releaseGroupIds) {
+        Metadata metadata = new Metadata();
+        for (String releaseGroupId : releaseGroupIds) {
+            ReleaseGroupXML releaseGroupXML = new ReleaseGroupXML(releaseGroupId);
+            releaseGroupXML.addUserTags(tag);
+            metadata.addReleaseGroups(releaseGroupXML);
+        }
+        return getXmlRetrofitService().postMetadata(PathType.TAG.toString(), metadata, map);
+    }
+
+    @Override
+    public Flowable<Result<Metadata>> postTagToRecordings(UserTagXML tag, String... recordingIds) {
+        Metadata metadata = new Metadata();
+        for (String recordingId : recordingIds) {
+            RecordingXML recordingXML = new RecordingXML(recordingId);
+            recordingXML.addUserTags(tag);
+            metadata.addRecordings(recordingXML);
+        }
         return getXmlRetrofitService().postMetadata(PathType.TAG.toString(), metadata, map);
     }
 

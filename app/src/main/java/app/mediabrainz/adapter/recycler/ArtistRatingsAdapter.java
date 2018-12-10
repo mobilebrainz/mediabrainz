@@ -80,14 +80,14 @@ public class ArtistRatingsAdapter extends BasePagedListAdapter<Rating> {
                                     if (metadata.getMessage().getText().equals("OK")) {
                                         ratingBar.setRating(rate);
                                     } else {
-                                        ShowUtil.showToast(itemView.getContext(), "Error");
+                                        ShowUtil.showToast(itemView.getContext(), R.string.error_post_rating);
                                     }
                                     alertDialog.dismiss();
                                 },
                                 t -> {
                                     ratingProgress.setVisibility(View.INVISIBLE);
                                     rb.setAlpha(1.0F);
-                                    ShowUtil.showToast(itemView.getContext(), t.getMessage());
+                                    ShowUtil.showToast(itemView.getContext(), R.string.error_post_rating);
                                     alertDialog.dismiss();
                                 });
                     }

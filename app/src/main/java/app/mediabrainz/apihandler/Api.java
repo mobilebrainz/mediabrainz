@@ -533,6 +533,18 @@ public class Api {
                 errorHandler);
     }
 
+    public Disposable postTagToReleaseGroups(String tag, UserTagXML.VoteType voteType, List<ReleaseGroup> releaseGroups, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
+        String[] ids = new String[releaseGroups.size()];
+        for (int i = 0; i < ids.length; ++i) {
+            ids[i] = releaseGroups.get(i).getId();
+        }
+        return oauth.refreshToken(
+                () -> ApiHandler.subscribe(
+                        new PostWebService(CLIENT).postTagToReleaseGroups(new UserTagXML(tag, voteType), ids),
+                        consumer, errorHandler),
+                errorHandler);
+    }
+
     public Disposable getArtistRatings(String artistMbid, Consumer<Artist> consumer, ErrorHandler errorHandler) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe(

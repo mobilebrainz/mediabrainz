@@ -254,6 +254,8 @@
     <string name="settings_load_images">Load images</string>
     <string name="settings_load_ratings">Load ratings from external resources</string>
     <string name="settings_title_miscellanea">Miscellanea</string>
+    <string name="settings_title_tags_and_genres">Tags and Genres</string>
+    <string name="settings_propagate_artist_tags">Propagate artist tags to official albums</string>
 
     <!-- ImageActivity -->
     <string name="error_image_loading">Error loading of image</string>
@@ -383,5 +385,11 @@
     <string name="recording_info_tab_info">Info</string>
     <string name="recording_info_tab_credits">Credits</string>
     <string name="show_lyrics_site">Show full version http://lyrics.wikia.com</string>
+
+
+    <string name="tag_propagated_to_albums">Tag was propagated to official albums successfully!</string>
+    <string name="error_tag_propagation_to_albums">Error of tag propagation to official albums</string>
+    <string name="error_post_tag">Error post tag</string>
+    <string name="error_post_rating">Error post rating</string>
 
 </resources>

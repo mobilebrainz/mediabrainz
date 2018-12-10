@@ -14,6 +14,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.EditTagsPagerAdapter;
 import app.mediabrainz.api.model.Artist;
@@ -27,13 +31,12 @@ import app.mediabrainz.communicator.GetReleaseGroupCommunicator;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.ShowUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 import static app.mediabrainz.adapter.pager.EditTagsPagerAdapter.TagsTab.GENRES;
 import static app.mediabrainz.adapter.pager.EditTagsPagerAdapter.TagsTab.TAGS;
+import static app.mediabrainz.api.model.ReleaseGroup.PrimaryType.ALBUM;
+import static app.mediabrainz.api.model.ReleaseGroup.SecondaryType.NOTHING;
 
 
 public class EditTagsPagerFragment extends LazyFragment implements
@@ -200,19 +203,52 @@ public class EditTagsPagerFragment extends LazyFragment implements
                                     artist.setUserTags(a.getUserTags());
                                     artist.setGenres(a.getGenres());
                                     artist.setUserGenres(a.getUserGenres());
-                                    lazyLoad();
                                     tagInput.setText("");
-                                    viewProgressLoading(false);
+
+                                    if (MediaBrainzApp.getPreferences().isPropagateArtistTags()) {
+                                        propagateTagToAlbums(tag, voteType);
+                                    } else {
+                                        lazyLoad();
+                                    }
                                 },
                                 this::showConnectionWarning
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showMessage(getActivity(), "Error");
+                        ShowUtil.showToast(getContext(), R.string.error_post_tag);
                     }
                 },
                 this::showConnectionWarning
         );
+    }
+
+    public void propagateTagToAlbums(String tag, UserTagXML.VoteType voteType) {
+        api.searchOfficialReleaseGroups(artist.getId(),
+                releaseGroupSearch -> {
+                    if (releaseGroupSearch.getCount() > 0) {
+                        api.postTagToReleaseGroups(
+                                tag, voteType, releaseGroupSearch.getReleaseGroups(),
+                                metadata1 -> {
+                                    if (metadata1.getMessage().getText().equals("OK")) {
+                                        ShowUtil.showToast(getContext(), R.string.tag_propagated_to_albums);
+                                    } else {
+                                        ShowUtil.showToast(getContext(), R.string.error_tag_propagation_to_albums);
+                                    }
+                                    lazyLoad();
+                                },
+                                t -> {
+                                    lazyLoad();
+                                    ShowUtil.showToast(getContext(), R.string.error_tag_propagation_to_albums);
+                                });
+                    } else {
+                        lazyLoad();
+                    }
+                },
+                t -> {
+                    lazyLoad();
+                    ShowUtil.showToast(getContext(), R.string.error_tag_propagation_to_albums);
+                },
+                100, 0, ALBUM, NOTHING);
     }
 
     public void postReleaseGroupTag(String tag, UserTagXML.VoteType voteType) {
@@ -235,7 +271,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showMessage(getActivity(), "Error");
+                        ShowUtil.showToast(getContext(), R.string.error_post_tag);
                     }
                 },
                 this::showConnectionWarning
@@ -262,7 +298,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showMessage(getActivity(), "Error");
+                        ShowUtil.showToast(getContext(), R.string.error_post_tag);
                     }
                 },
                 this::showConnectionWarning
