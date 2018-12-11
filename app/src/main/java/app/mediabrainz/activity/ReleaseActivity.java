@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -111,6 +112,29 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         if (requestQueue != null) {
             requestQueue.cancelAll(TAG);
             requestQueue.cancelAll(ReleaseRatingsFragment.TAG);
+        }
+    }
+
+    @Override
+    protected int getOptionsMenu() {
+        return R.menu.release_top_nav;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_share:
+                if (releaseGroup != null) {
+                    shareActionText("https://musicbrainz.org/release-group/" + releaseGroup.getId());
+                }
+                return true;
+
+            case R.id.action_settings:
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(menuItem);
         }
     }
 

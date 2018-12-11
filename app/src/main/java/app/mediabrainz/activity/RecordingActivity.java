@@ -7,6 +7,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -88,6 +89,29 @@ public class RecordingActivity extends BaseBottomNavActivity implements
         floatingActionButton = findViewById(R.id.floatin_action_btn);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
         showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.ADD_TO_COLLECTION);
+    }
+
+    @Override
+    protected int getOptionsMenu() {
+        return R.menu.recording_top_nav;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_share:
+                if (!TextUtils.isEmpty(mbid)) {
+                    shareActionText("https://musicbrainz.org/release-group/" + mbid);
+                }
+                return true;
+
+            case R.id.action_settings:
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
     }
 
     @Override

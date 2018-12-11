@@ -45,7 +45,7 @@
     <string name="edit_login">You must log in before you can edit!</string>
     <string name="tag_hint">Tag (genre)</string>
 
-    <!-- MainActivity -->
+    <!-- SearchActivity -->
     <string name="description_search">Search</string>
     <string name="log_in_btn">LOG IN</string>
 
@@ -55,7 +55,7 @@
     <string name="track_field_hint">Track</string>
     <string name="search_btn">SEARCH</string>
 
-    <!-- SearchActivity -->
+    <!-- ResultSearchActivity -->
     <string name="search_artist_title">Search Artist</string>
     <string name="search_album_title">Search Album</string>
     <string name="search_track_title">Search Track</string>
@@ -198,7 +198,7 @@
     <string name="barcode_btn">Add barcode</string>
     <string name="barcode_cancel">Cancel</string>
 
-    <!-- SearchActivity -->
+    <!-- ResultSearchActivity -->
     <string name="barcode_text_hint">Barcode</string>
     <string name="barcode_release_hint">Release</string>
     <string name="barcode_instructions">Search for release to add barcode.</string>
@@ -242,6 +242,8 @@
     <string name="action_user_profile">User Profile</string>
     <string name="action_scan_barcode">Scan Barcode</string>
     <string name="action_search_artist">Search artist</string>
+    <string name="action_share">Share</string>
+    <string name="action_settings">Settings</string>
     <string name="search_artist_hint">Search artist</string>
 
     <!-- Preferences -->
