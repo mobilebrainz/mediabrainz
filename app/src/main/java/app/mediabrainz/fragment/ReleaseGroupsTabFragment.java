@@ -3,6 +3,7 @@ package app.mediabrainz.fragment;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,10 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.ReleaseGroupsPagerAdapter;
 import app.mediabrainz.adapter.recycler.ReleaseGroupsAdapter;
@@ -26,8 +27,12 @@ import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
 import app.mediabrainz.data.Status;
 import app.mediabrainz.ui.ReleaseGroupsViewModel;
 
+import static app.mediabrainz.account.Preferences.PreferenceName.RELEASE_GROUP_OFFICIAL;
 
-public class ReleaseGroupsTabFragment extends LazyFragment implements RetryCallback {
+
+public class ReleaseGroupsTabFragment extends LazyFragment implements
+        RetryCallback,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String RELEASES_TAB = "RELEASES_TAB";
 
@@ -38,7 +43,6 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements RetryCallb
     private RecyclerView pagedRecycler;
     private ReleaseGroupsAdapter adapter;
 
-    private CheckBox officialCheckBox;
     private TextView errorMessageTextView;
     private Button retryLoadingButton;
     private ProgressBar loadingProgressBar;
@@ -61,7 +65,6 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements RetryCallb
 
         releaseGroupType = ReleaseGroupsPagerAdapter.ReleaseTab.values()[getArguments().getInt(RELEASES_TAB)];
 
-        officialCheckBox = layout.findViewById(R.id.official_checkbox);
         pagedRecycler = layout.findViewById(R.id.paged_recycler);
         swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
@@ -83,7 +86,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements RetryCallb
             adapter.setHolderClickListener(releaseGroup -> ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(releaseGroup.getId()));
 
             releaseGroupsViewModel = ViewModelProviders.of(this).get(ReleaseGroupsViewModel.class);
-            mutableIsOfficial.setValue(officialCheckBox.isChecked());
+            mutableIsOfficial.setValue(MediaBrainzApp.getPreferences().isReleaseGroupOfficial());
             releaseGroupsViewModel.load(artistMbid, releaseGroupType.getAlbumType(), mutableIsOfficial);
             releaseGroupsViewModel.realeseGroupLiveData.observe(this, adapter::submitList);
             releaseGroupsViewModel.getNetworkState().observe(this, adapter::setNetworkState);
@@ -94,12 +97,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements RetryCallb
             pagedRecycler.setHasFixedSize(true);
             pagedRecycler.setAdapter(adapter);
 
-            officialCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                mutableIsOfficial.setValue(isChecked);
-                releaseGroupsViewModel.refresh();
-                swipeRefreshLayout.setRefreshing(false);
-                pagedRecycler.scrollToPosition(0);
-            });
+            MediaBrainzApp.getPreferences().registerOnSharedPreferenceChangeListener(this);
 
             initSwipeToRefresh();
         }
@@ -137,6 +135,33 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements RetryCallb
         if (releaseGroupsViewModel != null) {
             releaseGroupsViewModel.retry();
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(RELEASE_GROUP_OFFICIAL)) {
+            if (!loadView()) {
+                pagedRecycler.setAdapter(null);
+                setLoaded(false);
+            }
+            /*
+            if (getUserVisibleHint()) {
+                mutableIsOfficial.setValue(MediaBrainzApp.getPreferences().isReleaseGroupOfficial());
+                releaseGroupsViewModel.refresh();
+                swipeRefreshLayout.setRefreshing(false);
+                pagedRecycler.scrollToPosition(0);
+            } else {
+                pagedRecycler.setAdapter(null);
+                setLoaded(false);
+            }
+            */
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MediaBrainzApp.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
 }

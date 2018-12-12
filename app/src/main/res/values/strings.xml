@@ -254,10 +254,17 @@
     <string name="settings_clear_recommends">Clear recommends</string>
     <string name="settings_title_images">Images</string>
     <string name="settings_load_images">Load images</string>
-    <string name="settings_load_ratings">Load ratings from external resources</string>
+    <string name="settings_title_load_ratings">Load ratings</string>
+    <string name="settings_summary_load_ratings">Load ratings from external resources</string>
+
     <string name="settings_title_miscellanea">Miscellanea</string>
-    <string name="settings_title_tags_and_genres">Tags and Genres</string>
-    <string name="settings_propagate_artist_tags">Propagate artist tags to official albums</string>
+    <string name="settings_summary_propagate_artist_tags">Propagate artist tags to official albums</string>
+    <string name="settings_title_propagate_artist_tags">Propagate artist tags</string>
+
+    <string name="settings_title_artist_preferences">Artist Preferences</string>
+    <string name="settings_summary_release_group_official">Show only official release groups</string>
+    <string name="settings_title_release_group_official">Official release groups</string>
+
 
     <!-- ImageActivity -->
     <string name="error_image_loading">Error loading of image</string>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/app_background"
+              android:orientation="vertical">
+
+    <!-- bug in android 28.0.0: left indent in preference screen -->
+    <FrameLayout
+        android:id="@+id/settings_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-40dp"/>
+
+</LinearLayout>

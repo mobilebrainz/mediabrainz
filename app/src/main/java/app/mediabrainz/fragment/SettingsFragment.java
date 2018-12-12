@@ -3,8 +3,9 @@ package app.mediabrainz.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import app.mediabrainz.R;
@@ -12,7 +13,7 @@ import app.mediabrainz.data.room.repository.RecommendRepository;
 import app.mediabrainz.data.room.repository.SuggestionRepository;
 
 
-public class SettingsFragment extends PreferenceFragment implements
+public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String CLEAR_SUGGESTIONS = "clear_suggestions";
@@ -29,9 +30,8 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+    public void onCreatePreferences(Bundle bundle, String s) {
+        setPreferencesFromResource(R.xml.preferences, s);
 
         findPreference(CLEAR_SUGGESTIONS).setOnPreferenceClickListener(preference -> {
             if (preference.getKey().equals(CLEAR_SUGGESTIONS)) {
@@ -80,6 +80,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 
 }
