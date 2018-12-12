@@ -17,7 +17,8 @@
     </style>
 
     <style name="PopupMenuTheme" parent="Theme.AppCompat.Light">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/actionMenuTextColor</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
