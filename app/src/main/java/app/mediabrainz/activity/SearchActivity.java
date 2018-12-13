@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.fragment.SearchFragment;
 import app.mediabrainz.fragment.SelectedSearchFragment;
@@ -20,7 +18,6 @@ public class SearchActivity extends BaseActivity implements
         SearchFragment.SearchFragmentListener,
         SelectedSearchFragment.SelectedSearchFragmentListener {
 
-    private List<String> genres = new ArrayList<>();
     private boolean isLoading;
     private boolean isError;
 
@@ -69,12 +66,14 @@ public class SearchActivity extends BaseActivity implements
     private void load() {
         viewError(false);
 
-        viewProgressLoading(true);
-        api.getGenres(g -> {
-                    viewProgressLoading(false);
-                    genres = g;
-                },
-                this::showConnectionWarning);
+        if (MediaBrainzApp.getGenres().isEmpty()) {
+            viewProgressLoading(true);
+            api.getGenres(g -> {
+                        viewProgressLoading(false);
+                        MediaBrainzApp.setGenres(g);
+                    },
+                    this::showConnectionWarning);
+        }
     }
 
     @Override
@@ -103,11 +102,6 @@ public class SearchActivity extends BaseActivity implements
         viewProgressLoading(false);
         viewError(true);
         errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
-    }
-
-    @Override
-    public List<String> getGenres() {
-        return genres;
     }
 
     protected void viewError(boolean isView) {

@@ -19,17 +19,15 @@ import java.util.List;
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.activity.SearchType;
+import app.mediabrainz.adapter.SuggestionListAdapter;
 import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.intent.ActivityFactory;
-import app.mediabrainz.adapter.SuggestionListAdapter;
 
 
 public class SelectedSearchFragment extends Fragment {
 
     public interface SelectedSearchFragmentListener {
         void searchType(SearchType searchType, String query);
-
-        List<String> getGenres();
     }
 
     private List<String> genres = new ArrayList<>();
@@ -76,9 +74,7 @@ public class SelectedSearchFragment extends Fragment {
         searchTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 if (SearchType.TAG.ordinal() == pos) {
-                    if (genres.isEmpty()) {
-                        genres = ((SelectedSearchFragmentListener) getContext()).getGenres();
-                    }
+                    genres = MediaBrainzApp.getGenres();
                     if (!genres.isEmpty()) {
                         if (adapter == null) {
                             adapter = new ArrayAdapter<>(
