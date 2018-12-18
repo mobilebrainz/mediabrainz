@@ -17,15 +17,14 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
     <application
-        android:name="app.mediabrainz.MediaBrainzApp"
+        android:name=".MediaBrainzApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <service android:name="app.mediabrainz.account.MediaBrainzAuthenticatorService">
+        <service android:name=".account.MediaBrainzAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -36,7 +35,7 @@
         </service>
 
         <activity
-            android:name="app.mediabrainz.activity.SplashActivity"
+            android:name=".activity.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -44,21 +43,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
-            android:name="app.mediabrainz.activity.SearchActivity"
+            android:name=".activity.SearchActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
-
         <activity
-            android:name="app.mediabrainz.activity.ResultSearchActivity"
+            android:name=".activity.ResultSearchActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -73,59 +69,53 @@
             android:value=".activity.SearchActivity"/>
 
         <activity
-            android:name="app.mediabrainz.activity.AboutActivity"
+            android:name=".activity.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/about_title"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
         <activity
-            android:name="app.mediabrainz.activity.ArtistActivity"
+            android:name=".activity.ArtistActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
         <activity
-            android:name="app.mediabrainz.activity.ReleaseActivity"
+            android:name=".activity.ReleaseActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
         <activity
-            android:name="app.mediabrainz.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/login_title"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
         <activity
-            android:name="app.mediabrainz.activity.SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/settings_title"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
+        <activity android:name=".activity.ImageActivity"/>
         <activity
-            android:name="app.mediabrainz.activity.ImageActivity"/>
-
-        <activity
-            android:name="app.mediabrainz.activity.TagActivity"
+            android:name=".activity.TagActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
         <activity
-            android:name="app.mediabrainz.activity.UserActivity"
+            android:name=".activity.UserActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
         <activity
-            android:name="app.mediabrainz.activity.RecordingActivity"
+            android:name=".activity.RecordingActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
-
+        <activity android:name=".activity.YoutubeActivity">
+        </activity>
+        <activity android:name=".activity.YoutubeSearchActivity">
+        </activity>
     </application>
 
 </manifest>

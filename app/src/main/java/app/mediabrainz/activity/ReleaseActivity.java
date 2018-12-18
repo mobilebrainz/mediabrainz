@@ -37,6 +37,7 @@ import app.mediabrainz.communicator.GetReleaseGroupCommunicator;
 import app.mediabrainz.communicator.GetRequestQueueCommunicator;
 import app.mediabrainz.communicator.GetUrlsCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
+import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnTagCommunicator;
@@ -76,7 +77,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         GetReleaseGroupCommunicator,
         GetUrlsCommunicator,
         SetWebViewCommunicator,
-        GetRequestQueueCommunicator {
+        GetRequestQueueCommunicator,
+        OnPlayYoutubeCommunicator {
 
     public static final String TAG = "ReleaseActivity";
     public static final String RELEASE_MBID = "RELEASE_MBID";
@@ -107,7 +109,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    protected void onStop () {
+    protected void onStop() {
         super.onStop();
         if (requestQueue != null) {
             requestQueue.cancelAll(TAG);
@@ -424,5 +426,15 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     @Override
     public RequestQueue getRequestQueue() {
         return requestQueue;
+    }
+
+    @Override
+    public void onPlay(String recordingName) {
+        String keyword = "";
+        if (!releaseGroup.getArtistCredit().isEmpty()) {
+            keyword = releaseGroup.getArtistCredit().get(0).getArtist().getName() + " - ";
+        }
+        keyword += recordingName;
+        ActivityFactory.startYoutubeSearchActivity(this, keyword);
     }
 }

@@ -7,20 +7,34 @@ import app.mediabrainz.activity.AboutActivity;
 import app.mediabrainz.activity.ArtistActivity;
 import app.mediabrainz.activity.ImageActivity;
 import app.mediabrainz.activity.LoginActivity;
-import app.mediabrainz.activity.SearchActivity;
 import app.mediabrainz.activity.RecordingActivity;
 import app.mediabrainz.activity.ReleaseActivity;
 import app.mediabrainz.activity.ResultSearchActivity;
+import app.mediabrainz.activity.SearchActivity;
 import app.mediabrainz.activity.SearchType;
 import app.mediabrainz.activity.SettingsActivity;
 import app.mediabrainz.activity.TagActivity;
 import app.mediabrainz.activity.UserActivity;
+import app.mediabrainz.activity.YoutubeActivity;
+import app.mediabrainz.activity.YoutubeSearchActivity;
 import app.mediabrainz.adapter.pager.TagPagerAdapter;
 
 import static app.mediabrainz.activity.UserActivity.DEFAULT_USER_NAV_VIEW;
 
 
 public class ActivityFactory {
+
+    public static void startYoutubeSearchActivity(Context context, String keyword) {
+        Intent intent = new Intent(context, YoutubeSearchActivity.class);
+        intent.putExtra(YoutubeSearchActivity.KEYWORD, keyword);
+        context.startActivity(intent);
+    }
+
+    public static void startYoutubeActivity(Context context, String videoId) {
+        Intent intent = new Intent(context, YoutubeActivity.class);
+        intent.putExtra(YoutubeActivity.VIDEO_ID, videoId);
+        context.startActivity(intent);
+    }
 
     public static void startSearchActivity(Context context, String searchQuery, SearchType searchType) {
         Intent intent = new Intent(context, ResultSearchActivity.class);

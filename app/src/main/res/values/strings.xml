@@ -245,6 +245,7 @@
     <string name="action_share">Share</string>
     <string name="action_settings">Settings</string>
     <string name="search_artist_hint">Search artist</string>
+    <string name="action_youtube_search">YouTube Search</string>
 
     <!-- Preferences -->
     <string name="settings_search">Search</string>
@@ -260,6 +261,10 @@
     <string name="settings_title_miscellanea">Miscellanea</string>
     <string name="settings_summary_propagate_artist_tags">Propagate artist tags to official albums</string>
     <string name="settings_title_propagate_artist_tags">Propagate artist tags</string>
+
+    <string name="settings_title_youtube_preferences">Youtube Preferences</string>
+    <string name="settings_title_play_youtube">Choose youtube player</string>
+    <string name="settings_summary_play_youtube">Play youtube in YouTube Application</string>
 
     <string name="settings_title_artist_preferences">Artist Preferences</string>
     <string name="settings_summary_release_group_official">Show only official release groups</string>
@@ -400,5 +405,9 @@
     <string name="error_tag_propagation_to_albums">Error of tag propagation to official albums</string>
     <string name="error_post_tag">Error post tag</string>
     <string name="error_post_rating">Error post rating</string>
+
+    <!-- Youtube -->
+    <string name="youtube_search">YouTube Search</string>
+
 
 </resources>

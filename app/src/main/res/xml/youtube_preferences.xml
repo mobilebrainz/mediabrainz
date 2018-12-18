@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_title_youtube_preferences">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="play_youtube"
+            android:summary="@string/settings_summary_play_youtube"
+            android:title="@string/settings_title_play_youtube"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

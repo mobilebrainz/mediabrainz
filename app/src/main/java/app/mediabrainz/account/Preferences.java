@@ -16,6 +16,7 @@ public class Preferences {
         String LOAD_IMAGES = "load_images";
         String LOAD_RATINGS = "load_ratings";
         String PROPAGATE_ARTIST_TAGS = "propagate_artist_tags";
+        String PLAY_YOUTUBE = "play_youtube";
 
         String RELEASE_GROUP_OFFICIAL = "release_group_official";
     }
@@ -49,6 +50,10 @@ public class Preferences {
 
     public boolean isPropagateArtistTags() {
         return getDefaultPreferences().getBoolean(PreferenceName.PROPAGATE_ARTIST_TAGS, false);
+    }
+
+    public boolean isPlayYoutube() {
+        return getDefaultPreferences().getBoolean(PreferenceName.PLAY_YOUTUBE, true);
     }
 
     private SharedPreferences getDefaultPreferences() {

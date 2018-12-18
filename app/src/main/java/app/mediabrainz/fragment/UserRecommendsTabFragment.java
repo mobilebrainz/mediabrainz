@@ -19,6 +19,7 @@ import app.mediabrainz.adapter.recycler.EntityTagAdapter;
 import app.mediabrainz.api.site.TagEntity;
 import app.mediabrainz.api.site.TagServiceInterface;
 import app.mediabrainz.communicator.OnArtistCommunicator;
+import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
 import app.mediabrainz.data.room.repository.RecommendRepository;
@@ -155,6 +156,8 @@ public class UserRecommendsTabFragment extends Fragment {
                     EntityTagAdapter recordingAdapter = new EntityTagAdapter(recommends);
                     recordingAdapter.setHolderClickListener(position ->
                             ((OnRecordingCommunicator) getContext()).onRecording(recommends.get(position).getMbid()));
+                    recordingAdapter.setOnPlayYoutubeListener(keyword ->
+                            ((OnPlayYoutubeCommunicator) getContext()).onPlay(keyword));
                     recycler.setAdapter(recordingAdapter);
                     break;
             }

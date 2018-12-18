@@ -16,16 +16,17 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.List;
+
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.api.coverart.CoverArtImage;
 import app.mediabrainz.api.model.Rating;
 import app.mediabrainz.api.model.ReleaseGroup;
+import app.mediabrainz.apihandler.StringMapper;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.ShowUtil;
-
-import java.util.Collections;
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
@@ -46,6 +47,8 @@ public class ReleaseGroupCollectionAdapter extends BaseRecyclerViewAdapter<Relea
         private TextView allRatingView;
         private ImageView deleteBtn;
         private LinearLayout ratingContainer;
+        private TextView artistNameView;
+        private TextView typeView;
 
         public static ReleaseGroupCollectionViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -62,11 +65,18 @@ public class ReleaseGroupCollectionAdapter extends BaseRecyclerViewAdapter<Relea
             userRating = v.findViewById(R.id.user_rating);
             allRatingView = v.findViewById(R.id.all_rating);
             ratingContainer = v.findViewById(R.id.rating_container);
+            artistNameView = v.findViewById(R.id.artist_name);
+            typeView = v.findViewById(R.id.rg_type);
         }
 
         public void bindTo(ReleaseGroup releaseGroup, boolean isPrivate) {
             deleteBtn.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
             releaseGroupName.setText(releaseGroup.getTitle());
+            if (!releaseGroup.getArtistCredit().isEmpty()) {
+                artistNameView.setText(releaseGroup.getArtistCredit().get(0).getArtist().getName());
+            }
+            typeView.setText(StringMapper.mapReleaseGroupOneType(releaseGroup));
+
             setUserRating(releaseGroup);
             setAllRating(releaseGroup);
 

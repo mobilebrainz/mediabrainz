@@ -17,6 +17,7 @@ public class TracksAdapter extends BaseExpandedRecyclerAdapter<Media.Track> {
     public static final String TAG = "TracksAdapter";
 
     private ItemViewHolder.OnItemClickListener onItemClickListener;
+    private ItemViewHolder.OnPlayYoutubeListener onPlayYoutubeListener;
 
     public TracksAdapter(List<Section<Media.Track>> sections) {
         super(sections);
@@ -44,6 +45,7 @@ public class TracksAdapter extends BaseExpandedRecyclerAdapter<Media.Track> {
             case ITEM_VISIBLE:
                 ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
                 itemViewHolder.setOnItemClickListener(onItemClickListener);
+                itemViewHolder.setOnPlayYoutubeListener(onPlayYoutubeListener);
                 itemViewHolder.bindView((Media.Track) items.get(position));
                 break;
             case HEADER:
@@ -57,4 +59,7 @@ public class TracksAdapter extends BaseExpandedRecyclerAdapter<Media.Track> {
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void setOnPlayYoutubeListener(ItemViewHolder.OnPlayYoutubeListener onPlayYoutubeListener) {
+        this.onPlayYoutubeListener = onPlayYoutubeListener;
+    }
 }

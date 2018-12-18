@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import app.mediabrainz.R;
 import app.mediabrainz.fragment.ArtistSettingsFragment;
+import app.mediabrainz.fragment.YoutubeSettingsFragment;
 
 
 public class LocalSettingsDialogFragment extends DialogFragment {
@@ -18,7 +19,8 @@ public class LocalSettingsDialogFragment extends DialogFragment {
     private static final String LOCAL_SETTINGS_TYPE = "LOCAL_SETTINGS_TYPE";
 
     public enum LocalSettingsType {
-        ARTIST_SETTINGS(new ArtistSettingsFragment());
+        ARTIST_SETTINGS(new ArtistSettingsFragment()),
+        YOUTUBE_SETTINGS(new YoutubeSettingsFragment());
 
         private final PreferenceFragmentCompat preferenceFragmentCompat;
 

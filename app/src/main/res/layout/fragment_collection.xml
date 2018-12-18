@@ -15,7 +15,8 @@
             android:id="@+id/collection_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:scrollbars="vertical"/>
 
         <ProgressBar
             android:id="@+id/loading"

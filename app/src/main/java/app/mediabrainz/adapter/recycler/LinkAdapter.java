@@ -46,7 +46,7 @@ public class LinkAdapter extends BaseRecyclerViewAdapter<LinkAdapter.LinkViewHol
             int iconId = R.drawable.ic_link_24_dark;
             switch (t) {
                 case "youtube":
-                    iconId = R.drawable.ic_youtube_24;
+                    iconId = R.drawable.ic_youtube_24_light;
                     break;
                 case "official homepage":
                     iconId = R.drawable.ic_home_24_dark;

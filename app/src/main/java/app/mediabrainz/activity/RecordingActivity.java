@@ -99,6 +99,15 @@ public class RecordingActivity extends BaseBottomNavActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.action_youtube_search:
+                String keyword = "";
+                if (!recording.getArtistCredits().isEmpty()) {
+                    keyword = recording.getArtistCredits().get(0).getArtist().getName() + " - ";
+                }
+                keyword += recording.getTitle();
+                ActivityFactory.startYoutubeSearchActivity(this, keyword);
+                return true;
+
             case R.id.action_share:
                 if (!TextUtils.isEmpty(mbid)) {
                     shareActionText("https://musicbrainz.org/release-group/" + mbid);

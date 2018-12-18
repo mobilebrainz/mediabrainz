@@ -17,6 +17,7 @@ import app.mediabrainz.data.room.database.AppDatabase;
 public class MediaBrainzApp extends Application {
 
     public static final String SUPPORT_MAIL = "mobilebrainz@gmail.com";
+    public static final String YOUTUBE_API_KEY = "AIzaSyBHRfvdBmjm7Fk4BE8exK7QZ85hJLiE8gU";
 
     public static OAuth oauth;
     public static Api api;

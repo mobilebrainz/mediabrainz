@@ -23,6 +23,7 @@ import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnCollectionCommunicator;
 import app.mediabrainz.communicator.OnCreateCollectionCommunicator;
 import app.mediabrainz.communicator.OnEditCollectionCommunicator;
+import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
@@ -66,7 +67,8 @@ public class UserActivity extends BaseBottomNavActivity implements
         OnEditCollectionCommunicator,
         CollectionsPagerFragment.CollectionTabOrdinalCommunicator,
         OnUserCommunicator,
-        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator {
+        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator,
+        OnPlayYoutubeCommunicator {
 
     public static final String TAG = "UserActivity";
     public static final String USERNAME = "USERNAME";
@@ -369,4 +371,8 @@ public class UserActivity extends BaseBottomNavActivity implements
         return getFragmentViewId();
     }
 
+    @Override
+    public void onPlay(String recordingName) {
+        ActivityFactory.startYoutubeSearchActivity(this, recordingName);
+    }
 }

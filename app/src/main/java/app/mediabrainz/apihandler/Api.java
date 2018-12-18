@@ -72,6 +72,8 @@ import app.mediabrainz.api.site.TagService;
 import app.mediabrainz.api.site.TagServiceInterface;
 import app.mediabrainz.api.site.UserProfile;
 import app.mediabrainz.api.site.UserProfileService;
+import app.mediabrainz.api.externalResources.youtube.YoutubeService;
+import app.mediabrainz.api.externalResources.youtube.model.YoutubeSearchListResponse;
 import app.mediabrainz.functions.ErrorHandler;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
@@ -250,7 +252,7 @@ public class Api {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
                         new ReleaseGroupBrowseService(ReleaseGroupBrowseService.ReleaseGroupBrowseEntityType.COLLECTION, collection.getId())
-                                .addIncs(ReleaseGroupBrowseService.ReleaseGroupIncType.RATINGS, ReleaseGroupBrowseService.ReleaseGroupIncType.USER_RATINGS)
+                                .addIncs(ReleaseGroupBrowseService.ReleaseGroupIncType.RATINGS, ReleaseGroupBrowseService.ReleaseGroupIncType.USER_RATINGS, ReleaseGroupBrowseService.ReleaseGroupIncType.ARTIST_CREDITS)
                                 .browse(100, 0),
                         consumer, errorHandler),
                 errorHandler);
@@ -735,6 +737,12 @@ public class Api {
     public Disposable sendEmail(String username, String subject, String message, boolean revealEmail, Consumer<ResponseBody> consumer, ErrorHandler errorHandler) {
         return ApiHandler.subscribe(
                 getSiteService().sendEmail(username, subject, message, revealEmail),
+                consumer, errorHandler);
+    }
+
+    public Disposable searchYoutube(String keyword, String youtubeApiKey, Consumer<YoutubeSearchListResponse> consumer, ErrorHandler errorHandler) {
+        return ApiHandler.subscribe(
+                new YoutubeService().search(keyword, youtubeApiKey),
                 consumer, errorHandler);
     }
 
