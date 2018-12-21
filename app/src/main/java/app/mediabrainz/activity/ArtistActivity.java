@@ -298,7 +298,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
     @Override
     public void onCollection(String collectionMbid) {
         viewProgressLoading(true);
-        api.addEntityToCollection(
+        api.addEntityToCollectionOld(
                 collectionMbid, ARTISTS, mbid,
                 metadata -> {
                     viewProgressLoading(false);

@@ -273,7 +273,7 @@ public class ReleaseRatingsFragment extends LazyFragment {
     }
 
     private void setLastfmInfo() {
-        List<Artist.ArtistCredit> artistCredit = releaseGroup.getArtistCredit();
+        List<Artist.ArtistCredit> artistCredit = releaseGroup.getArtistCredits();
         if (artistCredit != null && !artistCredit.isEmpty()) {
             viewProgressLoading(true);
             api.getAlbumFromLastfm(

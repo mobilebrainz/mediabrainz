@@ -199,8 +199,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                             rg -> {
                                 viewProgressLoading(false);
                                 releaseGroup = rg;
-                                if (!rg.getArtistCredit().isEmpty()) {
-                                    Artist.ArtistCredit artistCredit = rg.getArtistCredit().get(0);
+                                if (!rg.getArtistCredits().isEmpty()) {
+                                    Artist.ArtistCredit artistCredit = rg.getArtistCredits().get(0);
                                     topTitle.setText(artistCredit.getName());
                                     topTitle.setOnClickListener(v -> onArtist(artistCredit.getArtist().getId()));
                                 }
@@ -314,7 +314,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         final String mbid = (collectionType.equals(CollectionServiceInterface.CollectionType.RELEASES)) ? releaseMbid : release.getReleaseGroup().getId();
 
         viewProgressLoading(true);
-        api.addEntityToCollection(
+        api.addEntityToCollectionOld(
                 collectionMbid, collectionType, mbid,
                 metadata -> {
                     viewProgressLoading(false);
@@ -431,8 +431,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     @Override
     public void onPlay(String recordingName) {
         String keyword = "";
-        if (!releaseGroup.getArtistCredit().isEmpty()) {
-            keyword = releaseGroup.getArtistCredit().get(0).getArtist().getName() + " - ";
+        if (!releaseGroup.getArtistCredits().isEmpty()) {
+            keyword = releaseGroup.getArtistCredits().get(0).getArtist().getName() + " - ";
         }
         keyword += recordingName;
         ActivityFactory.startYoutubeSearchActivity(this, keyword);

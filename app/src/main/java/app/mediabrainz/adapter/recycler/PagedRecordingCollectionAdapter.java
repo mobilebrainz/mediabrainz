@@ -2,6 +2,8 @@ package app.mediabrainz.adapter.recycler;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,51 +13,63 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.util.List;
+import java.util.Objects;
+
 import app.mediabrainz.R;
+import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.Rating;
 import app.mediabrainz.api.model.Recording;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.ShowUtil;
 
-import java.util.Collections;
-import java.util.List;
-
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class RecordingCollectionAdapter extends BaseRecyclerViewAdapter<RecordingCollectionAdapter.RecordingCollectionViewHolder> {
+public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Recording> {
 
-    private List<Recording> recordings;
-
-    public static class RecordingCollectionViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder {
+    public static class PagedRecordingCollectionViewHolder extends RecyclerView.ViewHolder {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_recording_collection;
 
-        private TextView recordingNameTextView;
+        private Recording recording;
+        private String artistName = "";
+
+        private TextView recordingNameView;
+        private TextView artistNameView;
         private ImageView deleteButton;
         private RatingBar userRating;
         private TextView allRatingView;
         private LinearLayout ratingContainer;
+        private ImageView playYoutubeView;
 
-        public static RecordingCollectionViewHolder create(ViewGroup parent) {
-            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View view = layoutInflater.inflate(VIEW_HOLDER_LAYOUT, parent, false);
-            return new RecordingCollectionViewHolder(view);
-        }
-
-        private RecordingCollectionViewHolder(View v) {
+        private PagedRecordingCollectionViewHolder(View v) {
             super(v);
-            recordingNameTextView = v.findViewById(R.id.recording_name);
+            recordingNameView = v.findViewById(R.id.recording_name);
+            artistNameView = v.findViewById(R.id.artist_name);
             deleteButton = v.findViewById(R.id.delete);
             userRating = v.findViewById(R.id.user_rating);
             allRatingView = v.findViewById(R.id.all_rating);
             ratingContainer = v.findViewById(R.id.rating_container);
+            playYoutubeView = itemView.findViewById(R.id.play_youtube);
+        }
+
+        public static PagedRecordingCollectionViewHolder create(ViewGroup parent) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(VIEW_HOLDER_LAYOUT, parent, false);
+            return new PagedRecordingCollectionViewHolder(view);
         }
 
         public void bindTo(Recording recording, boolean isPrivate) {
+            this.recording = recording;
             deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            recordingNameTextView.setText(recording.getTitle());
+            recordingNameView.setText(recording.getTitle());
+            List<Artist.ArtistCredit> artistCredits = recording.getArtistCredits();
+            if (artistCredits != null && !artistCredits.isEmpty()) {
+                artistName = artistCredits.get(0).getArtist().getName();
+                artistNameView.setText(artistName);
+            }
             setUserRating(recording);
             setAllRating(recording);
 
@@ -140,40 +154,104 @@ public class RecordingCollectionAdapter extends BaseRecyclerViewAdapter<Recordin
                 }
             });
         }
+
+        public void setonPlayYoutubeListener(OnPlayYoutubeListener listener) {
+            playYoutubeView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onPlay(artistName + (!artistName.equals("") ? " - " : "") + recording.getTitle());
+                }
+            });
+        }
     }
 
     private boolean isPrivate;
 
-    public RecordingCollectionAdapter(List<Recording> recordings, boolean isPrivate) {
-        this.recordings = recordings;
+    public PagedRecordingCollectionAdapter(RetryCallback retryCallback, boolean isPrivate) {
+        super(DIFF_CALLBACK, retryCallback);
         this.isPrivate = isPrivate;
-        Collections.sort(this.recordings, (a1, a2) -> (a1.getTitle()).compareTo(a2.getTitle()));
     }
 
     @Override
-    public void onBind(RecordingCollectionViewHolder holder, final int position) {
-        holder.setOnDeleteListener(onDeleteListener);
-        holder.bindTo(recordings.get(position), isPrivate);
-    }
-
-    @Override
-    public int getItemCount() {
-        return recordings.size();
+    public int getItemViewType(int position) {
+        if (hasExtraRow() && position == getItemCount() - 1) {
+            return NetworkStateViewHolder.VIEW_HOLDER_LAYOUT;
+        } else {
+            return PagedRecordingCollectionViewHolder.VIEW_HOLDER_LAYOUT;
+        }
     }
 
     @NonNull
     @Override
-    public RecordingCollectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return RecordingCollectionViewHolder.create(parent);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case PagedRecordingCollectionViewHolder.VIEW_HOLDER_LAYOUT:
+                return PagedRecordingCollectionViewHolder.create(parent);
+            case NetworkStateViewHolder.VIEW_HOLDER_LAYOUT:
+                return NetworkStateViewHolder.create(parent, retryCallback);
+            default:
+                throw new IllegalArgumentException("unknown view type");
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case PagedRecordingCollectionViewHolder.VIEW_HOLDER_LAYOUT:
+                Recording recording = getItem(position);
+                ((PagedRecordingCollectionViewHolder) holder).bindTo(recording, isPrivate);
+                if (holderClickListener != null) {
+                    holder.itemView.setOnClickListener(view -> holderClickListener.onClick(recording));
+                }
+                if (onDeleteListener != null) {
+                    ((PagedRecordingCollectionViewHolder) holder).setOnDeleteListener(onDeleteListener);
+                }
+                if (onPlayYoutubeListener != null) {
+                    ((PagedRecordingCollectionViewHolder) holder).setonPlayYoutubeListener(onPlayYoutubeListener);
+                }
+                break;
+            case NetworkStateViewHolder.VIEW_HOLDER_LAYOUT:
+                ((NetworkStateViewHolder) holder).bindTo(networkState);
+                break;
+        }
+    }
+
+    private static DiffUtil.ItemCallback<Recording> DIFF_CALLBACK = new DiffUtil.ItemCallback<Recording>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Recording oldItem, @NonNull Recording newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Recording oldItem, @NonNull Recording newItem) {
+            return Objects.equals(oldItem, newItem);
+        }
+    };
+
+    public interface OnPlayYoutubeListener {
+        void onPlay(String keyword);
+    }
+
+    public interface HolderClickListener {
+        void onClick(Recording recording);
     }
 
     public interface OnDeleteListener {
         void onDelete(int position);
     }
 
+    private HolderClickListener holderClickListener;
     private OnDeleteListener onDeleteListener;
+    private OnPlayYoutubeListener onPlayYoutubeListener;
+
+    public void setHolderClickListener(HolderClickListener holderClickListener) {
+        this.holderClickListener = holderClickListener;
+    }
 
     public void setOnDeleteListener(OnDeleteListener onDeleteListener) {
         this.onDeleteListener = onDeleteListener;
+    }
+
+    public void setOnPlayYoutubeListener(OnPlayYoutubeListener onPlayYoutubeListener) {
+        this.onPlayYoutubeListener = onPlayYoutubeListener;
     }
 }

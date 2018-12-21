@@ -175,7 +175,7 @@ public class Api {
         return false;
     }
 
-    public Disposable addEntityToCollection(String collId, CollectionServiceInterface.CollectionType collType, String id, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
+    public Disposable addEntityToCollectionOld(String collId, CollectionServiceInterface.CollectionType collType, String id, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe(
                         new CollectionService(CLIENT).putCollection(collId, collType, id),
@@ -183,95 +183,96 @@ public class Api {
                 errorHandler);
     }
 
-    public Disposable getAreasFromCollection(Collection collection, Consumer<Area.AreaBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getAreasFromCollection(String collectionId, Consumer<Area.AreaBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new AreaBrowseService(AreaBrowseService.AreaBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new AreaBrowseService(AreaBrowseService.AreaBrowseEntityType.COLLECTION, collectionId)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getArtistsFromCollection(Collection collection, Consumer<Artist.ArtistBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getArtistsFromCollection(String collectionId, Consumer<Artist.ArtistBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new ArtistBrowseService(ArtistBrowseService.ArtistBrowseEntityType.COLLECTION, collection.getId())
+                        new ArtistBrowseService(ArtistBrowseService.ArtistBrowseEntityType.COLLECTION, collectionId)
                                 .addIncs(ArtistBrowseService.ArtistIncType.RATINGS, ArtistBrowseService.ArtistIncType.USER_RATINGS)
-                                .browse(100, 0),
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getEventsFromCollection(Collection collection, Consumer<Event.EventBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getEventsFromCollection(String collectionId, Consumer<Event.EventBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new EventBrowseService(EventBrowseService.EventBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new EventBrowseService(EventBrowseService.EventBrowseEntityType.COLLECTION, collectionId)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getLabelsFromCollection(Collection collection, Consumer<Label.LabelBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getLabelsFromCollection(String collectionId, Consumer<Label.LabelBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new LabelBrowseService(LabelBrowseService.LabelBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new LabelBrowseService(LabelBrowseService.LabelBrowseEntityType.COLLECTION, collectionId)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getPlacesFromCollection(Collection collection, Consumer<Place.PlaceBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getPlacesFromCollection(String collectionId, Consumer<Place.PlaceBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new PlaceBrowseService(PlaceBrowseService.PlaceBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new PlaceBrowseService(PlaceBrowseService.PlaceBrowseEntityType.COLLECTION, collectionId)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getRecordingsFromCollection(Collection collection, Consumer<Recording.RecordingBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getRecordingsFromCollection(String collectionId, Consumer<Recording.RecordingBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new RecordingBrowseService(RecordingBrowseService.RecordingBrowseEntityType.COLLECTION, collection.getId())
-                                .addIncs(RecordingBrowseService.RecordingIncType.RATINGS, RecordingBrowseService.RecordingIncType.USER_RATINGS)
-                                .browse(100, 0),
+                        new RecordingBrowseService(RecordingBrowseService.RecordingBrowseEntityType.COLLECTION, collectionId)
+                                .addIncs(RecordingBrowseService.RecordingIncType.RATINGS, RecordingBrowseService.RecordingIncType.USER_RATINGS, RecordingBrowseService.RecordingIncType.ARTIST_CREDITS)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getReleasesFromCollection(Collection collection, Consumer<Release.ReleaseBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getReleasesFromCollection(String collectionId, Consumer<Release.ReleaseBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new ReleaseBrowseService(ReleaseBrowseService.ReleaseBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new ReleaseBrowseService(ReleaseBrowseService.ReleaseBrowseEntityType.COLLECTION, collectionId)
+                                .addIncs(ReleaseBrowseService.ReleaseIncType.ARTIST_CREDITS)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getReleaseGroupsFromCollection(Collection collection, Consumer<ReleaseGroup.ReleaseGroupBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getReleaseGroupsFromCollection(String collectionId, Consumer<ReleaseGroup.ReleaseGroupBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new ReleaseGroupBrowseService(ReleaseGroupBrowseService.ReleaseGroupBrowseEntityType.COLLECTION, collection.getId())
+                        new ReleaseGroupBrowseService(ReleaseGroupBrowseService.ReleaseGroupBrowseEntityType.COLLECTION, collectionId)
                                 .addIncs(ReleaseGroupBrowseService.ReleaseGroupIncType.RATINGS, ReleaseGroupBrowseService.ReleaseGroupIncType.USER_RATINGS, ReleaseGroupBrowseService.ReleaseGroupIncType.ARTIST_CREDITS)
-                                .browse(100, 0),
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getSeriesFromCollection(Collection collection, Consumer<Series.SeriesBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getSeriesFromCollection(String collectionId, Consumer<Series.SeriesBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new SeriesBrowseService(SeriesBrowseService.SeriesBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new SeriesBrowseService(SeriesBrowseService.SeriesBrowseEntityType.COLLECTION, collectionId)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }
 
-    public Disposable getWorksFromCollection(Collection collection, Consumer<Work.WorkBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
+    public Disposable getWorksFromCollection(String collectionId, Consumer<Work.WorkBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new WorkBrowseService(WorkBrowseService.WorkBrowseEntityType.COLLECTION, collection.getId())
-                                .browse(100, 0),
+                        new WorkBrowseService(WorkBrowseService.WorkBrowseEntityType.COLLECTION, collectionId)
+                                .browse(limit, offset),
                         consumer, errorHandler),
                 errorHandler);
     }

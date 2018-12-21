@@ -312,7 +312,7 @@ public class RecordingActivity extends BaseBottomNavActivity implements
     @Override
     public void onCollection(String collectionMbid) {
         viewProgressLoading(true);
-        api.addEntityToCollection(
+        api.addEntityToCollectionOld(
                 collectionMbid, RECORDINGS, mbid,
                 metadata -> {
                     viewProgressLoading(false);
