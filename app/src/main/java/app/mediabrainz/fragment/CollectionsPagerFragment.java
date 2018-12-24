@@ -90,6 +90,8 @@ public class CollectionsPagerFragment extends LazyFragment implements
     }
 
     private void configurePager(List<CollectionsPagerAdapter.CollectionTab> collectionTabs) {
+
+
         CollectionsPagerAdapter pagerAdapter = new CollectionsPagerAdapter(getChildFragmentManager(), getResources(), collectionTabs);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
@@ -112,7 +114,7 @@ public class CollectionsPagerFragment extends LazyFragment implements
         viewError(false);
         String username = ((GetUsernameCommunicator) getContext()).getUsername();
 
-        //TODO: make .browse(n, m)
+        //TODO: make .browse(n, m)?
         viewProgressLoading(true);
         api.getCollections(
                 username,
@@ -243,4 +245,9 @@ public class CollectionsPagerFragment extends LazyFragment implements
     public List<Collection> getCollections() {
         return collections;
     }
+
+    public ViewPager getViewPager() {
+        return viewPager;
+    }
+
 }

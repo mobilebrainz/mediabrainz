@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import app.mediabrainz.communicator.GetReleaseGroupCommunicator;
 import app.mediabrainz.communicator.GetRequestQueueCommunicator;
 import app.mediabrainz.communicator.GetUrlsCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
+import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnTagCommunicator;
@@ -75,7 +77,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         GetReleaseGroupCommunicator,
         GetUrlsCommunicator,
         SetWebViewCommunicator,
-        GetRequestQueueCommunicator {
+        GetRequestQueueCommunicator,
+        OnPlayYoutubeCommunicator {
 
     public static final String TAG = "ReleaseActivity";
     public static final String RELEASE_MBID = "RELEASE_MBID";
@@ -106,11 +109,34 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    protected void onStop () {
+    protected void onStop() {
         super.onStop();
         if (requestQueue != null) {
             requestQueue.cancelAll(TAG);
             requestQueue.cancelAll(ReleaseRatingsFragment.TAG);
+        }
+    }
+
+    @Override
+    protected int getOptionsMenu() {
+        return R.menu.release_top_nav;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_share:
+                if (releaseGroup != null) {
+                    shareActionText("https://musicbrainz.org/release-group/" + releaseGroup.getId());
+                }
+                return true;
+
+            case R.id.action_settings:
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(menuItem);
         }
     }
 
@@ -173,8 +199,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                             rg -> {
                                 viewProgressLoading(false);
                                 releaseGroup = rg;
-                                if (!rg.getArtistCredit().isEmpty()) {
-                                    Artist.ArtistCredit artistCredit = rg.getArtistCredit().get(0);
+                                if (!rg.getArtistCredits().isEmpty()) {
+                                    Artist.ArtistCredit artistCredit = rg.getArtistCredits().get(0);
                                     topTitle.setText(artistCredit.getName());
                                     topTitle.setOnClickListener(v -> onArtist(artistCredit.getArtist().getId()));
                                 }
@@ -288,7 +314,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         final String mbid = (collectionType.equals(CollectionServiceInterface.CollectionType.RELEASES)) ? releaseMbid : release.getReleaseGroup().getId();
 
         viewProgressLoading(true);
-        api.addEntityToCollection(
+        api.addEntityToCollectionOld(
                 collectionMbid, collectionType, mbid,
                 metadata -> {
                     viewProgressLoading(false);
@@ -400,5 +426,15 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     @Override
     public RequestQueue getRequestQueue() {
         return requestQueue;
+    }
+
+    @Override
+    public void onPlay(String recordingName) {
+        String keyword = "";
+        if (!releaseGroup.getArtistCredits().isEmpty()) {
+            keyword = releaseGroup.getArtistCredits().get(0).getArtist().getName() + " - ";
+        }
+        keyword += recordingName;
+        ActivityFactory.startYoutubeSearchActivity(this, keyword);
     }
 }

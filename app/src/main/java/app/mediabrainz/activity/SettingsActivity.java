@@ -16,7 +16,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.settings_fragment, new SettingsFragment())
                 .commit();
     }

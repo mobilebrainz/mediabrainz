@@ -9,11 +9,13 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -22,12 +24,12 @@ import android.widget.Toast;
 
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
+import app.mediabrainz.adapter.SuggestionListAdapter;
 import app.mediabrainz.adapter.pager.UserProfilePagerAdapter;
 import app.mediabrainz.apihandler.Api;
 import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.intent.zxing.IntentIntegrator;
-import app.mediabrainz.adapter.SuggestionListAdapter;
 import app.mediabrainz.util.MbUtils;
 
 import static app.mediabrainz.MediaBrainzApp.SUPPORT_MAIL;
@@ -37,6 +39,8 @@ import static app.mediabrainz.MediaBrainzApp.oauth;
 public abstract class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         SearchView.OnQueryTextListener {
+
+    private final int DEFAULT_OPTIONS_MENU = R.menu.base_top_nav;
 
     protected DrawerLayout drawer;
     protected NavigationView navigationView;
@@ -199,13 +203,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.base_top_nav, menu);
+        getMenuInflater().inflate(getOptionsMenu(), menu);
+        if(menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        createSearchOptionsMenu(menu);
+        return true;
+    }
 
+    private void createSearchOptionsMenu(Menu menu) {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(this);
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, ResultSearchActivity.class)));
         searchView.setIconifiedByDefault(false);
 
         if (MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
@@ -218,7 +229,17 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 searchView.clearFocus();
             });
         }
-        return true;
+    }
+
+    protected void shareActionText(String text) {
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText(text)
+                .startChooser();
+    }
+
+    protected int getOptionsMenu() {
+        return DEFAULT_OPTIONS_MENU;
     }
 
     @Override

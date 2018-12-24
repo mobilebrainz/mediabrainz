@@ -81,7 +81,7 @@ public class ReleaseInformationFragment extends Fragment {
     }
 
     private void setArtistName() {
-        List<Artist.ArtistCredit> artistCredits = release.getReleaseGroup().getArtistCredit();
+        List<Artist.ArtistCredit> artistCredits = release.getReleaseGroup().getArtistCredits();
         List<String> artistNames = new ArrayList<>();
         for (Artist.ArtistCredit artistCredit : artistCredits) {
             artistNames.add(artistCredit.getName());

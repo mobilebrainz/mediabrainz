@@ -19,11 +19,20 @@ public abstract class LazyFragment extends Fragment {
         }
     }
 
-    protected void loadView() {
+    protected boolean loadView() {
         if (getUserVisibleHint()) {
             lazyLoad();
             isLoaded = true;
+            return true;
         }
+        return false;
     }
 
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
+    }
 }

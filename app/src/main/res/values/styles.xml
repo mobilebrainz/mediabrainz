@@ -13,6 +13,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionMenuTextColor">@color/actionMenuTextColor</item>
         <item name="android:dropDownListViewStyle">@style/ListViewDividerStyle</item>
+        <item name="popupTheme">@style/PopupMenuTheme</item>
+    </style>
+
+    <style name="PopupMenuTheme" parent="Theme.AppCompat.Light">
+        <item name="android:background">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/actionMenuTextColor</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

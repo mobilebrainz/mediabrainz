@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            android:paddingTop="5dp"/>
+            android:paddingTop="5dp"
+            android:scrollbars="vertical"/>
 
         <TextView
             android:id="@+id/noresults"
@@ -25,7 +26,6 @@
             android:text="@string/no_links"
             android:textSize="@dimen/text_size_16"
             android:visibility="gone"/>
-
 
     </FrameLayout>
 

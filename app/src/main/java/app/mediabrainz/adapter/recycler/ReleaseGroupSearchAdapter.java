@@ -57,8 +57,8 @@ public class ReleaseGroupSearchAdapter extends BaseRecyclerViewAdapter<ReleaseGr
 
         public void bindTo(ReleaseGroup releaseGroup) {
             releaseName.setText(releaseGroup.getTitle());
-            List<Artist.ArtistCredit> artists = releaseGroup.getArtistCredit();
-            Artist artist = null;
+            List<Artist.ArtistCredit> artists = releaseGroup.getArtistCredits();
+            Artist artist;
             if (artists != null && !artists.isEmpty()) {
                 artist = artists.get(0).getArtist();
                 artistName.setText(artist.getName());

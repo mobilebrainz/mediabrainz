@@ -1,6 +1,8 @@
 package app.mediabrainz.adapter.recycler;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +14,21 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+import java.util.Objects;
+
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.api.coverart.CoverArtImage;
+import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.Release;
-
-import java.util.Collections;
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 
 
-public class ReleaseCollectionAdapter extends BaseRecyclerViewAdapter<ReleaseCollectionAdapter.ReleaseCollectionViewHolder> {
+public class PagedReleaseCollectionAdapter extends BasePagedListAdapter<Release> {
 
-    private List<Release> releases;
-
-    public static class ReleaseCollectionViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder {
+    public static class PagedReleaseCollectionViewHolder extends RecyclerView.ViewHolder {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_release_collection;
 
@@ -35,27 +36,33 @@ public class ReleaseCollectionAdapter extends BaseRecyclerViewAdapter<ReleaseCol
 
         private ImageView coverart;
         private ProgressBar progressLoading;
-        private TextView releaseName;
+        private TextView releaseNameView;
+        private TextView artistNameView;
         private ImageView deleteBtn;
 
-        public static ReleaseCollectionViewHolder create(ViewGroup parent) {
-            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View view = layoutInflater.inflate(VIEW_HOLDER_LAYOUT, parent, false);
-            return new ReleaseCollectionViewHolder(view);
-        }
-
-        private ReleaseCollectionViewHolder(View v) {
+        private PagedReleaseCollectionViewHolder(View v) {
             super(v);
             coverart = v.findViewById(R.id.release_image);
             progressLoading = v.findViewById(R.id.image_loading);
-            releaseName = v.findViewById(R.id.release_name);
+            releaseNameView = v.findViewById(R.id.release_name);
+            artistNameView = v.findViewById(R.id.artist_name);
             deleteBtn = v.findViewById(R.id.delete);
         }
 
-        public void bindTo(Release release, boolean isPrivate) {
+        public static PagedReleaseCollectionViewHolder create(ViewGroup parent) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(VIEW_HOLDER_LAYOUT, parent, false);
+            return new PagedReleaseCollectionViewHolder(view);
+        }
+
+        private void bindTo(Release release, boolean isPrivate) {
             deleteBtn.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
             this.release = release;
-            releaseName.setText(release.getTitle());
+            releaseNameView.setText(release.getTitle());
+            List<Artist.ArtistCredit> artistCredits = release.getArtistCredits();
+            if (artistCredits != null && !artistCredits.isEmpty()) {
+                artistNameView.setText(artistCredits.get(0).getArtist().getName());
+            }
             loadReleaseImage();
         }
 
@@ -110,32 +117,76 @@ public class ReleaseCollectionAdapter extends BaseRecyclerViewAdapter<ReleaseCol
                 }
             });
         }
-
     }
 
     private boolean isPrivate;
 
-    public ReleaseCollectionAdapter(List<Release> releases, boolean isPrivate) {
-        this.releases = releases;
+    public PagedReleaseCollectionAdapter(RetryCallback retryCallback, boolean isPrivate) {
+        super(DIFF_CALLBACK, retryCallback);
         this.isPrivate = isPrivate;
-        Collections.sort(this.releases, (a1, a2) -> (a1.getTitle()).compareTo(a2.getTitle()));
     }
 
     @Override
-    public void onBind(ReleaseCollectionViewHolder holder, final int position) {
-        holder.setOnDeleteListener(onDeleteListener);
-        holder.bindTo(releases.get(position), isPrivate);
-    }
-
-    @Override
-    public int getItemCount() {
-        return releases.size();
+    public int getItemViewType(int position) {
+        if (hasExtraRow() && position == getItemCount() - 1) {
+            return NetworkStateViewHolder.VIEW_HOLDER_LAYOUT;
+        } else {
+            return PagedReleaseCollectionViewHolder.VIEW_HOLDER_LAYOUT;
+        }
     }
 
     @NonNull
     @Override
-    public ReleaseCollectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return ReleaseCollectionViewHolder.create(parent);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case PagedReleaseCollectionViewHolder.VIEW_HOLDER_LAYOUT:
+                return PagedReleaseCollectionViewHolder.create(parent);
+            case NetworkStateViewHolder.VIEW_HOLDER_LAYOUT:
+                return NetworkStateViewHolder.create(parent, retryCallback);
+            default:
+                throw new IllegalArgumentException("unknown view type");
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case PagedReleaseCollectionViewHolder.VIEW_HOLDER_LAYOUT:
+                Release release = getItem(position);
+                ((PagedReleaseCollectionViewHolder) holder).bindTo(release, isPrivate);
+                if (holderClickListener != null) {
+                    holder.itemView.setOnClickListener(view -> holderClickListener.onClick(release));
+                }
+                if (onDeleteListener != null) {
+                    ((PagedReleaseCollectionViewHolder) holder).setOnDeleteListener(onDeleteListener);
+                }
+                break;
+            case NetworkStateViewHolder.VIEW_HOLDER_LAYOUT:
+                ((NetworkStateViewHolder) holder).bindTo(networkState);
+                break;
+        }
+    }
+
+    private static DiffUtil.ItemCallback<Release> DIFF_CALLBACK = new DiffUtil.ItemCallback<Release>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Release oldItem, @NonNull Release newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Release oldItem, @NonNull Release newItem) {
+            return Objects.equals(oldItem, newItem);
+        }
+    };
+
+    public interface HolderClickListener {
+        void onClick(Release release);
+    }
+
+    private HolderClickListener holderClickListener;
+
+    public void setHolderClickListener(HolderClickListener holderClickListener) {
+        this.holderClickListener = holderClickListener;
     }
 
     public interface OnDeleteListener {

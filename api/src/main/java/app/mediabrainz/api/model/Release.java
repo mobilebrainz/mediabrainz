@@ -236,7 +236,7 @@ public class Release extends BaseLookupEntity {
     //inc=artists
     //inc=artist-credits
     @Json(name = "artist-credit")
-    private List<Artist.ArtistCredit> artistCredit;
+    private List<Artist.ArtistCredit> artistCredits;
 
     //inc=collections
     @Json(name = "collections")
@@ -338,12 +338,12 @@ public class Release extends BaseLookupEntity {
         this.textRepresentation = textRepresentation;
     }
 
-    public List<Artist.ArtistCredit> getArtistCredit() {
-        return artistCredit;
+    public List<Artist.ArtistCredit> getArtistCredits() {
+        return artistCredits;
     }
 
-    public void setArtistCredit(List<Artist.ArtistCredit> artistCredit) {
-        this.artistCredit = artistCredit;
+    public void setArtistCredits(List<Artist.ArtistCredit> artistCredits) {
+        this.artistCredits = artistCredits;
     }
 
     public ReleaseGroup getReleaseGroup() {

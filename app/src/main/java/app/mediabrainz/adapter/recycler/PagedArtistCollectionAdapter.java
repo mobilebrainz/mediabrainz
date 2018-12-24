@@ -2,6 +2,8 @@ package app.mediabrainz.adapter.recycler;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+import java.util.Objects;
+
 import app.mediabrainz.MediaBrainzApp;
 import app.mediabrainz.R;
 import app.mediabrainz.api.externalResources.lastfm.model.Image;
@@ -24,18 +29,13 @@ import app.mediabrainz.api.model.Rating;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.ShowUtil;
 
-import java.util.Collections;
-import java.util.List;
-
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class ArtistCollectionAdapter extends BaseRecyclerViewAdapter<ArtistCollectionAdapter.ArtistCollectionViewHolder> {
+public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
 
-    private List<Artist> artists;
-
-    public static class ArtistCollectionViewHolder extends BaseRecyclerViewAdapter.BaseViewHolder {
+    public static class PagedArtistCollectionViewHolder extends RecyclerView.ViewHolder {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_artist_collection;
 
@@ -47,13 +47,7 @@ public class ArtistCollectionAdapter extends BaseRecyclerViewAdapter<ArtistColle
         private ImageView deleteBtn;
         private LinearLayout ratingContainer;
 
-        public static ArtistCollectionViewHolder create(ViewGroup parent) {
-            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View view = layoutInflater.inflate(VIEW_HOLDER_LAYOUT, parent, false);
-            return new ArtistCollectionViewHolder(view);
-        }
-
-        private ArtistCollectionViewHolder(View v) {
+        private PagedArtistCollectionViewHolder(View v) {
             super(v);
             artistImage = v.findViewById(R.id.artist_image);
             progressLoading = v.findViewById(R.id.image_loading);
@@ -62,6 +56,12 @@ public class ArtistCollectionAdapter extends BaseRecyclerViewAdapter<ArtistColle
             allRatingView = v.findViewById(R.id.all_rating);
             deleteBtn = v.findViewById(R.id.delete);
             ratingContainer = v.findViewById(R.id.rating_container);
+        }
+
+        public static PagedArtistCollectionViewHolder create(ViewGroup parent) {
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(VIEW_HOLDER_LAYOUT, parent, false);
+            return new PagedArtistCollectionViewHolder(view);
         }
 
         private void bindTo(Artist artist, boolean isPrivate) {
@@ -206,27 +206,72 @@ public class ArtistCollectionAdapter extends BaseRecyclerViewAdapter<ArtistColle
 
     private boolean isPrivate;
 
-    public ArtistCollectionAdapter(List<Artist> artists, boolean isPrivate) {
-        this.artists = artists;
+    public PagedArtistCollectionAdapter(RetryCallback retryCallback, boolean isPrivate) {
+        super(DIFF_CALLBACK, retryCallback);
         this.isPrivate = isPrivate;
-        Collections.sort(this.artists, (a1, a2) -> (a1.getName()).compareTo(a2.getName()));
     }
 
     @Override
-    public void onBind(ArtistCollectionViewHolder holder, final int position) {
-        holder.setOnDeleteListener(onDeleteListener);
-        holder.bindTo(artists.get(position), isPrivate);
-    }
-
-    @Override
-    public int getItemCount() {
-        return artists.size();
+    public int getItemViewType(int position) {
+        if (hasExtraRow() && position == getItemCount() - 1) {
+            return NetworkStateViewHolder.VIEW_HOLDER_LAYOUT;
+        } else {
+            return PagedArtistCollectionViewHolder.VIEW_HOLDER_LAYOUT;
+        }
     }
 
     @NonNull
     @Override
-    public ArtistCollectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return ArtistCollectionViewHolder.create(parent);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case PagedArtistCollectionViewHolder.VIEW_HOLDER_LAYOUT:
+                return PagedArtistCollectionViewHolder.create(parent);
+            case NetworkStateViewHolder.VIEW_HOLDER_LAYOUT:
+                return NetworkStateViewHolder.create(parent, retryCallback);
+            default:
+                throw new IllegalArgumentException("unknown view type");
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case PagedArtistCollectionViewHolder.VIEW_HOLDER_LAYOUT:
+                Artist artist = getItem(position);
+                ((PagedArtistCollectionViewHolder) holder).bindTo(artist, isPrivate);
+                if (holderClickListener != null) {
+                    holder.itemView.setOnClickListener(view -> holderClickListener.onClick(artist));
+                }
+                if (onDeleteListener != null) {
+                    ((PagedArtistCollectionViewHolder) holder).setOnDeleteListener(onDeleteListener);
+                }
+                break;
+            case NetworkStateViewHolder.VIEW_HOLDER_LAYOUT:
+                ((NetworkStateViewHolder) holder).bindTo(networkState);
+                break;
+        }
+    }
+
+    private static DiffUtil.ItemCallback<Artist> DIFF_CALLBACK = new DiffUtil.ItemCallback<Artist>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Artist oldItem, @NonNull Artist newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Artist oldItem, @NonNull Artist newItem) {
+            return Objects.equals(oldItem, newItem);
+        }
+    };
+
+    public interface HolderClickListener {
+        void onClick(Artist artist);
+    }
+
+    private HolderClickListener holderClickListener;
+
+    public void setHolderClickListener(HolderClickListener holderClickListener) {
+        this.holderClickListener = holderClickListener;
     }
 
     public interface OnDeleteListener {

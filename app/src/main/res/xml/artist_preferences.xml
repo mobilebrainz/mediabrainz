@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_title_artist_preferences">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="release_group_official"
+            android:summary="@string/settings_summary_release_group_official"
+            android:title="@string/settings_title_release_group_official"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="propagate_artist_tags"
+            android:summary="@string/settings_summary_propagate_artist_tags"
+            android:title="@string/settings_title_propagate_artist_tags"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

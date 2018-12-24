@@ -20,6 +20,10 @@ public interface PostWebServiceInterface {
     Flowable<Result<Metadata>> postRecordingTags(String recordingId, UserTagXML... tags);
     Flowable<Result<Metadata>> postReleaseGroupTags(String releaseGroupId, UserTagXML... tags);
 
+    Flowable<Result<Metadata>> postTagToArtists(UserTagXML tag, String... artistIds);
+    Flowable<Result<Metadata>> postTagToReleaseGroups(UserTagXML tag, String... releaseGroupIds);
+    Flowable<Result<Metadata>> postTagToRecordings(UserTagXML tag, String... recordingIds);
+
     //TODO: require tests postBarcodes() and postIsrcs()
     Flowable<Result<Metadata>> postBarcodes(ReleaseXML... releases);
     Flowable<Result<Metadata>> postBarcode(String releaseId, String barcode);

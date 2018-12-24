@@ -45,7 +45,7 @@
     <string name="edit_login">You must log in before you can edit!</string>
     <string name="tag_hint">Tag (genre)</string>
 
-    <!-- MainActivity -->
+    <!-- SearchActivity -->
     <string name="description_search">Search</string>
     <string name="log_in_btn">LOG IN</string>
 
@@ -55,7 +55,7 @@
     <string name="track_field_hint">Track</string>
     <string name="search_btn">SEARCH</string>
 
-    <!-- SearchActivity -->
+    <!-- ResultSearchActivity -->
     <string name="search_artist_title">Search Artist</string>
     <string name="search_album_title">Search Album</string>
     <string name="search_track_title">Search Track</string>
@@ -198,7 +198,7 @@
     <string name="barcode_btn">Add barcode</string>
     <string name="barcode_cancel">Cancel</string>
 
-    <!-- SearchActivity -->
+    <!-- ResultSearchActivity -->
     <string name="barcode_text_hint">Barcode</string>
     <string name="barcode_release_hint">Release</string>
     <string name="barcode_instructions">Search for release to add barcode.</string>
@@ -242,7 +242,10 @@
     <string name="action_user_profile">User Profile</string>
     <string name="action_scan_barcode">Scan Barcode</string>
     <string name="action_search_artist">Search artist</string>
+    <string name="action_share">Share</string>
+    <string name="action_settings">Settings</string>
     <string name="search_artist_hint">Search artist</string>
+    <string name="action_youtube_search">YouTube Search</string>
 
     <!-- Preferences -->
     <string name="settings_search">Search</string>
@@ -252,8 +255,21 @@
     <string name="settings_clear_recommends">Clear recommends</string>
     <string name="settings_title_images">Images</string>
     <string name="settings_load_images">Load images</string>
-    <string name="settings_load_ratings">Load ratings from external resources</string>
+    <string name="settings_title_load_ratings">Load ratings</string>
+    <string name="settings_summary_load_ratings">Load ratings from external resources</string>
+
     <string name="settings_title_miscellanea">Miscellanea</string>
+    <string name="settings_summary_propagate_artist_tags">Propagate artist tags to official albums</string>
+    <string name="settings_title_propagate_artist_tags">Propagate artist tags</string>
+
+    <string name="settings_title_youtube_preferences">Youtube Preferences</string>
+    <string name="settings_title_play_youtube">Choose youtube player</string>
+    <string name="settings_summary_play_youtube">Play youtube in YouTube Application</string>
+
+    <string name="settings_title_artist_preferences">Artist Preferences</string>
+    <string name="settings_summary_release_group_official">Show only official release groups</string>
+    <string name="settings_title_release_group_official">Official release groups</string>
+
 
     <!-- ImageActivity -->
     <string name="error_image_loading">Error loading of image</string>
@@ -383,5 +399,15 @@
     <string name="recording_info_tab_info">Info</string>
     <string name="recording_info_tab_credits">Credits</string>
     <string name="show_lyrics_site">Show full version http://lyrics.wikia.com</string>
+
+
+    <string name="tag_propagated_to_albums">Tag was propagated to official albums successfully!</string>
+    <string name="error_tag_propagation_to_albums">Error of tag propagation to official albums</string>
+    <string name="error_post_tag">Error post tag</string>
+    <string name="error_post_rating">Error post rating</string>
+
+    <!-- Youtube -->
+    <string name="youtube_search">YouTube Search</string>
+
 
 </resources>

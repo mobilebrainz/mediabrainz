@@ -28,7 +28,6 @@ public class CollectionsDialogFragment extends DialogFragment {
     }
 
     private RecyclerView collectionRecycler;
-    private Button createCollection;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class CollectionsDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.dialog_fragment_collections, container, false);
-        createCollection = layout.findViewById(R.id.create_collection);
+        Button createCollection = layout.findViewById(R.id.create_collection);
         createCollection.setOnClickListener(v -> {
             ((DialogFragmentListener) getContext()).showCreateCollection();
             dismiss();

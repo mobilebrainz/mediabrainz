@@ -7,6 +7,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -34,6 +35,7 @@ import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
 import app.mediabrainz.data.room.repository.RecommendRepository;
 import app.mediabrainz.dialog.CollectionsDialogFragment;
 import app.mediabrainz.dialog.CreateCollectionDialogFragment;
+import app.mediabrainz.dialog.LocalSettingsDialogFragment;
 import app.mediabrainz.dialog.PagedReleaseDialogFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
@@ -48,6 +50,7 @@ import static app.mediabrainz.adapter.pager.ArtistNavigationPagerAdapter.TAB_TAG
 import static app.mediabrainz.api.model.Collection.ARTIST_ENTITY_TYPE;
 import static app.mediabrainz.api.model.Collection.ARTIST_TYPE;
 import static app.mediabrainz.api.other.CollectionServiceInterface.CollectionType.ARTISTS;
+import static app.mediabrainz.dialog.LocalSettingsDialogFragment.LocalSettingsType.ARTIST_SETTINGS;
 
 
 public class ArtistActivity extends BaseBottomNavActivity implements
@@ -82,6 +85,29 @@ public class ArtistActivity extends BaseBottomNavActivity implements
         floatingActionButton = findViewById(R.id.floatin_action_btn);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
         showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.ADD_TO_COLLECTION);
+    }
+
+    @Override
+    protected int getOptionsMenu() {
+        return R.menu.artist_top_nav;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_share:
+                if (!TextUtils.isEmpty(mbid)) {
+                    shareActionText("https://musicbrainz.org/artist/" + mbid);
+                }
+                return true;
+
+            case R.id.action_settings:
+                LocalSettingsDialogFragment.newInstance(ARTIST_SETTINGS.ordinal()).show(getSupportFragmentManager(), LocalSettingsDialogFragment.TAG);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
     }
 
     @Override
@@ -272,7 +298,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
     @Override
     public void onCollection(String collectionMbid) {
         viewProgressLoading(true);
-        api.addEntityToCollection(
+        api.addEntityToCollectionOld(
                 collectionMbid, ARTISTS, mbid,
                 metadata -> {
                     viewProgressLoading(false);

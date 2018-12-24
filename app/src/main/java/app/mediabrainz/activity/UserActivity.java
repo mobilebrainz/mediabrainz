@@ -23,6 +23,7 @@ import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnCollectionCommunicator;
 import app.mediabrainz.communicator.OnCreateCollectionCommunicator;
 import app.mediabrainz.communicator.OnEditCollectionCommunicator;
+import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
@@ -32,12 +33,22 @@ import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
 import app.mediabrainz.data.room.entity.User;
 import app.mediabrainz.data.room.repository.UserRepository;
 import app.mediabrainz.dialog.PagedReleaseDialogFragment;
+import app.mediabrainz.fragment.AreaCollectionFragment;
+import app.mediabrainz.fragment.ArtistCollectionFragment;
+import app.mediabrainz.fragment.BaseCollectionFragment;
 import app.mediabrainz.fragment.CollectionCreateFragment;
 import app.mediabrainz.fragment.CollectionEditFragment;
-import app.mediabrainz.fragment.CollectionFragment;
 import app.mediabrainz.fragment.CollectionsPagerFragment;
+import app.mediabrainz.fragment.EventCollectionFragment;
+import app.mediabrainz.fragment.LabelCollectionFragment;
+import app.mediabrainz.fragment.PlaceCollectionFragment;
+import app.mediabrainz.fragment.RecordingCollectionFragment;
+import app.mediabrainz.fragment.ReleaseCollectionFragment;
+import app.mediabrainz.fragment.ReleaseGroupCollectionFragment;
+import app.mediabrainz.fragment.SeriesCollectionFragment;
 import app.mediabrainz.fragment.UserProfilePagerFragment;
 import app.mediabrainz.fragment.UserTagPagerFragment;
+import app.mediabrainz.fragment.WorkCollectionFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.util.ShowUtil;
@@ -50,6 +61,17 @@ import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_RATIN
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_RECOMMENDS_POS;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_SEND_MESSAGE;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_TAGS_POS;
+import static app.mediabrainz.api.model.Collection.AREA_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.ARTIST_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.EVENT_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.INSTRUMENT_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.LABEL_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.PLACE_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.RECORDING_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.RELEASE_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.RELEASE_GROUP_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.SERIES_ENTITY_TYPE;
+import static app.mediabrainz.api.model.Collection.WORK_ENTITY_TYPE;
 
 
 public class UserActivity extends BaseBottomNavActivity implements
@@ -66,13 +88,17 @@ public class UserActivity extends BaseBottomNavActivity implements
         OnEditCollectionCommunicator,
         CollectionsPagerFragment.CollectionTabOrdinalCommunicator,
         OnUserCommunicator,
-        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator {
+        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator,
+        OnPlayYoutubeCommunicator,
+        BaseCollectionFragment.OnChangeCollection {
 
     public static final String TAG = "UserActivity";
     public static final String USERNAME = "USERNAME";
     public static final int DEFAULT_USER_NAV_VIEW = R.id.user_navigation_profile;
 
     private int collectionTabOrdinal = -1;
+    private boolean collectionChanged;
+
     private String username;
     private Collection collection;
     private boolean isPrivate;
@@ -177,7 +203,14 @@ public class UserActivity extends BaseBottomNavActivity implements
     @Override
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
-        if (fragment instanceof CollectionFragment || fragment instanceof CollectionCreateFragment) {
+        if (fragment instanceof BaseCollectionFragment) {
+            if (collectionChanged) {
+                collectionChanged = false;
+                ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
+            }
+            //((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
+            bottomNavigationView.setSelectedItemId(R.id.user_navigation_collections);
+        } else if (fragment instanceof CollectionCreateFragment) {
             bottomNavigationView.setSelectedItemId(R.id.user_navigation_collections);
         } else if (fragment instanceof UserTagPagerFragment) {
             bottomNavigationView.setSelectedItemId(R.id.user_navigation_tags);
@@ -243,7 +276,41 @@ public class UserActivity extends BaseBottomNavActivity implements
     public void onCollection(Collection collection) {
         if (!isLoading) {
             this.collection = collection;
-            loadFragment(CollectionFragment.newInstance());
+            switch (collection.getEntityType()) {
+                case ARTIST_ENTITY_TYPE:
+                    loadFragment(ArtistCollectionFragment.newInstance());
+                    break;
+                case AREA_ENTITY_TYPE:
+                    loadFragment(AreaCollectionFragment.newInstance());
+                    break;
+                case EVENT_ENTITY_TYPE:
+                    loadFragment(EventCollectionFragment.newInstance());
+                    break;
+                case INSTRUMENT_ENTITY_TYPE:
+                    //loadFragment(InstrumentCollectionFragment.newInstance());
+                    break;
+                case LABEL_ENTITY_TYPE:
+                    loadFragment(LabelCollectionFragment.newInstance());
+                    break;
+                case PLACE_ENTITY_TYPE:
+                    loadFragment(PlaceCollectionFragment.newInstance());
+                    break;
+                case RECORDING_ENTITY_TYPE:
+                    loadFragment(RecordingCollectionFragment.newInstance());
+                    break;
+                case RELEASE_ENTITY_TYPE:
+                    loadFragment(ReleaseCollectionFragment.newInstance());
+                    break;
+                case RELEASE_GROUP_ENTITY_TYPE:
+                    loadFragment(ReleaseGroupCollectionFragment.newInstance());
+                    break;
+                case SERIES_ENTITY_TYPE:
+                    loadFragment(SeriesCollectionFragment.newInstance());
+                    break;
+                case WORK_ENTITY_TYPE:
+                    loadFragment(WorkCollectionFragment.newInstance());
+                    break;
+            }
         }
     }
 
@@ -254,7 +321,7 @@ public class UserActivity extends BaseBottomNavActivity implements
 
     @Override
     public String getCollectionMbid() {
-        return null;
+        return collection.getId();
     }
 
     @SuppressLint("RestrictedApi")
@@ -369,4 +436,13 @@ public class UserActivity extends BaseBottomNavActivity implements
         return getFragmentViewId();
     }
 
+    @Override
+    public void onPlay(String keyword) {
+        ActivityFactory.startYoutubeSearchActivity(this, keyword);
+    }
+
+    @Override
+    public void changeCollection() {
+        collectionChanged = true;
+    }
 }

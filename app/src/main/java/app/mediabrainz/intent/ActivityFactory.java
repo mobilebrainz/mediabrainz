@@ -7,14 +7,16 @@ import app.mediabrainz.activity.AboutActivity;
 import app.mediabrainz.activity.ArtistActivity;
 import app.mediabrainz.activity.ImageActivity;
 import app.mediabrainz.activity.LoginActivity;
-import app.mediabrainz.activity.MainActivity;
 import app.mediabrainz.activity.RecordingActivity;
 import app.mediabrainz.activity.ReleaseActivity;
+import app.mediabrainz.activity.ResultSearchActivity;
 import app.mediabrainz.activity.SearchActivity;
 import app.mediabrainz.activity.SearchType;
 import app.mediabrainz.activity.SettingsActivity;
 import app.mediabrainz.activity.TagActivity;
 import app.mediabrainz.activity.UserActivity;
+import app.mediabrainz.activity.YoutubeActivity;
+import app.mediabrainz.activity.YoutubeSearchActivity;
 import app.mediabrainz.adapter.pager.TagPagerAdapter;
 
 import static app.mediabrainz.activity.UserActivity.DEFAULT_USER_NAV_VIEW;
@@ -22,18 +24,30 @@ import static app.mediabrainz.activity.UserActivity.DEFAULT_USER_NAV_VIEW;
 
 public class ActivityFactory {
 
+    public static void startYoutubeSearchActivity(Context context, String keyword) {
+        Intent intent = new Intent(context, YoutubeSearchActivity.class);
+        intent.putExtra(YoutubeSearchActivity.KEYWORD, keyword);
+        context.startActivity(intent);
+    }
+
+    public static void startYoutubeActivity(Context context, String videoId) {
+        Intent intent = new Intent(context, YoutubeActivity.class);
+        intent.putExtra(YoutubeActivity.VIDEO_ID, videoId);
+        context.startActivity(intent);
+    }
+
     public static void startSearchActivity(Context context, String searchQuery, SearchType searchType) {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(SearchActivity.SEARCH_QUERY, searchQuery);
-        intent.putExtra(SearchActivity.SEARCH_TYPE, searchType.ordinal());
+        Intent intent = new Intent(context, ResultSearchActivity.class);
+        intent.putExtra(ResultSearchActivity.SEARCH_QUERY, searchQuery);
+        intent.putExtra(ResultSearchActivity.SEARCH_TYPE, searchType.ordinal());
         context.startActivity(intent);
     }
 
     public static void startSearchActivity(Context context, String artist, String album, String recording) {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(SearchActivity.QUERY, artist);
-        intent.putExtra(SearchActivity.ALBUM_SEARCH, album);
-        intent.putExtra(SearchActivity.TRACK_SEARCH, recording);
+        Intent intent = new Intent(context, ResultSearchActivity.class);
+        intent.putExtra(ResultSearchActivity.QUERY, artist);
+        intent.putExtra(ResultSearchActivity.ALBUM_SEARCH, album);
+        intent.putExtra(ResultSearchActivity.TRACK_SEARCH, recording);
         context.startActivity(intent);
     }
 
@@ -77,7 +91,7 @@ public class ActivityFactory {
     }
 
     public static void startMainActivity(Context context) {
-        context.startActivity(new Intent(context, MainActivity.class));
+        context.startActivity(new Intent(context, SearchActivity.class));
     }
 
     public static void startImageActivity(Context context, String imageUrl) {

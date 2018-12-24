@@ -20,6 +20,7 @@ import app.mediabrainz.api.model.Media;
 import app.mediabrainz.api.model.Recording;
 import app.mediabrainz.api.model.Release;
 import app.mediabrainz.communicator.GetReleaseCommunicator;
+import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 
 import static app.mediabrainz.MediaBrainzApp.api;
@@ -159,6 +160,8 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
         recyclerAdapter = tracksAdapter;
         tracksAdapter.setOnItemClickListener(track ->
                 ((OnRecordingCommunicator) getContext()).onRecording(track.getRecording().getId()));
+        tracksAdapter.setOnPlayYoutubeListener(track ->
+                ((OnPlayYoutubeCommunicator) getContext()).onPlay(track.getRecording().getTitle()));
 
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setItemViewCacheSize(50);

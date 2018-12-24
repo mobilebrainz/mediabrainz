@@ -3,6 +3,7 @@ package app.mediabrainz.adapter.recycler.tracks;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,14 +23,23 @@ import static app.mediabrainz.MediaBrainzApp.oauth;
 
 public class ItemViewHolder extends BaseItemViewHolder {
 
+    public interface OnPlayYoutubeListener {
+        void onPlay(Media.Track track);
+    }
+
     public interface OnItemClickListener {
         void onClick(Media.Track track);
     }
 
     private OnItemClickListener onItemClickListener;
+    private OnPlayYoutubeListener onPlayYoutubeListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnPlayYoutubeListener(OnPlayYoutubeListener onPlayYoutubeListener) {
+        this.onPlayYoutubeListener = onPlayYoutubeListener;
     }
 
     private TextView num;
@@ -38,6 +48,7 @@ public class ItemViewHolder extends BaseItemViewHolder {
     private RatingBar userRating;
     private TextView allRatingView;
     private LinearLayout ratingContainer;
+    private ImageView playYoutubeView;
 
     public ItemViewHolder(View itemView, boolean visible) {
         super(itemView, visible);
@@ -47,6 +58,7 @@ public class ItemViewHolder extends BaseItemViewHolder {
         userRating = itemView.findViewById(R.id.user_rating);
         allRatingView = itemView.findViewById(R.id.all_rating);
         ratingContainer = itemView.findViewById(R.id.rating_container);
+        playYoutubeView = itemView.findViewById(R.id.play_youtube);
     }
 
     public void bindView(Media.Track track) {
@@ -55,6 +67,12 @@ public class ItemViewHolder extends BaseItemViewHolder {
                 onItemClickListener.onClick(track);
             }
         });
+        playYoutubeView.setOnClickListener(v -> {
+            if (onPlayYoutubeListener != null) {
+                onPlayYoutubeListener.onPlay(track);
+            }
+        });
+
         num.setText(track.getNumber());
         name.setText(track.getTitle());
         length.setText(MbUtils.formatTime(track.getLength()));
