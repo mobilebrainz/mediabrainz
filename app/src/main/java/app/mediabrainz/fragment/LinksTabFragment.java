@@ -24,7 +24,7 @@ import app.mediabrainz.communicator.GetUrlsCommunicator;
 public class LinksTabFragment extends Fragment {
 
     private View noresultsView;
-    private RecyclerView linksRecyclerView;
+    private RecyclerView recyclerView;
     private List<Url> urls;
 
     public static LinksTabFragment newInstance() {
@@ -36,10 +36,10 @@ public class LinksTabFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_links_tab, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         noresultsView = layout.findViewById(R.id.noresultsView);
-        linksRecyclerView = layout.findViewById(R.id.linksRecyclerView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
@@ -58,15 +58,15 @@ public class LinksTabFragment extends Fragment {
                 adapter.setHolderClickListener(position ->
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(position).getResource())))
                 );
-                linksRecyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
             }
         }
     }
 
     private void configLinksRecycler() {
-        linksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        linksRecyclerView.setItemViewCacheSize(100);
-        linksRecyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
 }
