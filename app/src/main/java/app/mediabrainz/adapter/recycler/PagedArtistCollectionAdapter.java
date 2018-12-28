@@ -85,10 +85,10 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
                 Window win = alertDialog.getWindow();
                 if (win != null) {
                     win.setContentView(R.layout.dialog_rating_bar);
-                    RatingBar rb = win.findViewById(R.id.rating_bar);
+                    RatingBar rb = win.findViewById(R.id.ratingBar);
                     View progressView = win.findViewById(R.id.progressView);
-                    TextView title = win.findViewById(R.id.title_text);
-                    title.setText(itemView.getResources().getString(R.string.rate_entity, artist.getName()));
+                    TextView titleTextView = win.findViewById(R.id.titleTextView);
+                    titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, artist.getName()));
                     rb.setRating(userRatingView.getRating());
 
                     rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {

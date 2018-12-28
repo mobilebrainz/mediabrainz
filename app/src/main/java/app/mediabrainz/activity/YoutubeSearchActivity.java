@@ -37,7 +37,7 @@ public class YoutubeSearchActivity extends BaseActivity implements
     private RecyclerView searchRecyclerView;
     private View errorView;
     private View progressView;
-    private View noresults;
+    private View noresultsView;
 
     @Override
     protected int initContentLayout() {
@@ -52,7 +52,7 @@ public class YoutubeSearchActivity extends BaseActivity implements
         contentView = findViewById(R.id.contentView);
         errorView = findViewById(R.id.errorView);
         progressView = findViewById(R.id.progressView);
-        noresults = findViewById(R.id.noresultsView);
+        noresultsView = findViewById(R.id.noresultsView);
 
         if (savedInstanceState != null) {
             keyword = savedInstanceState.getString(KEYWORD);
@@ -102,7 +102,7 @@ public class YoutubeSearchActivity extends BaseActivity implements
     }
 
     private void search() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(true);
 
@@ -127,7 +127,7 @@ public class YoutubeSearchActivity extends BaseActivity implements
                             }
                         });
                     } else {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     }
                     viewProgressLoading(false);
                 },
@@ -139,7 +139,7 @@ public class YoutubeSearchActivity extends BaseActivity implements
         //ShowUtil.showError(this, t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> search());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> search());
     }
 
     @Override

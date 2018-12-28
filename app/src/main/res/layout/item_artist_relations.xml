@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/container"
+        android:id="@+id/containerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -60,7 +60,7 @@
                 android:paddingBottom="4dp">
 
                 <TextView
-                    android:id="@+id/begin"
+                    android:id="@+id/beginView"
                     android:layout_marginTop="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                     android:textSize="@dimen/text_size_14"/>
 
                 <TextView
-                    android:id="@+id/end"
+                    android:id="@+id/endView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"

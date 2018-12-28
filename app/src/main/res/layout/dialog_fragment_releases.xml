@@ -7,7 +7,6 @@
 
     <!-- https://material.io/design/components/dialogs.html#theming -->
     <LinearLayout
-        android:id="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:background="@color/colorPrimary"
@@ -17,7 +16,7 @@
         android:paddingRight="24dp">
 
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/titleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -33,12 +32,12 @@
         android:layout_height="match_parent">
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/paged_recycler"
+                android:id="@+id/pagedRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="5dp"
@@ -49,7 +48,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <include
-            android:id="@+id/item_network_state"
+            android:id="@+id/itemNetworkStateView"
             layout="@layout/item_network_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

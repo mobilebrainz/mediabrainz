@@ -31,8 +31,8 @@ public class UserProfileFragment extends LazyFragment {
 
     private View errorView;
     private View progressView;
-    private ProgressBar avatarLoading;
-    private FrameLayout avatarFrame;
+    private ProgressBar avatarLoadingView;
+    private FrameLayout avatarFrameView;
     private ImageView avatarView;
     private TextView userTypeView;
     private TextView ageView;
@@ -56,17 +56,17 @@ public class UserProfileFragment extends LazyFragment {
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-        avatarLoading = layout.findViewById(R.id.avatar_loading);
-        avatarFrame = layout.findViewById(R.id.avatar_frame);
-        avatarView = layout.findViewById(R.id.avatar);
-        userTypeView = layout.findViewById(R.id.user_type);
-        ageView = layout.findViewById(R.id.age);
-        genderView = layout.findViewById(R.id.gender);
-        locationView = layout.findViewById(R.id.location);
-        memberSinceView = layout.findViewById(R.id.member_since);
-        homepageView = layout.findViewById(R.id.homepage);
-        languagesView = layout.findViewById(R.id.languages);
-        bioView = layout.findViewById(R.id.bio);
+        avatarLoadingView = layout.findViewById(R.id.avatarLoadingView);
+        avatarFrameView = layout.findViewById(R.id.avatarFrameView);
+        avatarView = layout.findViewById(R.id.avatarView);
+        userTypeView = layout.findViewById(R.id.userTypeView);
+        ageView = layout.findViewById(R.id.ageView);
+        genderView = layout.findViewById(R.id.genderView);
+        locationView = layout.findViewById(R.id.locationView);
+        memberSinceView = layout.findViewById(R.id.memberSinceView);
+        homepageView = layout.findViewById(R.id.homepageView);
+        languagesView = layout.findViewById(R.id.languagesView);
+        bioView = layout.findViewById(R.id.bioView);
 
         loadView();
         return layout;
@@ -118,18 +118,18 @@ public class UserProfileFragment extends LazyFragment {
                         }
 
                         if (!userProfile.getGravatar().contains("https://gravatar.com/avatar/placeholder?d=mm&s=108")) {
-                            avatarFrame.setVisibility(View.VISIBLE);
-                            avatarLoading.setVisibility(View.VISIBLE);
+                            avatarFrameView.setVisibility(View.VISIBLE);
+                            avatarLoadingView.setVisibility(View.VISIBLE);
                             Picasso.get().load(userProfile.getGravatar()).fit().centerInside().into(avatarView,
                                     new Callback() {
                                         @Override
                                         public void onSuccess() {
-                                            avatarLoading.setVisibility(View.GONE);
+                                            avatarLoadingView.setVisibility(View.GONE);
                                         }
 
                                         @Override
                                         public void onError(Exception e) {
-                                            avatarFrame.setVisibility(View.GONE);
+                                            avatarFrameView.setVisibility(View.GONE);
                                         }
                                     });
                         }
@@ -162,7 +162,7 @@ public class UserProfileFragment extends LazyFragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
 }

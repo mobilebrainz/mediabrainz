@@ -37,18 +37,18 @@ public abstract class BaseComplexRecyclerFragment<T> extends LazyFragment {
 
     protected NestedScrollView scrollView;
     protected FrameLayout frameView;
-    protected LinearLayout recyclerContainer;
+    protected LinearLayout recyclerContainerView;
     protected LinearLayout recyclerSettingView;
     protected CheckBox expandCheckBox;
     protected LinearLayout filterView;
-    protected ImageView filterBtnTop;
-    protected ImageView selectBtnTop;
-    protected RecyclerView recycler;
-    protected LinearLayout bottomBar;
-    protected ImageView selectBtn;
-    protected ImageView expandBtn;
-    protected ImageView filterBtn;
-    protected ImageView upBtn;
+    protected ImageView topFilterButton;
+    protected ImageView topSelectButton;
+    protected RecyclerView recyclerView;
+    protected LinearLayout bottomBarView;
+    protected ImageView selectButton;
+    protected ImageView expandButton;
+    protected ImageView filterButton;
+    protected ImageView upButton;
 
     protected Integer getCustomContentLayout() {
         return null;
@@ -63,20 +63,20 @@ public abstract class BaseComplexRecyclerFragment<T> extends LazyFragment {
         int contentLayout = getCustomContentLayout() == null ? R.layout.fragment_base_complex_recycler : getCustomContentLayout();
         View layout = inflater.inflate(contentLayout, container, false);
 
-        scrollView = layout.findViewById(R.id.scroll_view);
-        frameView = layout.findViewById(R.id.frame_view);
-        recyclerContainer = layout.findViewById(R.id.recycler_container);
-        expandCheckBox = layout.findViewById(R.id.expand_check_box);
-        recycler = layout.findViewById(R.id.recycler);
-        recyclerSettingView = layout.findViewById(R.id.recycler_setting);
-        filterView = layout.findViewById(R.id.filter);
-        filterBtnTop = layout.findViewById(R.id.filter_btn_top);
-        selectBtnTop = layout.findViewById(R.id.select_btn_top);
-        bottomBar = layout.findViewById(R.id.bottom_bar);
-        selectBtn = layout.findViewById(R.id.select_btn);
-        expandBtn = layout.findViewById(R.id.expand_btn);
-        filterBtn = layout.findViewById(R.id.filter_btn);
-        upBtn = layout.findViewById(R.id.up_btn);
+        scrollView = layout.findViewById(R.id.scrollView);
+        frameView = layout.findViewById(R.id.frameView);
+        recyclerContainerView = layout.findViewById(R.id.recyclerContainerView);
+        expandCheckBox = layout.findViewById(R.id.expandCheckBox);
+        recyclerView = layout.findViewById(R.id.recyclerView);
+        recyclerSettingView = layout.findViewById(R.id.recyclerSettingView);
+        filterView = layout.findViewById(R.id.filterView);
+        topFilterButton = layout.findViewById(R.id.topFilterButton);
+        topSelectButton = layout.findViewById(R.id.topSelectButton);
+        bottomBarView = layout.findViewById(R.id.bottomBarView);
+        selectButton = layout.findViewById(R.id.selectButton);
+        expandButton = layout.findViewById(R.id.expandButton);
+        filterButton = layout.findViewById(R.id.filterButton);
+        upButton = layout.findViewById(R.id.upButton);
 
         return layout;
     }
@@ -143,8 +143,8 @@ public abstract class BaseComplexRecyclerFragment<T> extends LazyFragment {
         boolean[] finalCheckedItems = checkedItems == null ? new boolean[size] : checkedItems;
 
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(R.string.select_items);
+        TextView tittitleTextVieweText = titleView.findViewById(R.id.titleTextView);
+        tittitleTextVieweText.setText(R.string.select_items);
 
         new AlertDialog.Builder(getContext())
                 .setCustomTitle(titleView)
@@ -183,8 +183,8 @@ public abstract class BaseComplexRecyclerFragment<T> extends LazyFragment {
         }
 
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(R.string.select_item);
+        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+        titleTextView.setText(R.string.select_item);
 
         new AlertDialog.Builder(getContext())
             .setCustomTitle(titleView)
@@ -221,29 +221,29 @@ public abstract class BaseComplexRecyclerFragment<T> extends LazyFragment {
     public void configRecyclerToolbar() {
         if (recyclerAdapter.getSections().size() > 1) {
             recyclerSettingView.setVisibility(View.VISIBLE);
-            bottomBar.setVisibility(View.VISIBLE);
+            bottomBarView.setVisibility(View.VISIBLE);
 
             expandCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 int img = isChecked ? R.drawable.ic_arrow_collapse_all_24 :
                         R.drawable.ic_arrow_expand_all_24;
-                expandBtn.setImageDrawable(ContextCompat.getDrawable(getContext(), img));
+                expandButton.setImageDrawable(ContextCompat.getDrawable(getContext(), img));
                 recyclerAdapter.expandAll(isChecked);
             });
-            expandBtn.setOnClickListener(v -> expandCheckBox.setChecked(!expandCheckBox.isChecked()));
+            expandButton.setOnClickListener(v -> expandCheckBox.setChecked(!expandCheckBox.isChecked()));
 
-            filterBtnTop.setOnClickListener(this::filter);
-            filterBtn.setOnClickListener(this::filter);
+            topFilterButton.setOnClickListener(this::filter);
+            filterButton.setOnClickListener(this::filter);
 
-            selectBtnTop.setOnClickListener(this::select);
-            selectBtn.setOnClickListener(this::select);
+            topSelectButton.setOnClickListener(this::select);
+            selectButton.setOnClickListener(this::select);
 
-            upBtn.setOnClickListener(v -> {
+            upButton.setOnClickListener(v -> {
                 scrollView.fullScroll(View.FOCUS_UP);
                 scrollView.fullScroll(View.FOCUS_UP);
             });
         } else {
             recyclerSettingView.setVisibility(View.GONE);
-            bottomBar.setVisibility(View.GONE);
+            bottomBarView.setVisibility(View.GONE);
             recyclerAdapter.expandAll(true);
         }
     }

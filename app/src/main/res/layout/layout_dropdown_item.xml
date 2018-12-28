@@ -2,7 +2,7 @@
 <!-- https://material.io/design/components/lists.html#specs  -->
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dropdown_item"
+    android:id="@+id/dropdownItemView"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="@color/actionMenuTextColor"

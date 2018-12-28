@@ -33,8 +33,8 @@ public class ReleaseInfoTabFragment extends Fragment {
 
     private void insertNestedFragments() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_release_information, new ReleaseInformationFragment())
-                .replace(R.id.fragment_wiki, new WikipediaWebViewFragment())
+        transaction.replace(R.id.releaseInformationFragment, new ReleaseInformationFragment())
+                .replace(R.id.wikipediaWebViewFragment, new WikipediaWebViewFragment())
                 .commit();
     }
 

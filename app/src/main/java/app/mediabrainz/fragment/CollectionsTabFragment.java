@@ -56,7 +56,7 @@ public class CollectionsTabFragment extends Fragment {
     private boolean isPrivate;
 
     private View progressView;
-    private RecyclerView collectionsRecycler;
+    private RecyclerView collectionsRecyclerView;
 
     public static CollectionsTabFragment newInstance(int collectionTab) {
         Bundle args = new Bundle();
@@ -71,7 +71,7 @@ public class CollectionsTabFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_collections_tab, container, false);
 
         collectionTab = getArguments().getInt(COLLECTION_TAB);
-        collectionsRecycler = layout.findViewById(R.id.collections_recycler);
+        collectionsRecyclerView = layout.findViewById(R.id.collectionsRecyclerView);
         progressView = layout.findViewById(R.id.progressView);
 
         load();
@@ -114,8 +114,8 @@ public class CollectionsTabFragment extends Fragment {
                             pos -> {
                                 Collection collection = tabCollections.get(pos);
                                 View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-                                TextView titleText = titleView.findViewById(R.id.title_text);
-                                titleText.setText(getString(R.string.collection_alert_title, collection.getName()));
+                                TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+                                titleTextView.setText(getString(R.string.collection_alert_title, collection.getName()));
 
                                 new AlertDialog.Builder(getContext())
                                         .setCustomTitle(titleView)
@@ -138,20 +138,20 @@ public class CollectionsTabFragment extends Fragment {
                                         .show();
                             });
                 }
-                collectionsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-                collectionsRecycler.setItemViewCacheSize(100);
-                collectionsRecycler.setHasFixedSize(true);
-                collectionsRecycler.setAdapter(adapter);
+                collectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                collectionsRecyclerView.setItemViewCacheSize(100);
+                collectionsRecyclerView.setHasFixedSize(true);
+                collectionsRecyclerView.setAdapter(adapter);
             }
         }
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
-            collectionsRecycler.setAlpha(0.3F);
+            collectionsRecyclerView.setAlpha(0.3F);
             progressView.setVisibility(View.VISIBLE);
         } else {
-            collectionsRecycler.setAlpha(1.0F);
+            collectionsRecyclerView.setAlpha(1.0F);
             progressView.setVisibility(View.GONE);
         }
     }

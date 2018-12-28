@@ -17,7 +17,7 @@ public abstract class BaseHeaderViewHolder extends RecyclerView.ViewHolder {
 
     public BaseHeaderViewHolder(View itemView) {
         super(itemView);
-        container = itemView.findViewById(R.id.container);
+        container = itemView.findViewById(R.id.containerView);
     }
 
     protected abstract void bind(BaseHeader header);

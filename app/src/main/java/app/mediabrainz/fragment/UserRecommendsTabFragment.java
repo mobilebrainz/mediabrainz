@@ -43,7 +43,7 @@ public class UserRecommendsTabFragment extends Fragment {
 
     private View errorView;
     private View progressView;
-    private View noresults;
+    private View noresultsView;
     private RecyclerView recycler;
 
 
@@ -63,8 +63,8 @@ public class UserRecommendsTabFragment extends Fragment {
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-        noresults = layout.findViewById(R.id.noresultsView);
-        recycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recycler = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
@@ -78,7 +78,7 @@ public class UserRecommendsTabFragment extends Fragment {
 
     private void load() {
         viewError(false);
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         viewProgressLoading(true);
         new RecommendRepository().getAll(recommends -> {
@@ -104,7 +104,7 @@ public class UserRecommendsTabFragment extends Fragment {
 
             } else {
                 viewProgressLoading(false);
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -162,7 +162,7 @@ public class UserRecommendsTabFragment extends Fragment {
                     break;
             }
         } else {
-            noresults.setVisibility(View.VISIBLE);
+            noresultsView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -190,7 +190,7 @@ public class UserRecommendsTabFragment extends Fragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
 }

@@ -83,11 +83,11 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
                 Window win = alertDialog.getWindow();
                 if (win != null) {
                     win.setContentView(R.layout.dialog_rating_bar);
-                    RatingBar rb = win.findViewById(R.id.rating_bar);
+                    RatingBar rb = win.findViewById(R.id.ratingBar);
                     View progressView = win.findViewById(R.id.progressView);
                     rb.setRating(userRatingView.getRating());
-                    TextView title = win.findViewById(R.id.title_text);
-                    title.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
+                    TextView titleTextView = win.findViewById(R.id.titleTextView);
+                    titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
 
                     rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
                         if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {

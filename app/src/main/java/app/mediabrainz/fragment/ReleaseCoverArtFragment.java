@@ -25,9 +25,9 @@ import static app.mediabrainz.MediaBrainzApp.api;
 
 public class ReleaseCoverArtFragment extends LazyFragment {
 
-    private RecyclerView coverartRecycler;
+    private RecyclerView coverartRecyclerView;
     private View progressView;
-    private View noresults;
+    private View noresultsView;
 
     public static ReleaseCoverArtFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,8 +42,8 @@ public class ReleaseCoverArtFragment extends LazyFragment {
         View layout = inflater.inflate(R.layout.fragment_cover_art, container, false);
 
         progressView = layout.findViewById(R.id.progressView);
-        noresults = layout.findViewById(R.id.noresultsView);
-        coverartRecycler = layout.findViewById(R.id.coverart_recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        coverartRecyclerView = layout.findViewById(R.id.coverartRecyclerView);
 
         configCoverartRecycler();
         loadView();
@@ -52,7 +52,7 @@ public class ReleaseCoverArtFragment extends LazyFragment {
 
     @Override
     public void lazyLoad() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         String releaseMbid = ((GetReleaseCommunicator) getContext()).getReleaseMbid();
         if (!TextUtils.isEmpty(releaseMbid)) {
@@ -62,16 +62,16 @@ public class ReleaseCoverArtFragment extends LazyFragment {
                     this::displayResult,
                     t -> {
                         progressView.setVisibility(View.GONE);
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     }
             );
         }
     }
 
     private void configCoverartRecycler() {
-        coverartRecycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        coverartRecycler.setItemViewCacheSize(50);
-        coverartRecycler.setHasFixedSize(true);
+        coverartRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        coverartRecyclerView.setItemViewCacheSize(50);
+        coverartRecyclerView.setHasFixedSize(true);
     }
 
     private void displayResult(ReleaseCoverArt coverArt) {
@@ -88,7 +88,7 @@ public class ReleaseCoverArtFragment extends LazyFragment {
         }
         if (!coverArts.isEmpty()) {
             CoverArtAdapter adapter = new CoverArtAdapter(coverArts);
-            coverartRecycler.setAdapter(adapter);
+            coverartRecyclerView.setAdapter(adapter);
             adapter.setHolderClickListener(position -> {
                 String imageUrl = coverArts.get(position).getImage();
                 if (!TextUtils.isEmpty(imageUrl)) {

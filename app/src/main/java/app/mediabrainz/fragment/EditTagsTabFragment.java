@@ -45,7 +45,7 @@ public class EditTagsTabFragment extends Fragment {
 
     private int tagsTab = 0;
 
-    private View noresults;
+    private View noresultsView;
     private RecyclerView tagsRecycler;
 
     public static EditTagsTabFragment newInstance(int tagsTab) {
@@ -62,8 +62,8 @@ public class EditTagsTabFragment extends Fragment {
 
         tagsTab = getArguments().getInt(TAGS_TAB);
 
-        noresults = layout.findViewById(R.id.noresultsView);
-        tagsRecycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        tagsRecycler = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
@@ -76,7 +76,7 @@ public class EditTagsTabFragment extends Fragment {
     }
 
     private void load() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         TagInterface parent = (TagInterface) getParentFragment();
 
@@ -122,21 +122,21 @@ public class EditTagsTabFragment extends Fragment {
                     Window win = alertDialog.getWindow();
                     if (win != null) {
                         win.setContentView(R.layout.dialog_vote_tag);
-                        ImageView voteUpBtn = win.findViewById(R.id.vote_up_btn);
+                        ImageView voteUpButton = win.findViewById(R.id.voteUpButton);
 
-                        voteUpBtn.setOnClickListener(v -> {
+                        voteUpButton.setOnClickListener(v -> {
                             alertDialog.dismiss();
                             parent.postTag(tag, UserTagXML.VoteType.UPVOTE, tagsTab);
                         });
 
-                        ImageView voteWithdrawBtn = win.findViewById(R.id.vote_withdraw_btn);
-                        voteWithdrawBtn.setOnClickListener(v -> {
+                        ImageView voteWithdrawButton = win.findViewById(R.id.voteWithdrawButton);
+                        voteWithdrawButton.setOnClickListener(v -> {
                             alertDialog.dismiss();
                             parent.postTag(tag, UserTagXML.VoteType.WITHDRAW, tagsTab);
                         });
 
-                        ImageView voteDownBtn = win.findViewById(R.id.vote_down_btn);
-                        voteDownBtn.setOnClickListener(v -> {
+                        ImageView voteDownButton = win.findViewById(R.id.voteDownButton);
+                        voteDownButton.setOnClickListener(v -> {
                             alertDialog.dismiss();
                             parent.postTag(tag, UserTagXML.VoteType.DOWNVOTE, tagsTab);
                         });

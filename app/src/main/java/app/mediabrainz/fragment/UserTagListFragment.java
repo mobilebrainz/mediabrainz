@@ -35,7 +35,7 @@ public class UserTagListFragment extends Fragment {
     private TagServiceInterface.UserTagType userTagType;
 
 
-    private View noresults;
+    private View noresultsView;
     private RecyclerView recycler;
 
     public static UserTagListFragment newInstance(int tagType) {
@@ -49,8 +49,8 @@ public class UserTagListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        noresults = layout.findViewById(R.id.noresultsView);
-        recycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recycler = layout.findViewById(R.id.recyclerView);
 
         intTagType = getArguments().getInt(TAG_TYPE);
 
@@ -66,7 +66,7 @@ public class UserTagListFragment extends Fragment {
     }
 
     public void load() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         switch (intTagType) {
             case TAB_ARTISTS_POS:
@@ -82,7 +82,7 @@ public class UserTagListFragment extends Fragment {
         List<TagEntity> tagEntities = ((GetUserTagEntitiesCommunicator) getParentFragment()).getEntities(userTagType);
         if (tagEntities != null) {
             if (tagEntities.isEmpty()) {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             } else {
                 switch (intTagType) {
                     case TAB_ARTISTS_POS:

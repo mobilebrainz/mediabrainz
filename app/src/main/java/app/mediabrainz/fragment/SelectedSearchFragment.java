@@ -32,8 +32,8 @@ public class SelectedSearchFragment extends Fragment {
 
     private List<String> genres = new ArrayList<>();
 
-    private AutoCompleteTextView searchField;
-    private Spinner searchTypeSpinner;
+    private AutoCompleteTextView queryInputView;
+    private Spinner searchSpinner;
     private ArrayAdapter<String> adapter;
 
     public static SearchFragment newInstance() {
@@ -47,11 +47,11 @@ public class SelectedSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_selected_search, container, false);
 
-        searchTypeSpinner = layout.findViewById(R.id.search_spin);
-        searchField = layout.findViewById(R.id.query_input);
+        searchSpinner = layout.findViewById(R.id.searchSpinner);
+        queryInputView = layout.findViewById(R.id.queryInputView);
 
-        searchField.setOnEditorActionListener((view, actionId, event) -> search());
-        layout.findViewById(R.id.search_btn).setOnClickListener(view -> search());
+        queryInputView.setOnEditorActionListener((view, actionId, event) -> search());
+        layout.findViewById(R.id.searchButton).setOnClickListener(view -> search());
 
         return layout;
     }
@@ -69,9 +69,9 @@ public class SelectedSearchFragment extends Fragment {
         }
         ArrayAdapter<CharSequence> typeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, types);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        searchTypeSpinner.setAdapter(typeAdapter);
+        searchSpinner.setAdapter(typeAdapter);
 
-        searchTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        searchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                 if (SearchType.TAG.ordinal() == pos) {
                     genres = MediaBrainzApp.getGenres();
@@ -82,14 +82,14 @@ public class SelectedSearchFragment extends Fragment {
                                     android.R.layout.simple_dropdown_item_1line,
                                     genres.toArray(new String[genres.size()]));
                         }
-                        searchField.setThreshold(1);
-                        searchField.setAdapter(adapter);
+                        queryInputView.setThreshold(1);
+                        queryInputView.setAdapter(adapter);
                     }
                 } else if (SearchType.USER.ordinal() == pos && MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
-                    searchField.setThreshold(2);
-                    searchField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.USER));
+                    queryInputView.setThreshold(2);
+                    queryInputView.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.USER));
                 } else {
-                    searchField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
+                    queryInputView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
                 }
             }
 
@@ -100,14 +100,14 @@ public class SelectedSearchFragment extends Fragment {
     }
 
     private boolean search() {
-        String query = searchField.getText().toString().trim().toLowerCase();
+        String query = queryInputView.getText().toString().trim().toLowerCase();
         if (!TextUtils.isEmpty(query)) {
             hideKeyboard();
 
             if (genres.contains(query)) {
                 ActivityFactory.startTagActivity(getContext(), query, true);
             } else {
-                SearchType searchType = SearchType.values()[searchTypeSpinner.getSelectedItemPosition()];
+                SearchType searchType = SearchType.values()[searchSpinner.getSelectedItemPosition()];
                 ((SelectedSearchFragmentListener) getContext()).searchType(searchType, query);
             }
         }
@@ -116,7 +116,7 @@ public class SelectedSearchFragment extends Fragment {
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(queryInputView.getWindowToken(), 0);
     }
 
 }

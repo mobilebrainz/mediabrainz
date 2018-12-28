@@ -20,7 +20,7 @@
             android:layout_height="wrap_content">
 
             <Spinner
-                android:id="@+id/search_spin"
+                android:id="@+id/searchSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -37,7 +37,7 @@
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
-                    android:id="@+id/query_input"
+                    android:id="@+id/queryInputView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/search_hint"
@@ -48,7 +48,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/search_btn"
+                android:id="@+id/searchButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/colorPrimaryLight"

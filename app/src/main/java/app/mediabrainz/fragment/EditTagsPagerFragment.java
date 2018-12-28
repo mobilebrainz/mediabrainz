@@ -63,15 +63,15 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
     private int tagsTab = EditTagsPagerAdapter.TagsTab.GENRES.ordinal();
 
-    private View content;
+    private View contentView;
     private View errorView;
     private View progressView;
-    private TextView loginWarning;
-    private AutoCompleteTextView tagInput;
-    private ImageButton tagBtn;
+    private TextView loginWarningView;
+    private AutoCompleteTextView tagInputView;
+    private ImageButton tagButton;
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
 
     public static EditTagsPagerFragment newInstance(int tagsPagerType) {
         Bundle args = new Bundle();
@@ -87,15 +87,15 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
         tagsPagerType = TagsPagerType.values()[getArguments().getInt(TAGS_PAGER_TYPE, 0)];
 
-        content = layout.findViewById(R.id.contentView);
+        contentView = layout.findViewById(R.id.contentView);
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-        loginWarning = layout.findViewById(R.id.login_warning);
-        tagInput = layout.findViewById(R.id.tag_input);
-        tagBtn = layout.findViewById(R.id.tag_btn);
+        loginWarningView = layout.findViewById(R.id.loginWarningView);
+        tagInputView = layout.findViewById(R.id.tagInputView);
+        tagButton = layout.findViewById(R.id.tagButton);
 
-        viewPager = layout.findViewById(R.id.pagerView);
-        tabLayout = layout.findViewById(R.id.tabsView);
+        pagerView = layout.findViewById(R.id.pagerView);
+        tabsView = layout.findViewById(R.id.tabsView);
 
         setEditListeners();
         loadView();
@@ -139,12 +139,12 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
         if (isExist) {
             EditTagsPagerAdapter pagerAdapter = new EditTagsPagerAdapter(getChildFragmentManager(), getResources());
-            viewPager.setAdapter(pagerAdapter);
-            viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-            tabLayout.setupWithViewPager(viewPager);
-            tabLayout.setTabMode(TabLayout.MODE_FIXED);
-            pagerAdapter.setupTabViews(tabLayout);
-            viewPager.setCurrentItem(tagsTab);
+            pagerView.setAdapter(pagerAdapter);
+            pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+            tabsView.setupWithViewPager(pagerView);
+            tabsView.setTabMode(TabLayout.MODE_FIXED);
+            pagerAdapter.setupTabViews(tabsView);
+            pagerView.setCurrentItem(tagsTab);
 
             api.getGenres(
                     g -> {
@@ -153,8 +153,8 @@ public class EditTagsPagerFragment extends LazyFragment implements
                                 getContext(),
                                 android.R.layout.simple_dropdown_item_1line,
                                 allGenres.toArray(new String[allGenres.size()]));
-                        tagInput.setThreshold(1);
-                        tagInput.setAdapter(adapter);
+                        tagInputView.setThreshold(1);
+                        tagInputView.setAdapter(adapter);
                     },
                     this::showConnectionWarning);
         }
@@ -163,18 +163,18 @@ public class EditTagsPagerFragment extends LazyFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        loginWarning.setVisibility(oauth.hasAccount() ? View.GONE : View.VISIBLE);
+        loginWarningView.setVisibility(oauth.hasAccount() ? View.GONE : View.VISIBLE);
     }
 
     private void setEditListeners() {
-        tagBtn.setOnClickListener(v -> {
+        tagButton.setOnClickListener(v -> {
             if (progressView.getVisibility() == View.VISIBLE) {
                 return;
             }
             if (oauth.hasAccount()) {
-                String tagString = tagInput.getText().toString().trim();
+                String tagString = tagInputView.getText().toString().trim();
                 if (TextUtils.isEmpty(tagString)) {
-                    tagInput.setText("");
+                    tagInputView.setText("");
                 } else {
                     tagsTab = allGenres.contains(tagString.toLowerCase()) ? GENRES.ordinal() : TAGS.ordinal();
                     postTag(tagString, UserTagXML.VoteType.UPVOTE);
@@ -203,7 +203,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                                     artist.setUserTags(a.getUserTags());
                                     artist.setGenres(a.getGenres());
                                     artist.setUserGenres(a.getUserGenres());
-                                    tagInput.setText("");
+                                    tagInputView.setText("");
 
                                     if (MediaBrainzApp.getPreferences().isPropagateArtistTags()) {
                                         propagateTagToAlbums(tag, voteType);
@@ -264,7 +264,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                                     releaseGroup.setGenres(a.getGenres());
                                     releaseGroup.setUserGenres(a.getUserGenres());
                                     lazyLoad();
-                                    tagInput.setText("");
+                                    tagInputView.setText("");
                                     viewProgressLoading(false);
                                 },
                                 this::showConnectionWarning
@@ -291,7 +291,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                                     recording.setGenres(a.getGenres());
                                     recording.setUserGenres(a.getUserGenres());
                                     lazyLoad();
-                                    tagInput.setText("");
+                                    tagInputView.setText("");
                                     viewProgressLoading(false);
                                 },
                                 this::showConnectionWarning
@@ -324,21 +324,21 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
-            content.setAlpha(0.3F);
+            contentView.setAlpha(0.3F);
             progressView.setVisibility(View.VISIBLE);
         } else {
-            content.setAlpha(1.0F);
+            contentView.setAlpha(1.0F);
             progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
-            content.setVisibility(View.INVISIBLE);
+            contentView.setVisibility(View.INVISIBLE);
             errorView.setVisibility(View.VISIBLE);
         } else {
             errorView.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
+            contentView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -347,7 +347,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
         viewProgressLoading(false);
         viewError(true);
         errorView.setVisibility(View.VISIBLE);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
     @Override

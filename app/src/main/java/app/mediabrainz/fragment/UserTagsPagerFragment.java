@@ -31,11 +31,11 @@ public class UserTagsPagerFragment extends LazyFragment implements
     private boolean isLoading;
     private boolean isError;
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
     private View errorView;
     private View progressView;
-    private View noresults;
+    private View noresultsView;
 
     public static UserTagsPagerFragment newInstance() {
         Bundle args = new Bundle();
@@ -50,9 +50,9 @@ public class UserTagsPagerFragment extends LazyFragment implements
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-        noresults = layout.findViewById(R.id.noresultsView);
-        viewPager = layout.findViewById(R.id.pagerView);
-        tabLayout = layout.findViewById(R.id.tabsView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        pagerView = layout.findViewById(R.id.pagerView);
+        tabsView = layout.findViewById(R.id.tabsView);
 
         loadView();
         return layout;
@@ -61,7 +61,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
     @Override
     protected void lazyLoad() {
         viewError(false);
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         String username = ((GetUsernameCommunicator) getContext()).getUsername();
         if (username != null) {
@@ -71,17 +71,17 @@ public class UserTagsPagerFragment extends LazyFragment implements
                     tagMap -> {
                         viewProgressLoading(false);
                         if (tagMap.get(Tag.TagType.GENRE).isEmpty() && tagMap.get(Tag.TagType.TAG).isEmpty()) {
-                            noresults.setVisibility(View.VISIBLE);
+                            noresultsView.setVisibility(View.VISIBLE);
                         } else {
                             setGenres(tagMap.get(Tag.TagType.GENRE));
                             setTags(tagMap.get(Tag.TagType.TAG));
 
                             UserTagsPagerAdapter pagerAdapter = new UserTagsPagerAdapter(getChildFragmentManager(), getResources());
-                            viewPager.setAdapter(pagerAdapter);
-                            viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-                            tabLayout.setupWithViewPager(viewPager);
-                            tabLayout.setTabMode(TabLayout.MODE_FIXED);
-                            pagerAdapter.setupTabViews(tabLayout);
+                            pagerView.setAdapter(pagerAdapter);
+                            pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+                            tabsView.setupWithViewPager(pagerView);
+                            tabsView.setTabMode(TabLayout.MODE_FIXED);
+                            pagerAdapter.setupTabViews(tabsView);
                         }
                     },
                     this::showConnectionWarning);
@@ -112,7 +112,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
     @Override

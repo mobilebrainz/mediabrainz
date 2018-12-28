@@ -23,7 +23,7 @@ public class UsersFragment extends LazyFragment {
     private boolean isLoading;
     private boolean isError;
 
-    private View noresults;
+    private View noresultsView;
     private RecyclerView recycler;
     private View errorView;
     private View progressView;
@@ -41,8 +41,8 @@ public class UsersFragment extends LazyFragment {
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-        noresults = layout.findViewById(R.id.noresultsView);
-        recycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recycler = layout.findViewById(R.id.recyclerView);
 
         configRecycler();
         loadView();
@@ -57,7 +57,7 @@ public class UsersFragment extends LazyFragment {
 
     @Override
     protected void lazyLoad() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(true);
 
@@ -75,11 +75,11 @@ public class UsersFragment extends LazyFragment {
                             users.remove(position);
                             userAdapter.notifyItemRemoved(position);
                             if (users.size() == 0) {
-                                noresults.setVisibility(View.VISIBLE);
+                                noresultsView.setVisibility(View.VISIBLE);
                             }
                         }));
             } else {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -87,8 +87,8 @@ public class UsersFragment extends LazyFragment {
 
     public void onDelete(User user, Action action) {
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(R.string.user_delete_user);
+        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+        titleTextView.setText(R.string.user_delete_user);
 
         new AlertDialog.Builder(getContext())
                 .setCustomTitle(titleView)

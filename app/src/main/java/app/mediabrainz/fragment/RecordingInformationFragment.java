@@ -26,7 +26,7 @@ public class RecordingInformationFragment extends Fragment {
     private Recording recording;
 
     private TextView recordingName;
-    private TextView length;
+    private TextView lengthView;
     private TextView artistNameView;
 
     public static RecordingInformationFragment newInstance() {
@@ -41,7 +41,7 @@ public class RecordingInformationFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_recording_information, container, false);
 
         recordingName = layout.findViewById(R.id.recordingNameView);
-        length = layout.findViewById(R.id.length);
+        lengthView = layout.findViewById(R.id.lengthView);
         artistNameView = layout.findViewById(R.id.artistNameView);
 
         load();
@@ -85,10 +85,10 @@ public class RecordingInformationFragment extends Fragment {
     private void setLength() {
         Long len = recording.getLength();
         if (len != null) {
-            length.setVisibility(View.VISIBLE);
-            length.setText(MbUtils.formatTime(len));
+            lengthView.setVisibility(View.VISIBLE);
+            lengthView.setText(MbUtils.formatTime(len));
         } else {
-            length.setVisibility(View.GONE);
+            lengthView.setVisibility(View.GONE);
         }
     }
 

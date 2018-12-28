@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/container"
+        android:id="@+id/containerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -27,7 +27,7 @@
             android:paddingTop="6dp">
 
             <TextView
-                android:id="@+id/track_num"
+                android:id="@+id/trackNumView"
                 android:layout_width="22dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_13"/>
@@ -65,7 +65,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/track_length"
+                android:id="@+id/trackLengthView"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"

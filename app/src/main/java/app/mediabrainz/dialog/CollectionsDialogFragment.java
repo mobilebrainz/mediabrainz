@@ -27,7 +27,7 @@ public class CollectionsDialogFragment extends DialogFragment {
         void showCreateCollection();
     }
 
-    private RecyclerView collectionRecycler;
+    private RecyclerView collectionRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,16 +39,16 @@ public class CollectionsDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.dialog_fragment_collections, container, false);
-        Button createCollection = layout.findViewById(R.id.create_collection);
-        createCollection.setOnClickListener(v -> {
+        Button createCollectionButton = layout.findViewById(R.id.createCollectionButton);
+        createCollectionButton.setOnClickListener(v -> {
             ((DialogFragmentListener) getContext()).showCreateCollection();
             dismiss();
         });
 
-        collectionRecycler = layout.findViewById(R.id.collection_recycler);
-        collectionRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        collectionRecycler.setItemViewCacheSize(50);
-        collectionRecycler.setHasFixedSize(true);
+        collectionRecyclerView = layout.findViewById(R.id.collectionRecyclerView);
+        collectionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        collectionRecyclerView.setItemViewCacheSize(50);
+        collectionRecyclerView.setHasFixedSize(true);
         return layout;
     }
 
@@ -58,7 +58,7 @@ public class CollectionsDialogFragment extends DialogFragment {
         List<Collection> collections = ((GetCollectionsCommunicator) getContext()).getCollections();
         if (collections != null) {
             DialogCollectionsAdapter adapter = new DialogCollectionsAdapter(collections);
-            collectionRecycler.setAdapter(adapter);
+            collectionRecyclerView.setAdapter(adapter);
             adapter.setHolderClickListener(position -> {
                 ((DialogFragmentListener) getContext()).onCollection(collections.get(position).getId());
                 dismiss();

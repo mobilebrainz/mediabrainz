@@ -116,7 +116,7 @@ public class UserTagPagerFragment extends Fragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
     @Override

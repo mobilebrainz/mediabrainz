@@ -6,7 +6,6 @@
 
     <!-- https://material.io/design/components/dialogs.html#theming -->
     <LinearLayout
-        android:id="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="64dp"
@@ -17,7 +16,7 @@
         android:paddingRight="24dp">
 
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/titleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -37,7 +36,7 @@
         android:paddingTop="8dp">
 
         <RatingBar
-            android:id="@+id/rating_bar"
+            android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

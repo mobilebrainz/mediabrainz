@@ -40,11 +40,11 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
     protected Collection collection;
 
     protected SwipeRefreshLayout swipeRefreshLayout;
-    protected RecyclerView pagedRecycler;
+    protected RecyclerView pagedRecyclerView;
     protected TextView errorMessageTextView;
     protected Button retryLoadingButton;
     protected ProgressBar loadingProgressBar;
-    protected View itemNetworkState;
+    protected View itemNetworkStateView;
 
     protected View errorView;
     protected View progressView;
@@ -63,16 +63,16 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
 
-        swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = layout.findViewById(R.id.swipeRefreshLayout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
         loadingProgressBar = layout.findViewById(R.id.loadingProgressBar);
-        itemNetworkState = layout.findViewById(R.id.item_network_state);
+        itemNetworkStateView = layout.findViewById(R.id.itemNetworkStateView);
 
-        pagedRecycler = layout.findViewById(R.id.paged_recycler);
-        pagedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        pagedRecycler.setNestedScrollingEnabled(true);
-        pagedRecycler.setHasFixedSize(true);
-        pagedRecycler.setItemViewCacheSize(100);
+        pagedRecyclerView = layout.findViewById(R.id.pagedRecyclerView);
+        pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        pagedRecyclerView.setNestedScrollingEnabled(true);
+        pagedRecyclerView.setHasFixedSize(true);
+        pagedRecyclerView.setItemViewCacheSize(100);
 
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
@@ -86,8 +86,8 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
 
     public void onDelete(BaseLookupEntity entity, Action action) {
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(R.string.collection_delete_entity);
+        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+        titleTextView.setText(R.string.collection_delete_entity);
 
         new AlertDialog.Builder(getContext())
                 .setCustomTitle(titleView)
@@ -120,7 +120,7 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
     private void showConnectionWarning(Throwable t) {
         progressView.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
     @Override

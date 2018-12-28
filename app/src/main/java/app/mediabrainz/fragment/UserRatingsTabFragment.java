@@ -39,13 +39,13 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
     private RatingsViewModel ratingsViewModel;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView pagedRecycler;
+    private RecyclerView pagedRecyclerView;
     private BasePagedListAdapter<Rating> adapter;
 
     private TextView errorMessageTextView;
     private Button retryLoadingButton;
     private ProgressBar loadingProgressBar;
-    private View itemNetworkState;
+    private View itemNetworkStateView;
 
     public static UserRatingsTabFragment newInstance(int ratingsTab) {
         Bundle args = new Bundle();
@@ -61,11 +61,11 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
 
         ratingType = RatingServiceInterface.RatingType.values()[getArguments().getInt(RATINGS_TAB)];
 
-        pagedRecycler = layout.findViewById(R.id.paged_recycler);
-        swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
+        pagedRecyclerView = layout.findViewById(R.id.pagedRecyclerView);
+        swipeRefreshLayout = layout.findViewById(R.id.swipeRefreshLayout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
         loadingProgressBar = layout.findViewById(R.id.loadingProgressBar);
-        itemNetworkState = layout.findViewById(R.id.item_network_state);
+        itemNetworkStateView = layout.findViewById(R.id.itemNetworkStateView);
 
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
@@ -102,10 +102,10 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
             ratingsViewModel.ratingsLiveData.observe(this, adapter::submitList);
             ratingsViewModel.getNetworkState().observe(this, adapter::setNetworkState);
 
-            pagedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            pagedRecycler.setNestedScrollingEnabled(true);
-            pagedRecycler.setHasFixedSize(true);
-            pagedRecycler.setAdapter(adapter);
+            pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            pagedRecyclerView.setNestedScrollingEnabled(true);
+            pagedRecyclerView.setHasFixedSize(true);
+            pagedRecyclerView.setAdapter(adapter);
 
             initSwipeToRefresh();
         }
@@ -118,7 +118,7 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
                 //Show the current network state for the first getWikidata when the rating list
                 //in the adapter is empty and disable swipe to scroll at the first loading
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
-                    itemNetworkState.setVisibility(View.VISIBLE);
+                    itemNetworkStateView.setVisibility(View.VISIBLE);
                     //errorView message
                     errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
                     if (networkState.getMessage() != null) {
@@ -129,7 +129,7 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
                     loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
-                    pagedRecycler.scrollToPosition(0);
+                    pagedRecyclerView.scrollToPosition(0);
                 }
             }
         });
@@ -137,7 +137,7 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             ratingsViewModel.refresh();
             swipeRefreshLayout.setRefreshing(false);
-            pagedRecycler.scrollToPosition(0);
+            pagedRecyclerView.scrollToPosition(0);
         });
     }
 

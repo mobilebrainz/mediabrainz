@@ -54,7 +54,7 @@ public class WikipediaWebViewFragment extends Fragment {
 
         progressView = layout.findViewById(R.id.progressView);
         errorView = layout.findViewById(R.id.errorView);
-        webView = layout.findViewById(R.id.web_view);
+        webView = layout.findViewById(R.id.webView);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -97,7 +97,7 @@ public class WikipediaWebViewFragment extends Fragment {
         ((SetWebViewCommunicator) getContext()).setWebView(webView);
 
         lang = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0).getLanguage();
-        langButton = layout.findViewById(R.id.lang_btn);
+        langButton = layout.findViewById(R.id.langButton);
         langButton.setOnClickListener(v -> {
             buttonLang = buttonLang.equals("en") ? lang : "en";
             webView.loadUrl(urlMap.get(buttonLang));
@@ -171,7 +171,7 @@ public class WikipediaWebViewFragment extends Fragment {
         //ShowUtil.showError(getActivity(), t);
         progressView.setVisibility(View.GONE);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
 }

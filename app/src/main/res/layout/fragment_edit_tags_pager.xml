@@ -15,7 +15,7 @@
         android:paddingEnd="5dp">
 
         <TextView
-            android:id="@+id/login_warning"
+            android:id="@+id/loginWarningView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -38,7 +38,7 @@
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
-                    android:id="@+id/tag_input"
+                    android:id="@+id/tagInputView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/tag_hint"
@@ -50,7 +50,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/tag_btn"
+                android:id="@+id/tagButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/colorPrimaryLight"

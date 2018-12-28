@@ -29,8 +29,8 @@ public class RecordingCreditsFragment extends Fragment {
 
     private List<Relation> artistRelations;
 
-    private RecyclerView recycler;
-    private View noresults;
+    private RecyclerView creditsRecyclerView;
+    private View noresultsView;
 
     public static RecordingCreditsFragment newInstance() {
         Bundle args = new Bundle();
@@ -43,8 +43,8 @@ public class RecordingCreditsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_credits, container, false);
 
-        recycler = layout.findViewById(R.id.credits_recycler);
-        noresults = layout.findViewById(R.id.noresultsView);
+        creditsRecyclerView = layout.findViewById(R.id.creditsRecyclerView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
 
         configReleaseRecycler();
         load();
@@ -65,19 +65,19 @@ public class RecordingCreditsFragment extends Fragment {
 
             if (!artistRelations.isEmpty()) {
                 CreditsAdapter adapter = new CreditsAdapter(artistRelations);
-                recycler.setAdapter(adapter);
+                creditsRecyclerView.setAdapter(adapter);
                 adapter.setHolderClickListener(position ->
                         ((OnArtistCommunicator) getContext()).onArtist(artistRelations.get(position).getArtist().getId()));
             } else {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             }
         }
     }
 
     private void configReleaseRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(25);
-        recycler.setHasFixedSize(true);
+        creditsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        creditsRecyclerView.setItemViewCacheSize(25);
+        creditsRecyclerView.setHasFixedSize(true);
     }
 
 }

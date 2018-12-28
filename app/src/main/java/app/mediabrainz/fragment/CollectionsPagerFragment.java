@@ -57,11 +57,11 @@ public class CollectionsPagerFragment extends LazyFragment implements
     private boolean isError;
     private List<Collection> collections;
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
     private View errorView;
     private View progressView;
-    private View noresults;
+    private View noresultsView;
 
     public static CollectionsPagerFragment newInstance() {
         Bundle args = new Bundle();
@@ -74,11 +74,11 @@ public class CollectionsPagerFragment extends LazyFragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_collections_pager, container, false);
 
-        viewPager = layout.findViewById(R.id.pagerView);
-        tabLayout = layout.findViewById(R.id.tabsView);
+        pagerView = layout.findViewById(R.id.pagerView);
+        tabsView = layout.findViewById(R.id.tabsView);
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-        noresults = layout.findViewById(R.id.noresultsView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
 
         loadView();
         return layout;
@@ -93,16 +93,16 @@ public class CollectionsPagerFragment extends LazyFragment implements
 
 
         CollectionsPagerAdapter pagerAdapter = new CollectionsPagerAdapter(getChildFragmentManager(), getResources(), collectionTabs);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-        tabLayout.setupWithViewPager(viewPager);
-        pagerAdapter.setupTabViews(tabLayout);
+        pagerView.setAdapter(pagerAdapter);
+        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+        tabsView.setupWithViewPager(pagerView);
+        pagerAdapter.setupTabViews(tabsView);
 
         int collectionTabOrdinal = ((CollectionTabOrdinalCommunicator) getContext()).getCollectionTabOrdinal();
 
         for (int i = 0; i < collectionTabs.size(); i++) {
             if (collectionTabs.get(i).ordinal() == collectionTabOrdinal) {
-                viewPager.setCurrentItem(i);
+                pagerView.setCurrentItem(i);
                 break;
             }
         }
@@ -110,7 +110,7 @@ public class CollectionsPagerFragment extends LazyFragment implements
 
     @Override
     protected void lazyLoad() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         viewError(false);
         String username = ((GetUsernameCommunicator) getContext()).getUsername();
 
@@ -196,13 +196,13 @@ public class CollectionsPagerFragment extends LazyFragment implements
                         }
                         Collections.sort(collectionTabs, (t1, t2) -> t1.ordinal() - t2.ordinal());
                         if (collectionTabs.size() < 5) {
-                            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+                            tabsView.setTabMode(TabLayout.MODE_FIXED);
                         } else {
-                            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                            tabsView.setTabMode(TabLayout.MODE_SCROLLABLE);
                         }
                         configurePager(collectionTabs);
                     } else {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     }
                 },
                 this::showConnectionWarning,
@@ -212,11 +212,11 @@ public class CollectionsPagerFragment extends LazyFragment implements
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            viewPager.setAlpha(0.3F);
+            pagerView.setAlpha(0.3F);
             progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            viewPager.setAlpha(1.0F);
+            pagerView.setAlpha(1.0F);
             progressView.setVisibility(View.GONE);
         }
     }
@@ -224,12 +224,12 @@ public class CollectionsPagerFragment extends LazyFragment implements
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            viewPager.setVisibility(View.INVISIBLE);
+            pagerView.setVisibility(View.INVISIBLE);
             errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
             errorView.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            pagerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -237,7 +237,7 @@ public class CollectionsPagerFragment extends LazyFragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> update());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> update());
     }
 
 
@@ -246,8 +246,8 @@ public class CollectionsPagerFragment extends LazyFragment implements
         return collections;
     }
 
-    public ViewPager getViewPager() {
-        return viewPager;
+    public ViewPager getPagerView() {
+        return pagerView;
     }
 
 }

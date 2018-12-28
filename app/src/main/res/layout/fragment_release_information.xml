@@ -58,7 +58,7 @@
             android:textStyle="bold"/>
 
         <TableLayout
-            android:id="@+id/release_info_table"
+            android:id="@+id/releaseInfoTableView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="10dp"

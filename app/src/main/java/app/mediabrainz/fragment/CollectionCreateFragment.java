@@ -22,9 +22,9 @@ import app.mediabrainz.communicator.ShowTitleCommunicator;
 public class CollectionCreateFragment extends Fragment {
 
     private EditText collectionNameView;
-    private Spinner typeSpinner;
-    private EditText descriptionEditText;
-    private CheckBox publicCheckBox;
+    private Spinner collectionTypeSpinner;
+    private EditText collectionDescriptionView;
+    private CheckBox collectionPublicCheckBox;
 
     public static CollectionCreateFragment newInstance() {
         Bundle args = new Bundle();
@@ -38,17 +38,17 @@ public class CollectionCreateFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_collection_create, container, false);
 
         collectionNameView = layout.findViewById(R.id.collectionNameView);
-        descriptionEditText = layout.findViewById(R.id.collection_description);
-        publicCheckBox = layout.findViewById(R.id.collection_public);
+        collectionDescriptionView = layout.findViewById(R.id.collectionDescriptionView);
+        collectionPublicCheckBox = layout.findViewById(R.id.collectionPublicCheckBox);
 
-        Button createButton = layout.findViewById(R.id.collection_create_btn);
-        createButton.setOnClickListener(v -> create());
+        Button collectionCreateButton = layout.findViewById(R.id.collectionCreateButton);
+        collectionCreateButton.setOnClickListener(v -> create());
 
-        typeSpinner = layout.findViewById(R.id.collection_type);
+        collectionTypeSpinner = layout.findViewById(R.id.collectionTypeSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.collection_type_spinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(adapter);
+        collectionTypeSpinner.setAdapter(adapter);
 
         ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(R.string.title_create_collection);
 
@@ -60,9 +60,9 @@ public class CollectionCreateFragment extends Fragment {
         String name = collectionNameView.getText().toString().trim();
         if (!TextUtils.isEmpty(name)) {
             ((OnCreateCollectionCommunicator) getContext()).onCreateCollection(
-                    name, typeSpinner.getSelectedItemPosition() + 1,
-                    descriptionEditText.getText().toString(),
-                    publicCheckBox.isChecked() ? 1 : 0,
+                    name, collectionTypeSpinner.getSelectedItemPosition() + 1,
+                    collectionDescriptionView.getText().toString(),
+                    collectionPublicCheckBox.isChecked() ? 1 : 0,
                     collectionNameView);
         }
     }

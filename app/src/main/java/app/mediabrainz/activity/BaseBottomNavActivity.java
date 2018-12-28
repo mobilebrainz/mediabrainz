@@ -141,7 +141,7 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
         //ShowUtil.showError(this, t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
     protected void loadFragment(Fragment fragment) {

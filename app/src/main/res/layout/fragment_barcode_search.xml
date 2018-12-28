@@ -32,7 +32,7 @@
         android:visibility="gone"/>
 
     <LinearLayout
-        android:id="@+id/container"
+        android:id="@+id/containerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content">
 
             <AutoCompleteTextView
-                android:id="@+id/barcode_text"
+                android:id="@+id/barcodeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/barcode_text_hint"
@@ -65,7 +65,7 @@
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
-                    android:id="@+id/release_search"
+                    android:id="@+id/releaseSearchView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/barcode_release_hint"
@@ -76,7 +76,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/barcode_search_btn"
+                android:id="@+id/barcodeSearchView"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/colorPrimaryLight"
@@ -91,7 +91,7 @@
             android:layout_marginTop="5dp">
 
             <AutoCompleteTextView
-                android:id="@+id/artist_search"
+                android:id="@+id/artistSearchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/barcode_artist_text_hint"
@@ -107,14 +107,14 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/barcode_instructions"
+                android:id="@+id/barcodeInstructionsView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/barcode_instructions"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/release_recycler"
+                android:id="@+id/releaseRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

@@ -32,8 +32,8 @@ public class ItemViewHolder extends BaseItemViewHolder {
         super(itemView, visible);
         artistView = itemView.findViewById(R.id.artistView);
         typeView = itemView.findViewById(R.id.typeView);
-        beginView = itemView.findViewById(R.id.begin);
-        endView = itemView.findViewById(R.id.end);
+        beginView = itemView.findViewById(R.id.beginView);
+        endView = itemView.findViewById(R.id.endView);
     }
 
     public void bindView(Relation relation) {

@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <FrameLayout
-                android:id="@+id/avatar_frame"
+                android:id="@+id/avatarFrameView"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginBottom="10dp"
@@ -24,12 +24,12 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:id="@+id/avatar"
+                    android:id="@+id/avatarView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
                 <ProgressBar
-                    android:id="@+id/avatar_loading"
+                    android:id="@+id/avatarLoadingView"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/user_type"
+                android:id="@+id/userTypeView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -51,7 +51,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/age"
+                android:id="@+id/ageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -63,7 +63,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/gender"
+                android:id="@+id/genderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -75,7 +75,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/location"
+                android:id="@+id/locationView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -87,7 +87,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/member_since"
+                android:id="@+id/memberSinceView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -99,7 +99,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/homepage"
+                android:id="@+id/homepageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -111,7 +111,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/languages"
+                android:id="@+id/languagesView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"
@@ -123,7 +123,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/bio"
+                android:id="@+id/bioView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8sp"

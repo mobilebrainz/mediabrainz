@@ -62,21 +62,21 @@ public class ArtistRatingsAdapter extends BasePagedListAdapter<Rating> {
             Window win = alertDialog.getWindow();
             if (win != null) {
                 win.setContentView(R.layout.dialog_rating_bar);
-                RatingBar rb = win.findViewById(R.id.rating_bar);
+                RatingBar ratingBar = win.findViewById(R.id.ratingBar);
                 View progressView = win.findViewById(R.id.progressView);
-                TextView title = win.findViewById(R.id.title_text);
-                title.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
-                rb.setRating(ratingView.getRating());
+                TextView titleTextView = win.findViewById(R.id.titleTextView);
+                titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
+                ratingBar.setRating(ratingView.getRating());
 
-                rb.setOnRatingBarChangeListener((RatingBar rateBar, float rate, boolean fromUser) -> {
+                ratingBar.setOnRatingBarChangeListener((RatingBar rateBar, float rate, boolean fromUser) -> {
                     if (progressView.getVisibility() == View.INVISIBLE && fromUser) {
                         progressView.setVisibility(View.VISIBLE);
-                        rb.setAlpha(0.3F);
+                        ratingBar.setAlpha(0.3F);
                         api.postArtistRating(
                                 rating.getMbid(), rate,
                                 metadata -> {
                                     progressView.setVisibility(View.INVISIBLE);
-                                    rb.setAlpha(1.0F);
+                                    ratingBar.setAlpha(1.0F);
                                     if (metadata.getMessage().getText().equals("OK")) {
                                         ratingView.setRating(rate);
                                     } else {
@@ -86,7 +86,7 @@ public class ArtistRatingsAdapter extends BasePagedListAdapter<Rating> {
                                 },
                                 t -> {
                                     progressView.setVisibility(View.INVISIBLE);
-                                    rb.setAlpha(1.0F);
+                                    ratingBar.setAlpha(1.0F);
                                     ShowUtil.showToast(itemView.getContext(), R.string.error_post_rating);
                                     alertDialog.dismiss();
                                 });

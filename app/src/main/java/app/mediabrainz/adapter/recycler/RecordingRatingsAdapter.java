@@ -62,10 +62,10 @@ public class RecordingRatingsAdapter extends BasePagedListAdapter<Rating> {
             Window win = alertDialog.getWindow();
             if (win != null) {
                 win.setContentView(R.layout.dialog_rating_bar);
-                RatingBar rb = win.findViewById(R.id.rating_bar);
+                RatingBar rb = win.findViewById(R.id.ratingBar);
                 View progressView = win.findViewById(R.id.progressView);
-                TextView title = win.findViewById(R.id.title_text);
-                title.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
+                TextView titleTextView = win.findViewById(R.id.titleTextView);
+                titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
                 rb.setRating(ratingView.getRating());
 
                 rb.setOnRatingBarChangeListener((RatingBar rateBar, float rate, boolean fromUser) -> {

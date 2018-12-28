@@ -34,8 +34,8 @@ public class RecordingInfoTabFragment extends Fragment {
     private void insertNestedFragments() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction
-                .replace(R.id.fragment_recording_information, new RecordingInformationFragment())
-                .replace(R.id.fragment_wiki, new WikipediaWebViewFragment())
+                .replace(R.id.recordingInformationFragment, new RecordingInformationFragment())
+                .replace(R.id.wikipediaWebViewFragment, new WikipediaWebViewFragment())
                 .commit();
     }
 

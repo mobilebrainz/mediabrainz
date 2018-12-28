@@ -38,13 +38,13 @@ public class TagTabFragment extends Fragment implements RetryCallback {
     private TagViewModel tagViewModel;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView tagRecycler;
+    private RecyclerView tagRecyclerView;
     private BasePagedListAdapter<TagEntity> adapter;
 
     private TextView errorMessageTextView;
     private Button retryLoadingButton;
     private ProgressBar loadingProgressBar;
-    private View itemNetworkState;
+    private View itemNetworkStateView;
 
     public static TagTabFragment newInstance(int tagTab) {
         Bundle args = new Bundle();
@@ -60,11 +60,11 @@ public class TagTabFragment extends Fragment implements RetryCallback {
 
         tagType = TagServiceInterface.TagType.values()[getArguments().getInt(TAG_TAB)];
 
-        tagRecycler = layout.findViewById(R.id.tag_recycler);
-        swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
+        tagRecyclerView = layout.findViewById(R.id.tagRecyclerView);
+        swipeRefreshLayout = layout.findViewById(R.id.swipeRefreshLayout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
         loadingProgressBar = layout.findViewById(R.id.loadingProgressBar);
-        itemNetworkState = layout.findViewById(R.id.item_network_state);
+        itemNetworkStateView = layout.findViewById(R.id.itemNetworkStateView);
 
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
@@ -101,10 +101,10 @@ public class TagTabFragment extends Fragment implements RetryCallback {
             tagViewModel.tagLiveData.observe(this, adapter::submitList);
             tagViewModel.getNetworkState().observe(this, adapter::setNetworkState);
 
-            tagRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            tagRecycler.setNestedScrollingEnabled(true);
+            tagRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            tagRecyclerView.setNestedScrollingEnabled(true);
             //tagRecycler.setHasFixedSize(true);
-            tagRecycler.setAdapter(adapter);
+            tagRecyclerView.setAdapter(adapter);
 
             initSwipeToRefresh();
         }
@@ -120,7 +120,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
                 //Show the current network state for the first getWikidata when the rating list
                 //in the adapter is empty and disable swipe to scroll at the first loading
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
-                    itemNetworkState.setVisibility(View.VISIBLE);
+                    itemNetworkStateView.setVisibility(View.VISIBLE);
                     //errorView message
                     errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
                     if (networkState.getMessage() != null) {
@@ -131,7 +131,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
                     loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
-                    tagRecycler.scrollToPosition(0);
+                    tagRecyclerView.scrollToPosition(0);
                 }
             }
         });
@@ -139,7 +139,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             tagViewModel.refresh();
             swipeRefreshLayout.setRefreshing(false);
-            tagRecycler.scrollToPosition(0);
+            tagRecyclerView.scrollToPosition(0);
         });
     }
 

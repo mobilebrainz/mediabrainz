@@ -12,7 +12,7 @@ public abstract class BaseItemViewHolder extends RecyclerView.ViewHolder {
 
     public BaseItemViewHolder(View itemView, boolean visible) {
         super(itemView);
-        container = itemView.findViewById(R.id.container);
+        container = itemView.findViewById(R.id.containerView);
         setVisibility(visible);
     }
 

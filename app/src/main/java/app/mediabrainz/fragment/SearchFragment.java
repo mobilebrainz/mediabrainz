@@ -24,9 +24,9 @@ public class SearchFragment extends Fragment {
         void searchEntity(String artist, String album, String track);
     }
 
-    private AutoCompleteTextView artistField;
-    private AutoCompleteTextView albumField;
-    private AutoCompleteTextView trackField;
+    private AutoCompleteTextView artistFieldView;
+    private AutoCompleteTextView albumFieldView;
+    private AutoCompleteTextView trackFieldView;
 
     public static SearchFragment newInstance() {
         Bundle args = new Bundle();
@@ -39,48 +39,48 @@ public class SearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_search, container, false);
 
-        artistField = layout.findViewById(R.id.artist_field);
-        albumField = layout.findViewById(R.id.album_field);
-        trackField = layout.findViewById(R.id.track_field);
+        artistFieldView = layout.findViewById(R.id.artistFieldView);
+        albumFieldView = layout.findViewById(R.id.albumFieldView);
+        trackFieldView = layout.findViewById(R.id.trackFieldView);
 
-        layout.findViewById(R.id.search_btn).setOnClickListener(view -> search());
+        layout.findViewById(R.id.searchButton).setOnClickListener(view -> search());
         return layout;
     }
 
     private boolean search() {
-        String artist = artistField.getText().toString().trim();
-        String album = albumField.getText().toString().trim();
-        String track = trackField.getText().toString().trim();
+        String artist = artistFieldView.getText().toString().trim();
+        String album = albumFieldView.getText().toString().trim();
+        String track = trackFieldView.getText().toString().trim();
 
         if (!TextUtils.isEmpty(track) || !TextUtils.isEmpty(album) || !TextUtils.isEmpty(artist)) {
             hideKeyboard();
             ((SearchFragmentListener) getContext()).searchEntity(artist, album, track);
         }
 
-        artistField.setText("");
-        albumField.setText("");
-        trackField.setText("");
+        artistFieldView.setText("");
+        albumFieldView.setText("");
+        trackFieldView.setText("");
         return false;
     }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(artistField.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(albumField.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(trackField.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(artistFieldView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(albumFieldView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(trackFieldView.getWindowToken(), 0);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (MediaBrainzApp.getPreferences().isSearchSuggestionsEnabled()) {
-            artistField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.ARTIST));
-            albumField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.ALBUM));
-            trackField.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.TRACK));
+            artistFieldView.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.ARTIST));
+            albumFieldView.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.ALBUM));
+            trackFieldView.setAdapter(new SuggestionListAdapter(getContext(), Suggestion.SuggestionField.TRACK));
         } else {
-            artistField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
-            albumField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
-            trackField.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
+            artistFieldView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
+            albumFieldView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
+            trackFieldView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.layout_dropdown_item, new String[]{}));
         }
     }
 

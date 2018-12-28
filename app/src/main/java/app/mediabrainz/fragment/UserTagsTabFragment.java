@@ -28,7 +28,7 @@ public class UserTagsTabFragment extends Fragment {
 
     private Tag.TagType tagType;
 
-    private View noresults;
+    private View noresultsView;
     private RecyclerView tagsRecycler;
 
     public static UserTagsTabFragment newInstance(int tagsTab) {
@@ -45,8 +45,8 @@ public class UserTagsTabFragment extends Fragment {
 
         tagType = Tag.TagType.values()[getArguments().getInt(TAGS_TAB)];
 
-        noresults = layout.findViewById(R.id.noresultsView);
-        tagsRecycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        tagsRecycler = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
@@ -59,7 +59,7 @@ public class UserTagsTabFragment extends Fragment {
     }
 
     private void load() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         String username = ((GetUsernameCommunicator) getContext()).getUsername();
 
@@ -75,7 +75,7 @@ public class UserTagsTabFragment extends Fragment {
         }
         if (username != null) {
             if (tags.isEmpty()) {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             } else {
                 configRecycler();
                 UserTagsAdapter adapter = new UserTagsAdapter(tags);

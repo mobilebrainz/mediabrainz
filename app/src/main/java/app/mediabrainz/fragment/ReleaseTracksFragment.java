@@ -32,7 +32,7 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     private View errorView;
     private View progressView;
-    private View noresults;
+    private View noresultsView;
 
     public static ReleaseTracksFragment newInstance() {
         Bundle args = new Bundle();
@@ -45,11 +45,11 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = super.onCreateView(inflater, container, savedInstanceState);
 
-        recyclerContainer.setVisibility(View.INVISIBLE);
+        recyclerContainerView.setVisibility(View.INVISIBLE);
         View frame = inflater.inflate(R.layout.fragment_release_tracks_frame, null);
         errorView = frame.findViewById(R.id.errorView);
         progressView = frame.findViewById(R.id.progressView);
-        noresults = frame.findViewById(R.id.noresultsView);
+        noresultsView = frame.findViewById(R.id.noresultsView);
         addFrameView(frame);
 
         loadView();
@@ -58,9 +58,9 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     @Override
     protected void lazyLoad() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         errorView.setVisibility(View.GONE);
-        recycler.removeAllViewsInLayout();
+        recyclerView.removeAllViewsInLayout();
 
         release = ((GetReleaseCommunicator) getContext()).getRelease();
         if (release != null) {
@@ -75,11 +75,11 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     private void showNoResult(boolean show) {
         if (show) {
-            noresults.setVisibility(View.VISIBLE);
-            recyclerContainer.setVisibility(View.GONE);
+            noresultsView.setVisibility(View.VISIBLE);
+            recyclerContainerView.setVisibility(View.GONE);
         } else {
-            noresults.setVisibility(View.GONE);
-            recyclerContainer.setVisibility(View.VISIBLE);
+            noresultsView.setVisibility(View.GONE);
+            recyclerContainerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -163,10 +163,10 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
         tracksAdapter.setOnPlayYoutubeListener(track ->
                 ((OnPlayYoutubeCommunicator) getContext()).onPlay(track.getRecording().getTitle()));
 
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(50);
-        recycler.setHasFixedSize(true);
-        recycler.setAdapter(tracksAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(50);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(tracksAdapter);
 
         configRecyclerToolbar();
     }
@@ -182,7 +182,7 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
         progressView.setVisibility(View.GONE);
         //ShowUtil.showError(getActivity(), t);
         errorView.setVisibility(View.VISIBLE);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
 }

@@ -36,7 +36,7 @@
                     android:layout_weight="1">
 
                     <AutoCompleteTextView
-                        android:id="@+id/artist_field"
+                        android:id="@+id/artistFieldView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/artist_field_hint"
@@ -64,7 +64,7 @@
                     android:layout_weight="1">
 
                     <AutoCompleteTextView
-                        android:id="@+id/album_field"
+                        android:id="@+id/albumFieldView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/album_field_hint"
@@ -92,7 +92,7 @@
                     android:layout_weight="1">
 
                     <AutoCompleteTextView
-                        android:id="@+id/track_field"
+                        android:id="@+id/trackFieldView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/track_field_hint"
@@ -107,7 +107,7 @@
         </TableLayout>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/search_btn"
+            android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_gravity="end"

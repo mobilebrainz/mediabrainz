@@ -42,9 +42,9 @@ public class ItemViewHolder extends BaseItemViewHolder {
         this.onPlayYoutubeListener = onPlayYoutubeListener;
     }
 
-    private TextView num;
-    private TextView name;
-    private TextView length;
+    private TextView trackNumView;
+    private TextView trackNameView;
+    private TextView trackLengthView;
     private RatingBar userRatingView;
     private TextView allRatingView;
     private LinearLayout ratingContainerView;
@@ -52,9 +52,9 @@ public class ItemViewHolder extends BaseItemViewHolder {
 
     public ItemViewHolder(View itemView, boolean visible) {
         super(itemView, visible);
-        num = itemView.findViewById(R.id.track_num);
-        name = itemView.findViewById(R.id.trackNameView);
-        length = itemView.findViewById(R.id.track_length);
+        trackNumView = itemView.findViewById(R.id.trackNumView);
+        trackNameView = itemView.findViewById(R.id.trackNameView);
+        trackLengthView = itemView.findViewById(R.id.trackLengthView);
         userRatingView = itemView.findViewById(R.id.userRatingView);
         allRatingView = itemView.findViewById(R.id.allRatingView);
         ratingContainerView = itemView.findViewById(R.id.ratingContainerView);
@@ -73,9 +73,9 @@ public class ItemViewHolder extends BaseItemViewHolder {
             }
         });
 
-        num.setText(track.getNumber());
-        name.setText(track.getTitle());
-        length.setText(MbUtils.formatTime(track.getLength()));
+        trackNumView.setText(track.getNumber());
+        trackNameView.setText(track.getTitle());
+        trackLengthView.setText(MbUtils.formatTime(track.getLength()));
 
         setUserRating(track.getRecording());
         setAllRating(track.getRecording());
@@ -90,11 +90,11 @@ public class ItemViewHolder extends BaseItemViewHolder {
             Window win = alertDialog.getWindow();
             if (win != null) {
                 win.setContentView(R.layout.dialog_rating_bar);
-                RatingBar rb = win.findViewById(R.id.rating_bar);
+                RatingBar rb = win.findViewById(R.id.ratingBar);
                 rb.setRating(userRatingView.getRating());
                 View progressView = win.findViewById(R.id.progressView);
-                TextView title = win.findViewById(R.id.title_text);
-                title.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
+                TextView titleTextView = win.findViewById(R.id.titleTextView);
+                titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
 
                 rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
                     if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {

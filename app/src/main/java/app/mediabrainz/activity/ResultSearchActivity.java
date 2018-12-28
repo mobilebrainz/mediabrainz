@@ -178,8 +178,8 @@ public class ResultSearchActivity extends BaseActivity implements
 
     private void showAddBarcodeDialog() {
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(getString(R.string.barcode_header, searchQuery));
+        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+        titleTextView.setText(getString(R.string.barcode_header, searchQuery));
         if (oauth.hasAccount()) {
             new AlertDialog.Builder(this)
                     .setCustomTitle(titleView)
@@ -373,7 +373,7 @@ public class ResultSearchActivity extends BaseActivity implements
         //ShowUtil.showError(this, t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> search());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> search());
     }
 
     private void saveQueryAsSuggestion() {

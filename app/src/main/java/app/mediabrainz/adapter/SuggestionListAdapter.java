@@ -55,8 +55,8 @@ public class SuggestionListAdapter extends ArrayAdapter {
         if (view == null) {
             view = LayoutInflater.from(parent.getContext()).inflate(LAYOUT_ID, parent, false);
         }
-        TextView text = view.findViewById(R.id.dropdown_item);
-        text.setText(getItem(position).getWord());
+        TextView dropdownItemView = view.findViewById(R.id.dropdownItemView);
+        dropdownItemView.setText(getItem(position).getWord());
         return view;
     }
 

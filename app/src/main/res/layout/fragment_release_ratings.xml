@@ -20,7 +20,7 @@
             android:paddingEnd="5dp">
 
             <TextView
-                android:id="@+id/login_warning"
+                android:id="@+id/loginWarningView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -31,7 +31,7 @@
                 android:visibility="gone"/>
 
             <RatingBar
-                android:id="@+id/user_rating_bar"
+                android:id="@+id/userRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -39,7 +39,7 @@
                 android:stepSize="1"/>
 
             <TextView
-                android:id="@+id/all_rating_text"
+                android:id="@+id/allRatingView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -47,14 +47,14 @@
                 android:textSize="16sp"/>
 
             <TableLayout
-                android:id="@+id/ratings_table"
+                android:id="@+id/ratingsTableView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp">
 
                 <TableRow
-                    android:id="@+id/lastfm_playcount_tableRow">
+                    android:id="@+id/lastfmPlaycountTableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                         android:textSize="16sp"/>
 
                     <RatingBar
-                        android:id="@+id/lastfm_playcount_rating_bar"
+                        android:id="@+id/lastfmPlaycountRatingBar"
                         style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -74,14 +74,14 @@
                         android:numStars="5"/>
 
                     <TextView
-                        android:id="@+id/lastfm_playcount"
+                        android:id="@+id/lastfmPlaycountView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"/>
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/lastfm_listeners_tableRow">
+                    android:id="@+id/lastfmListenersTableRow">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
                         android:textSize="16sp"/>
 
                     <RatingBar
-                        android:id="@+id/lastfm_listeners_rating_bar"
+                        android:id="@+id/lastfmListenersRatingBar"
                         style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,14 +101,14 @@
                         android:numStars="5"/>
 
                     <TextView
-                        android:id="@+id/lastfm_listeners"
+                        android:id="@+id/lastfmListenersView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"/>
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/rateyourmusic_tableRow"
+                    android:id="@+id/rateyourmusicTableRow"
                     android:visibility="gone">
 
                     <TextView
@@ -118,7 +118,7 @@
                         android:textSize="16sp"/>
 
                     <RatingBar
-                        android:id="@+id/rateyourmusic_rating_bar"
+                        android:id="@+id/rateyourmusicRatingBar"
                         style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                         android:visibility="gone"/>
 
                     <ProgressBar
-                        android:id="@+id/rateyourmusic_loading"
+                        android:id="@+id/rateyourmusicProgressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
@@ -140,14 +140,14 @@
                         android:visibility="gone"/>
 
                     <TextView
-                        android:id="@+id/rateyourmusic_number"
+                        android:id="@+id/rateyourmusicNumberView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"/>
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/progarchives_tableRow"
+                    android:id="@+id/progarchivesTableRow"
                     android:visibility="gone">
 
                     <TextView
@@ -157,7 +157,7 @@
                         android:textSize="16sp"/>
 
                     <RatingBar
-                        android:id="@+id/progarchives_rating_bar"
+                        android:id="@+id/progarchivesRatingBar"
                         style="@style/Widget.AppCompat.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                         android:visibility="gone"/>
 
                     <ProgressBar
-                        android:id="@+id/progarchives_loading"
+                        android:id="@+id/progarchivesProgressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
                         android:visibility="gone"/>
 
                     <TextView
-                        android:id="@+id/progarchives_number"
+                        android:id="@+id/progarchivesNumberView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"/>

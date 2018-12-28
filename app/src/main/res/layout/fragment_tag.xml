@@ -36,12 +36,12 @@
             android:visibility="gone"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/tag_recycler"
+                android:id="@+id/tagRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="5dp"
@@ -52,7 +52,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <include
-            android:id="@+id/item_network_state"
+            android:id="@+id/itemNetworkStateView"
             layout="@layout/item_network_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

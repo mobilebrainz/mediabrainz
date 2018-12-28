@@ -94,7 +94,7 @@ public class ArtistRelationsTabFragment extends BaseComplexRecyclerFragment<Rela
         }
     }
 
-    private View noresults;
+    private View noresultsView;
 
     public static ArtistRelationsTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -107,9 +107,9 @@ public class ArtistRelationsTabFragment extends BaseComplexRecyclerFragment<Rela
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = super.onCreateView(inflater, container, savedInstanceState);
 
-        recyclerContainer.setVisibility(View.INVISIBLE);
+        recyclerContainerView.setVisibility(View.INVISIBLE);
         View frame = inflater.inflate(R.layout.fragment_artist_relations_tab, null);
-        noresults = frame.findViewById(R.id.noresultsView);
+        noresultsView = frame.findViewById(R.id.noresultsView);
         addFrameView(frame);
 
         initSections();
@@ -129,7 +129,7 @@ public class ArtistRelationsTabFragment extends BaseComplexRecyclerFragment<Rela
 
     @Override
     public void lazyLoad() {
-        recycler.removeAllViewsInLayout();
+        recyclerView.removeAllViewsInLayout();
 
         Artist artist = ((GetArtistCommunicator) getContext()).getArtist();
         if (artist != null) {
@@ -199,10 +199,10 @@ public class ArtistRelationsTabFragment extends BaseComplexRecyclerFragment<Rela
         recyclerAdapter = artistRelationsAdapter;
         artistRelationsAdapter.setOnItemClickListener(artist -> ((OnArtistCommunicator) getContext()).onArtist(artist.getId()));
 
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(100);
-        recycler.setHasFixedSize(true);
-        recycler.setAdapter(artistRelationsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(artistRelationsAdapter);
 
         configRecyclerToolbar();
         expandCheckBox.setChecked(true);
@@ -210,11 +210,11 @@ public class ArtistRelationsTabFragment extends BaseComplexRecyclerFragment<Rela
 
     private void showNoResult(boolean show) {
         if (show) {
-            noresults.setVisibility(View.VISIBLE);
-            recyclerContainer.setVisibility(View.GONE);
+            noresultsView.setVisibility(View.VISIBLE);
+            recyclerContainerView.setVisibility(View.GONE);
         } else {
-            noresults.setVisibility(View.GONE);
-            recyclerContainer.setVisibility(View.VISIBLE);
+            noresultsView.setVisibility(View.GONE);
+            recyclerContainerView.setVisibility(View.VISIBLE);
         }
     }
 

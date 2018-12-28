@@ -14,7 +14,7 @@ import app.mediabrainz.ui.view.HtmlAssetTextView;
 
 public class AboutFragment extends Fragment {
 
-    private TextView versionLabel;
+    private TextView appVersionView;
 
     public static AboutFragment newInstance() {
         Bundle args = new Bundle();
@@ -33,16 +33,16 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_about, container);
-        versionLabel = layout.findViewById(R.id.version_text);
-        HtmlAssetTextView body = layout.findViewById(R.id.about_text);
-        body.setAsset("about.html");
+        appVersionView = layout.findViewById(R.id.appVersionView);
+        HtmlAssetTextView aboutView = layout.findViewById(R.id.aboutView);
+        aboutView.setAsset("about.html");
         return layout;
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        versionLabel.setText(getText(R.string.version_text) + " " + MediaBrainzApp.getVersion());
+        appVersionView.setText(getText(R.string.version_text) + " " + MediaBrainzApp.getVersion());
     }
 
 }

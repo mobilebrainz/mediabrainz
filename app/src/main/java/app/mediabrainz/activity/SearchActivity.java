@@ -53,7 +53,7 @@ public class SearchActivity extends BaseActivity implements
             load();
         } else {
             viewError(true);
-            errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+            errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
         }
 
     }
@@ -102,7 +102,7 @@ public class SearchActivity extends BaseActivity implements
     protected void showConnectionWarning(Throwable t) {
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
     protected void viewError(boolean isView) {

@@ -29,9 +29,9 @@ public class CreateCollectionDialogFragment extends DialogFragment {
     private List<Collection> collections = new ArrayList<>();
 
     private EditText collectionNameView;
-    private EditText descriptionEditText;
-    private CheckBox publicCheckBox;
-    private Button createButton;
+    private EditText collectionDescriptionView;
+    private CheckBox collectionPublicCheckBox;
+    private Button collectionCreateButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,11 +45,11 @@ public class CreateCollectionDialogFragment extends DialogFragment {
         View layout = inflater.inflate(R.layout.dialog_fragment_collection_create, container, false);
 
         collectionNameView = layout.findViewById(R.id.collectionNameView);
-        descriptionEditText = layout.findViewById(R.id.collection_description);
-        publicCheckBox = layout.findViewById(R.id.collection_public);
+        collectionDescriptionView = layout.findViewById(R.id.collectionDescriptionView);
+        collectionPublicCheckBox = layout.findViewById(R.id.collectionPublicCheckBox);
 
-        createButton = layout.findViewById(R.id.collection_create_btn);
-        createButton.setOnClickListener(v -> create());
+        collectionCreateButton = layout.findViewById(R.id.collectionCreateButton);
+        collectionCreateButton.setOnClickListener(v -> create());
         return layout;
     }
 
@@ -77,8 +77,8 @@ public class CreateCollectionDialogFragment extends DialogFragment {
             if (!existName) {
                 ((DialogFragmentListener) getContext()).onCreateCollection(
                         name,
-                        descriptionEditText.getText().toString(),
-                        publicCheckBox.isChecked() ? 1 : 0);
+                        collectionDescriptionView.getText().toString(),
+                        collectionPublicCheckBox.isChecked() ? 1 : 0);
                 dismiss();
             }
         }

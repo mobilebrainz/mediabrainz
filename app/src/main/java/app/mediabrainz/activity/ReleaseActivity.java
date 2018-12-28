@@ -262,8 +262,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                 String[] entityTypes = {RELEASE_GROUP_ENTITY_TYPE, RELEASE_ENTITY_TYPE};
 
                                 View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-                                TextView titleText = titleView.findViewById(R.id.title_text);
-                                titleText.setText(R.string.release_collection_selector);
+                                TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+                                titleTextView.setText(R.string.release_collection_selector);
 
                                 new AlertDialog.Builder(this)
                                         .setCustomTitle(titleView)

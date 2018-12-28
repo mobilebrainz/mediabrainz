@@ -19,7 +19,6 @@
             android:paddingStart="6dp">
 
             <TextView
-                android:id="@+id/collection_edit_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -52,7 +51,7 @@
                 android:background="@color/card_background">
 
                 <EditText
-                    android:id="@+id/collection_description"
+                    android:id="@+id/collectionDescriptionView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -66,7 +65,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <CheckBox
-                android:id="@+id/collection_public"
+                android:id="@+id/collectionPublicCheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -75,7 +74,7 @@
                 android:textSize="16sp"/>
 
             <Button
-                android:id="@+id/collection_edit_btn"
+                android:id="@+id/collectionEditButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"

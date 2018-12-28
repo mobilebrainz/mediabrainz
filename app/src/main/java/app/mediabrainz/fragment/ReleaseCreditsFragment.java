@@ -27,8 +27,8 @@ public class ReleaseCreditsFragment extends Fragment {
 
     private List<Relation> artistRelations;
 
-    private RecyclerView recycler;
-    private View noresults;
+    private RecyclerView creditsRecyclerView;
+    private View noresultsView;
 
     public static ReleaseCreditsFragment newInstance() {
         Bundle args = new Bundle();
@@ -41,8 +41,8 @@ public class ReleaseCreditsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_credits, container, false);
 
-        recycler = layout.findViewById(R.id.credits_recycler);
-        noresults = layout.findViewById(R.id.noresultsView);
+        creditsRecyclerView = layout.findViewById(R.id.creditsRecyclerView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
 
         configReleaseRecycler();
         load();
@@ -59,19 +59,19 @@ public class ReleaseCreditsFragment extends Fragment {
                 Comparator<Relation> sortDate = (r1, r2) -> (r1.getType()).compareTo(r2.getType());
                 Collections.sort(artistRelations, sortDate);
                 CreditsAdapter adapter = new CreditsAdapter(artistRelations);
-                recycler.setAdapter(adapter);
+                creditsRecyclerView.setAdapter(adapter);
                 adapter.setHolderClickListener(position ->
                         ((OnArtistCommunicator) getContext()).onArtist(artistRelations.get(position).getArtist().getId()));
             } else {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             }
         }
     }
 
     private void configReleaseRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(50);
-        recycler.setHasFixedSize(true);
+        creditsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        creditsRecyclerView.setItemViewCacheSize(50);
+        creditsRecyclerView.setHasFixedSize(true);
     }
 
 }
