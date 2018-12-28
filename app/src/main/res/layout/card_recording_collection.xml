@@ -23,7 +23,7 @@
             android:paddingTop="10dp">
 
             <TextView
-                android:id="@+id/recording_name"
+                android:id="@+id/recordingNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -32,7 +32,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/artist_name"
+                android:id="@+id/artistNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -41,14 +41,14 @@
                 android:textSize="14sp"/>
 
             <LinearLayout
-                android:id="@+id/rating_container"
+                android:id="@+id/ratingContainerView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:orientation="horizontal">
 
                 <RatingBar
-                    android:id="@+id/user_rating"
+                    android:id="@+id/userRatingView"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                     android:numStars="5"/>
 
                 <TextView
-                    android:id="@+id/all_rating"
+                    android:id="@+id/allRatingView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -68,7 +68,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/play_youtube"
+            android:id="@+id/playYoutubeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -79,7 +79,7 @@
             android:tint="@color/colorPrimaryLight"/>
 
         <ImageView
-            android:id="@+id/delete"
+            android:id="@+id/deleteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

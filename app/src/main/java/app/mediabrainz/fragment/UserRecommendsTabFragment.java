@@ -41,8 +41,8 @@ public class UserRecommendsTabFragment extends Fragment {
     private String secondaryTag;
     private int tagRate = 0;
 
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private View noresults;
     private RecyclerView recycler;
 
@@ -61,9 +61,9 @@ public class UserRecommendsTabFragment extends Fragment {
 
         tagType = TagServiceInterface.TagType.values()[getArguments().getInt(RECOMMENDS_TAB)];
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresults = layout.findViewById(R.id.noresultsView);
         recycler = layout.findViewById(R.id.recycler);
 
         load();
@@ -169,20 +169,20 @@ public class UserRecommendsTabFragment extends Fragment {
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 
@@ -190,7 +190,7 @@ public class UserRecommendsTabFragment extends Fragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
     }
 
 }

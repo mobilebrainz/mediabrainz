@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/drawerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="app.mediabrainz.activity.AboutActivity">
@@ -19,7 +19,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbarView"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
@@ -28,7 +28,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <fragment
-            android:id="@+id/about_fragment"
+            android:id="@+id/aboutFragment"
             android:name="app.mediabrainz.fragment.AboutFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -36,7 +36,7 @@
     </LinearLayout>
 
     <include
-        android:id="@+id/nav_view"
+        android:id="@+id/navView"
         layout="@layout/layout_nav"/>
 
 </android.support.v4.widget.DrawerLayout>

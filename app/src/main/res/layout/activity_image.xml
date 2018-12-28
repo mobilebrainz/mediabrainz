@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/drawerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_grey_800"
@@ -10,12 +10,12 @@
 
     <com.github.chrisbanes.photoview.PhotoView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/iv_photo"
+        android:id="@+id/photoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <ProgressBar
-        android:id="@+id/loading"
+        android:id="@+id/progressView"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -33,8 +33,8 @@ public class UserTagsPagerFragment extends LazyFragment implements
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private View noresults;
 
     public static UserTagsPagerFragment newInstance() {
@@ -48,11 +48,11 @@ public class UserTagsPagerFragment extends LazyFragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_pager_without_icons, container, false);
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresults = layout.findViewById(R.id.noresultsView);
+        viewPager = layout.findViewById(R.id.pagerView);
+        tabLayout = layout.findViewById(R.id.tabsView);
 
         loadView();
         return layout;
@@ -91,20 +91,20 @@ public class UserTagsPagerFragment extends LazyFragment implements
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 
@@ -112,7 +112,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
     }
 
     @Override

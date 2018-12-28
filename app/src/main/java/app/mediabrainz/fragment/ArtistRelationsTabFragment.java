@@ -109,7 +109,7 @@ public class ArtistRelationsTabFragment extends BaseComplexRecyclerFragment<Rela
 
         recyclerContainer.setVisibility(View.INVISIBLE);
         View frame = inflater.inflate(R.layout.fragment_artist_relations_tab, null);
-        noresults = frame.findViewById(R.id.noresults);
+        noresults = frame.findViewById(R.id.noresultsView);
         addFrameView(frame);
 
         initSections();

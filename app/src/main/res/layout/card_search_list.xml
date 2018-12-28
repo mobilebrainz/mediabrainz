@@ -11,7 +11,7 @@
     cardview:cardElevation="0dp">
 
     <TextView
-        android:id="@+id/string"
+        android:id="@+id/searchStringView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

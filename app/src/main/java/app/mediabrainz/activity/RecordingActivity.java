@@ -86,7 +86,7 @@ public class RecordingActivity extends BaseBottomNavActivity implements
             mbid = getIntent().getStringExtra(RECORDING_MBID);
         }
 
-        floatingActionButton = findViewById(R.id.floatin_action_btn);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
         showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.ADD_TO_COLLECTION);
     }
@@ -141,27 +141,27 @@ public class RecordingActivity extends BaseBottomNavActivity implements
     @Override
     protected BottomNavigationView.OnNavigationItemSelectedListener initOnNavigationItemSelectedListener() {
         return item -> {
-            frameContainer.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            frameContainerView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
             switch (item.getItemId()) {
                 case R.id.recording_nav_lyrics:
-                    viewPager.setCurrentItem(TAB_LYRICS_POS);
+                    pagerView.setCurrentItem(TAB_LYRICS_POS);
                     break;
 
                 case R.id.recording_nav_info:
-                    viewPager.setCurrentItem(TAB_INFO_POS);
+                    pagerView.setCurrentItem(TAB_INFO_POS);
                     break;
 
                 case R.id.recording_nav_releases:
-                    viewPager.setCurrentItem(TAB_RELEASES_POS);
+                    pagerView.setCurrentItem(TAB_RELEASES_POS);
                     break;
 
                 case R.id.recording_nav_ratings:
-                    viewPager.setCurrentItem(TAB_RATINGS_POS);
+                    pagerView.setCurrentItem(TAB_RATINGS_POS);
                     break;
 
                 case R.id.recording_nav_tags:
-                    viewPager.setCurrentItem(TAB_TAGS_POS);
+                    pagerView.setCurrentItem(TAB_TAGS_POS);
                     break;
             }
             return true;
@@ -179,11 +179,11 @@ public class RecordingActivity extends BaseBottomNavActivity implements
                     this.recording = recording;
                     if (!recording.getArtistCredits().isEmpty()) {
                         Artist.ArtistCredit artistCredit = recording.getArtistCredits().get(0);
-                        topTitle.setText(artistCredit.getName());
-                        topTitle.setOnClickListener(v -> onArtist(artistCredit.getArtist().getId()));
+                        toolbarTopTitleView.setText(artistCredit.getName());
+                        toolbarTopTitleView.setOnClickListener(v -> onArtist(artistCredit.getArtist().getId()));
                     }
                     if (!TextUtils.isEmpty(recording.getTitle())) {
-                        bottomTitle.setText(recording.getTitle());
+                        toolbarBottomTitleView.setText(recording.getTitle());
                     }
 
                     List<Relation> workRelations = new RelationExtractor(recording).getWorkRelations();

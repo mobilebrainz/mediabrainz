@@ -38,10 +38,10 @@ public class TagActivity extends BaseActivity implements
     private boolean isLoading;
     private boolean isError;
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private View error;
-    private View loading;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
+    private View errorView;
+    private View progressView;
 
     @Override
     protected int initContentLayout() {
@@ -52,10 +52,10 @@ public class TagActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewPager = findViewById(R.id.pager);
-        tabLayout = findViewById(R.id.tabs);
-        error = findViewById(R.id.error);
-        loading = findViewById(R.id.loading);
+        pagerView = findViewById(R.id.pagerView);
+        tabsView = findViewById(R.id.tabsView);
+        errorView = findViewById(R.id.errorView);
+        progressView = findViewById(R.id.progressView);
 
         if (savedInstanceState != null) {
             isGenre = savedInstanceState.getBoolean(IS_GENRE);
@@ -68,21 +68,21 @@ public class TagActivity extends BaseActivity implements
         }
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView topTitle = findViewById(R.id.toolbar_title_top);
-        TextView bottomTitle = findViewById(R.id.toolbar_title_bottom);
-        topTitle.setText(isGenre ? R.string.genre_title : R.string.tag_title);
-        bottomTitle.setText(tag);
+        TextView toolbarTopTitleView = findViewById(R.id.toolbarTopTitleView);
+        TextView toolbarBottomTitleView = findViewById(R.id.toolbarBottomTitleView);
+        toolbarTopTitleView.setText(isGenre ? R.string.genre_title : R.string.tag_title);
+        toolbarBottomTitleView.setText(tag);
 
         configurePager();
     }
 
     private void configurePager() {
         TagPagerAdapter pagerAdapter = new TagPagerAdapter(getSupportFragmentManager(), getResources());
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-        tabLayout.setupWithViewPager(viewPager);
-        pagerAdapter.setupTabViews(tabLayout);
-        viewPager.setCurrentItem(tagTabOrdianal);
+        pagerView.setAdapter(pagerAdapter);
+        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+        tabsView.setupWithViewPager(pagerView);
+        pagerAdapter.setupTabViews(tabsView);
+        pagerView.setCurrentItem(tagTabOrdianal);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class TagActivity extends BaseActivity implements
         outState.putBoolean(IS_GENRE, isGenre);
         outState.putString(MB_TAG, tag);
         outState.putInt(TAG_TAB_ORDINAL, tagTabOrdianal);
-        outState.putInt(PAGER_POSITION, tabLayout.getSelectedTabPosition());
+        outState.putInt(PAGER_POSITION, tabsView.getSelectedTabPosition());
     }
 
     @Override
@@ -100,30 +100,30 @@ public class TagActivity extends BaseActivity implements
         isGenre = savedInstanceState.getBoolean(IS_GENRE);
         tag = savedInstanceState.getString(MB_TAG);
         tagTabOrdianal = savedInstanceState.getInt(TAG_TAB_ORDINAL, 0);
-        viewPager.setCurrentItem(savedInstanceState.getInt(PAGER_POSITION));
+        pagerView.setCurrentItem(savedInstanceState.getInt(PAGER_POSITION));
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            viewPager.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            pagerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            viewPager.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            pagerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            viewPager.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            pagerView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
         }
     }
 

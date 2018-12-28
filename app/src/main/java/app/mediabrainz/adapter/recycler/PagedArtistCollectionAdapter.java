@@ -39,23 +39,23 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_artist_collection;
 
-        private ImageView artistImage;
-        private ProgressBar progressLoading;
-        private TextView artistName;
-        private RatingBar userRating;
+        private ImageView imageView;
+        private ProgressBar imageProgressView;
+        private TextView artistNameView;
+        private RatingBar userRatingView;
         private TextView allRatingView;
-        private ImageView deleteBtn;
-        private LinearLayout ratingContainer;
+        private ImageView deleteView;
+        private LinearLayout ratingContainerView;
 
         private PagedArtistCollectionViewHolder(View v) {
             super(v);
-            artistImage = v.findViewById(R.id.artist_image);
-            progressLoading = v.findViewById(R.id.image_loading);
-            artistName = v.findViewById(R.id.artist_name);
-            userRating = v.findViewById(R.id.user_rating);
-            allRatingView = v.findViewById(R.id.all_rating);
-            deleteBtn = v.findViewById(R.id.delete);
-            ratingContainer = v.findViewById(R.id.rating_container);
+            imageView = v.findViewById(R.id.releaseImageView);
+            imageProgressView = v.findViewById(R.id.imageProgressView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            userRatingView = v.findViewById(R.id.userRatingView);
+            allRatingView = v.findViewById(R.id.allRatingView);
+            deleteView = v.findViewById(R.id.deleteView);
+            ratingContainerView = v.findViewById(R.id.ratingContainerView);
         }
 
         public static PagedArtistCollectionViewHolder create(ViewGroup parent) {
@@ -65,17 +65,17 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
         }
 
         private void bindTo(Artist artist, boolean isPrivate) {
-            deleteBtn.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
 
-            artistName.setText(artist.getName());
+            artistNameView.setText(artist.getName());
             setUserRating(artist);
             setAllRating(artist);
             if (MediaBrainzApp.getPreferences().isLoadImagesEnabled()) {
                 loadArtistImageFromLastfm(artist.getName());
             } else {
-                artistImage.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
             }
-            ratingContainer.setOnClickListener(v -> showRatingBar(artist));
+            ratingContainerView.setOnClickListener(v -> showRatingBar(artist));
         }
 
         private void showRatingBar(Artist artist) {
@@ -86,22 +86,22 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
                 if (win != null) {
                     win.setContentView(R.layout.dialog_rating_bar);
                     RatingBar rb = win.findViewById(R.id.rating_bar);
-                    View ratingProgress = win.findViewById(R.id.loading);
+                    View progressView = win.findViewById(R.id.progressView);
                     TextView title = win.findViewById(R.id.title_text);
                     title.setText(itemView.getResources().getString(R.string.rate_entity, artist.getName()));
-                    rb.setRating(userRating.getRating());
+                    rb.setRating(userRatingView.getRating());
 
                     rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
-                        if (oauth.hasAccount() && ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                            ratingProgress.setVisibility(View.VISIBLE);
+                        if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                            progressView.setVisibility(View.VISIBLE);
                             rb.setAlpha(0.3F);
                             api.postArtistRating(
                                     artist.getId(), rating,
                                     metadata -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         if (metadata.getMessage().getText().equals("OK")) {
-                                            userRating.setRating(rating);
+                                            userRatingView.setRating(rating);
                                             api.getArtistRatings(
                                                     artist.getId(),
                                                     this::setAllRating,
@@ -112,7 +112,7 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
                                         alertDialog.dismiss();
                                     },
                                     t -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         ShowUtil.showToast(itemView.getContext(), t.getMessage());
                                         alertDialog.dismiss();
@@ -145,7 +145,7 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
             if (rating != null) {
                 Float r = rating.getValue();
                 if (r == null) r = 0f;
-                userRating.setRating(r);
+                userRatingView.setRating(r);
             }
         }
 
@@ -160,7 +160,7 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
                             if (images != null && !images.isEmpty()) {
                                 for (Image img : images) {
                                     if (img.getSize().equals(Image.SizeType.MEDIUM.toString()) && !TextUtils.isEmpty(img.getText())) {
-                                        Picasso.get().load(img.getText()).fit().into(artistImage, new Callback() {
+                                        Picasso.get().load(img.getText()).fit().into(imageView, new Callback() {
                                             @Override
                                             public void onSuccess() {
                                                 showImageProgressLoading(false);
@@ -186,16 +186,16 @@ public class PagedArtistCollectionAdapter extends BasePagedListAdapter<Artist> {
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                artistImage.setVisibility(View.INVISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.INVISIBLE);
+                imageProgressView.setVisibility(View.VISIBLE);
             } else {
-                progressLoading.setVisibility(View.GONE);
-                artistImage.setVisibility(View.VISIBLE);
+                imageProgressView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
             }
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteBtn.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

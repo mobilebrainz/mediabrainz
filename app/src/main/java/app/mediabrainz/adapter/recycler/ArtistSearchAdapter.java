@@ -33,11 +33,11 @@ public class ArtistSearchAdapter extends BaseRecyclerViewAdapter<ArtistSearchAda
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_search_artist;
 
-        private LinearLayout container;
-        private ImageView artistImage;
-        private ProgressBar progressLoading;
-        private TextView artistName;
-        private TextView type;
+        private LinearLayout artistVontainerView;
+        private ImageView imageView;
+        private ProgressBar imageProgressView;
+        private TextView artistNameView;
+        private TextView artistTypeView;
 
         public static ArtistSearchViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -47,16 +47,16 @@ public class ArtistSearchAdapter extends BaseRecyclerViewAdapter<ArtistSearchAda
 
         private ArtistSearchViewHolder(View v) {
             super(v);
-            container = v.findViewById(R.id.artist_container);
-            artistImage = v.findViewById(R.id.artist_image);
-            progressLoading = v.findViewById(R.id.image_loading);
-            artistName = v.findViewById(R.id.artist_name);
-            type = v.findViewById(R.id.artist_type);
+            artistVontainerView = v.findViewById(R.id.artistContainerView);
+            imageView = v.findViewById(R.id.imageView);
+            imageProgressView = v.findViewById(R.id.imageProgressView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            artistTypeView = v.findViewById(R.id.artistTypeView);
         }
 
         public void bindTo(Artist artist) {
-            artistName.setText(artist.getName());
-            type.setText(artist.getType());
+            artistNameView.setText(artist.getName());
+            artistTypeView.setText(artist.getType());
 
             String areastr = "";
             if (artist.getArea() != null && !TextUtils.isEmpty(artist.getArea().getName())) {
@@ -78,7 +78,7 @@ public class ArtistSearchAdapter extends BaseRecyclerViewAdapter<ArtistSearchAda
             if (MediaBrainzApp.getPreferences().isLoadImagesEnabled()) {
                 loadArtistImageFromLastfm(artist.getName());
             } else {
-                artistImage.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -90,7 +90,7 @@ public class ArtistSearchAdapter extends BaseRecyclerViewAdapter<ArtistSearchAda
                 textView.setEllipsize(END);
                 textView.setSingleLine();
                 textView.setTextColor(itemView.getResources().getColor(R.color.colorPrimaryLight));
-                container.addView(textView);
+                artistVontainerView.addView(textView);
             }
         }
 
@@ -106,7 +106,7 @@ public class ArtistSearchAdapter extends BaseRecyclerViewAdapter<ArtistSearchAda
                                 for (Image img : images) {
                                     if (img.getSize().equals(Image.SizeType.MEDIUM.toString()) && !TextUtils.isEmpty(img.getText())) {
                                         Picasso.get().load(img.getText()).fit()
-                                                .into(artistImage, new Callback() {
+                                                .into(imageView, new Callback() {
                                                     @Override
                                                     public void onSuccess() {
                                                         showImageProgressLoading(false);
@@ -132,11 +132,11 @@ public class ArtistSearchAdapter extends BaseRecyclerViewAdapter<ArtistSearchAda
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                artistImage.setVisibility(View.INVISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.INVISIBLE);
+                imageProgressView.setVisibility(View.VISIBLE);
             } else {
-                progressLoading.setVisibility(View.GONE);
-                artistImage.setVisibility(View.VISIBLE);
+                imageProgressView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
             }
         }
 

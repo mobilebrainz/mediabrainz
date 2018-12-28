@@ -59,7 +59,7 @@ public class LocalSettingsDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.settings_fragment, localSettingsType.gerLocalSettingsFragment()).commit();
+        transaction.replace(R.id.settingsFragment, localSettingsType.gerLocalSettingsFragment()).commit();
     }
 
 }

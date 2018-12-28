@@ -38,7 +38,7 @@ public class LinksTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_links_tab, container, false);
 
-        noresults = layout.findViewById(R.id.noresults);
+        noresults = layout.findViewById(R.id.noresultsView);
         linksRecycler = layout.findViewById(R.id.links_recycler);
 
         load();

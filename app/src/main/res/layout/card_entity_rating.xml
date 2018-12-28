@@ -26,7 +26,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/entity"
+                android:id="@+id/entityView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -35,7 +35,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/artist"
+                android:id="@+id/artistView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -45,13 +45,13 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/rating_container"
+            android:id="@+id/ratingContainerView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp">
 
             <RatingBar
-                android:id="@+id/rating"
+                android:id="@+id/ratingView"
                 style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

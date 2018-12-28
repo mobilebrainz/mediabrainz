@@ -15,12 +15,12 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:id="@+id/frameLayout"
+            android:id="@+id/frameView"
             android:layout_width="64dp"
             android:layout_height="64dp">
 
             <ProgressBar
-                android:id="@+id/image_loading"
+                android:id="@+id/imageProgressView"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/artist_image"
+                android:id="@+id/releaseImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_artist_24_dark"
@@ -45,7 +45,7 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/artist_name"
+                android:id="@+id/artistNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -54,14 +54,14 @@
                 android:textStyle="bold"/>
 
             <LinearLayout
-                android:id="@+id/rating_container"
+                android:id="@+id/ratingContainerView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <RatingBar
-                    android:id="@+id/user_rating"
+                    android:id="@+id/userRatingView"
                     style="@style/Widget.AppCompat.RatingBar.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                     android:numStars="5"/>
 
                 <TextView
-                    android:id="@+id/all_rating"
+                    android:id="@+id/allRatingView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -81,7 +81,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/delete"
+            android:id="@+id/deleteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

@@ -30,7 +30,7 @@ public class NetworkStateViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindTo(NetworkState networkState) {
-        //error message
+        //errorView message
         errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
         if (networkState.getMessage() != null) {
             errorMessageTextView.setText(networkState.getMessage());

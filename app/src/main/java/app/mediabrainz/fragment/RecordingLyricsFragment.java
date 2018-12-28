@@ -29,8 +29,8 @@ public class RecordingLyricsFragment extends LazyFragment {
     protected boolean isError;
 
     private View content;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private View noresults;
     private TextView lyrics;
     private Button showSiteBtn;
@@ -46,10 +46,10 @@ public class RecordingLyricsFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recording_lyrics, container, false);
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
+        content = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresults = layout.findViewById(R.id.noresultsView);
         lyrics = layout.findViewById(R.id.lyrics);
         showSiteBtn = layout.findViewById(R.id.show_site);
 
@@ -60,8 +60,8 @@ public class RecordingLyricsFragment extends LazyFragment {
     @Override
     public void lazyLoad() {
         content.setVisibility(View.GONE);
-        loading.setVisibility(View.GONE);
-        error.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         noresults.setVisibility(View.GONE);
 
         Recording recording = ((GetRecordingCommunicator) getContext()).getRecording();
@@ -72,7 +72,7 @@ public class RecordingLyricsFragment extends LazyFragment {
                 viewProgressLoading(true);
                 // Получить лирику из сервиса http://lyrics.wikia.com/wikia.php
                 // Нестабильно даёт результат. Лучше парсить http://lyrics.wikia.com
-                // пример: Deep Purple Smoke On The Water. С сервиса - error, с парсинга - текст песни.
+                // пример: Deep Purple Smoke On The Water. С сервиса - errorView, с парсинга - текст песни.
                 /*
                 api.getLyricsWikia(
                         artists.get(0).getName(), recording.getTitle(),
@@ -120,11 +120,11 @@ public class RecordingLyricsFragment extends LazyFragment {
         if (view) {
             isLoading = true;
             content.setVisibility(View.GONE);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             content.setVisibility(View.VISIBLE);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
@@ -132,10 +132,10 @@ public class RecordingLyricsFragment extends LazyFragment {
         if (view) {
             isError = true;
             content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
         }
     }
@@ -144,7 +144,7 @@ public class RecordingLyricsFragment extends LazyFragment {
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
     }
 
 }

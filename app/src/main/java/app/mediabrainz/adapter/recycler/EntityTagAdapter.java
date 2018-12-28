@@ -39,9 +39,9 @@ public class EntityTagAdapter extends BaseRecyclerViewAdapter<EntityTagAdapter.E
 
         private EntityTagViewHolder(View v) {
             super(v);
-            entityNameView = v.findViewById(R.id.entity_name);
-            artistNameView = v.findViewById(R.id.artist_name);
-            playYoutubeView = itemView.findViewById(R.id.play_youtube);
+            entityNameView = v.findViewById(R.id.entityNameView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            playYoutubeView = itemView.findViewById(R.id.playYoutubeView);
         }
 
         public void bindTo(TagEntity tag) {

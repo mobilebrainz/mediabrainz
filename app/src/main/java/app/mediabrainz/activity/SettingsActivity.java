@@ -17,7 +17,7 @@ public class SettingsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.settings_fragment, new SettingsFragment())
+                .replace(R.id.settingsFragment, new SettingsFragment())
                 .commit();
     }
 }

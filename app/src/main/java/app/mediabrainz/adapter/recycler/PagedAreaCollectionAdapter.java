@@ -21,13 +21,13 @@ public class PagedAreaCollectionAdapter extends BasePagedListAdapter<Area> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_area_collection;
 
-        private TextView areaNameTextView;
-        private ImageView deleteButton;
+        private TextView areaNameView;
+        private ImageView deleteView;
 
         private PagedAreaCollectionViewHolder(View v) {
             super(v);
-            areaNameTextView = v.findViewById(R.id.area_name);
-            deleteButton = v.findViewById(R.id.delete);
+            areaNameView = v.findViewById(R.id.areaNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedAreaCollectionViewHolder create(ViewGroup parent) {
@@ -37,12 +37,12 @@ public class PagedAreaCollectionAdapter extends BasePagedListAdapter<Area> {
         }
 
         private void bindTo(Area area, boolean isPrivate) {
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            areaNameTextView.setText(area.getName());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            areaNameView.setText(area.getName());
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

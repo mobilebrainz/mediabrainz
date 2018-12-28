@@ -32,10 +32,10 @@ public class CollectionEditFragment extends Fragment {
     boolean isError;
     private Collection collection;
 
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private View content;
-    private EditText nameEditText;
+    private EditText collectionNameView;
     private EditText descriptionEditText;
     private CheckBox publicCheckBox;
 
@@ -50,10 +50,10 @@ public class CollectionEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_collection_edit, container, false);
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        nameEditText = layout.findViewById(R.id.collection_name);
+        content = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        collectionNameView = layout.findViewById(R.id.collectionNameView);
         descriptionEditText = layout.findViewById(R.id.collection_description);
         publicCheckBox = layout.findViewById(R.id.collection_public);
 
@@ -62,18 +62,18 @@ public class CollectionEditFragment extends Fragment {
 
         collection = ((GetCollectionCommunicator) getContext()).getCollection();
         if (collection != null) {
-            nameEditText.setText(collection.getName());
-            nameEditText.setError(null);
+            collectionNameView.setText(collection.getName());
+            collectionNameView.setError(null);
         }
 
-        ((ShowTitleCommunicator) getContext()).getTopTitle().setText(R.string.title_edit_collection);
+        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(R.string.title_edit_collection);
         return layout;
     }
 
     private void edit() {
-        nameEditText.setError(null);
+        collectionNameView.setError(null);
 
-        String name = nameEditText.getText().toString().trim();
+        String name = collectionNameView.getText().toString().trim();
         if (!TextUtils.isEmpty(name)) {
             viewProgressLoading(true);
             //TODO: make .browse(n, m)
@@ -86,7 +86,7 @@ public class CollectionEditFragment extends Fragment {
                             for (Collection coll : collections) {
                                 if (coll.getName().equalsIgnoreCase(name) && coll.getType().equals(collection.getType())) {
                                     existName = true;
-                                    nameEditText.setError(getString(R.string.collection_create_exist_name));
+                                    collectionNameView.setError(getString(R.string.collection_create_exist_name));
                                     break;
                                 }
                             }
@@ -108,18 +108,18 @@ public class CollectionEditFragment extends Fragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> edit());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> edit());
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
             content.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             content.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
@@ -127,10 +127,10 @@ public class CollectionEditFragment extends Fragment {
         if (isView) {
             isError = true;
             content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
         }
     }

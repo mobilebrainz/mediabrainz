@@ -19,7 +19,7 @@ public class SearchListAdapter extends BaseRecyclerViewAdapter<SearchListAdapter
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_search_list;
 
-        private TextView string;
+        private TextView searchStringView;
 
         public static SearchListViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -29,11 +29,11 @@ public class SearchListAdapter extends BaseRecyclerViewAdapter<SearchListAdapter
 
         private SearchListViewHolder(View v) {
             super(v);
-            string = v.findViewById(R.id.string);
+            searchStringView = v.findViewById(R.id.searchStringView);
         }
 
         public void bindTo(String tag) {
-            string.setText(tag);
+            searchStringView.setText(tag);
         }
     }
 

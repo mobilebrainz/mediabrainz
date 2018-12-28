@@ -34,19 +34,19 @@ public class PagedReleaseCollectionAdapter extends BasePagedListAdapter<Release>
 
         private Release release;
 
-        private ImageView coverart;
-        private ProgressBar progressLoading;
+        private ImageView releaseImageView;
+        private ProgressBar imageProgressView;
         private TextView releaseNameView;
         private TextView artistNameView;
-        private ImageView deleteBtn;
+        private ImageView deleteView;
 
         private PagedReleaseCollectionViewHolder(View v) {
             super(v);
-            coverart = v.findViewById(R.id.release_image);
-            progressLoading = v.findViewById(R.id.image_loading);
-            releaseNameView = v.findViewById(R.id.release_name);
-            artistNameView = v.findViewById(R.id.artist_name);
-            deleteBtn = v.findViewById(R.id.delete);
+            releaseImageView = v.findViewById(R.id.releaseImageView);
+            imageProgressView = v.findViewById(R.id.imageProgressView);
+            releaseNameView = v.findViewById(R.id.releaseNameView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedReleaseCollectionViewHolder create(ViewGroup parent) {
@@ -56,7 +56,7 @@ public class PagedReleaseCollectionAdapter extends BasePagedListAdapter<Release>
         }
 
         private void bindTo(Release release, boolean isPrivate) {
-            deleteBtn.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
             this.release = release;
             releaseNameView.setText(release.getTitle());
             List<Artist.ArtistCredit> artistCredits = release.getArtistCredits();
@@ -79,7 +79,7 @@ public class PagedReleaseCollectionAdapter extends BasePagedListAdapter<Release>
                             CoverArtImage.Thumbnails thumbnails = coverArt.getFrontThumbnails();
                             if (thumbnails != null && !TextUtils.isEmpty(thumbnails.getSmall())) {
                                 Picasso.get().load(thumbnails.getSmall()).fit()
-                                        .into(coverart, new Callback() {
+                                        .into(releaseImageView, new Callback() {
                                             @Override
                                             public void onSuccess() {
                                                 showImageProgressLoading(false);
@@ -102,16 +102,16 @@ public class PagedReleaseCollectionAdapter extends BasePagedListAdapter<Release>
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                coverart.setVisibility(View.INVISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
+                releaseImageView.setVisibility(View.INVISIBLE);
+                imageProgressView.setVisibility(View.VISIBLE);
             } else {
-                progressLoading.setVisibility(View.GONE);
-                coverart.setVisibility(View.VISIBLE);
+                imageProgressView.setVisibility(View.GONE);
+                releaseImageView.setVisibility(View.VISIBLE);
             }
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteBtn.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

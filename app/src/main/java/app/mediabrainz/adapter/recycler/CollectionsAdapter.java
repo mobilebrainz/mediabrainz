@@ -33,9 +33,9 @@ public class CollectionsAdapter extends BaseRecyclerViewAdapter<CollectionsAdapt
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_collections;
 
-        private TextView collectionName;
-        private TextView collectionCount;
-        private ImageView collectionDelete;
+        private TextView collectionNameView;
+        private TextView collectionCountView;
+        private ImageView collectionDeleteView;
 
         public static CollectionsViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -45,22 +45,22 @@ public class CollectionsAdapter extends BaseRecyclerViewAdapter<CollectionsAdapt
 
         private CollectionsViewHolder(View v) {
             super(v);
-            collectionName = v.findViewById(R.id.collection_name);
-            collectionCount = v.findViewById(R.id.collection_count);
-            collectionDelete = v.findViewById(R.id.collection_delete);
+            collectionNameView = v.findViewById(R.id.collectionNameView);
+            collectionCountView = v.findViewById(R.id.collectionCountView);
+            collectionDeleteView = v.findViewById(R.id.collectionDeleteView);
         }
 
         public void bindTo(Collection collection, boolean isPrivate) {
-            collectionDelete.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            collectionDeleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
 
-            collectionDelete.setOnClickListener(v -> {
+            collectionDeleteView.setOnClickListener(v -> {
                 if (onDeleteCollectionListener != null) {
                     onDeleteCollectionListener.onDelete(getAdapterPosition());
                 }
             });
 
-            collectionName.setText(collection.getName());
-            collectionCount.setText(String.valueOf(collection.getCount()));
+            collectionNameView.setText(collection.getName());
+            collectionCountView.setText(String.valueOf(collection.getCount()));
         }
 
     }

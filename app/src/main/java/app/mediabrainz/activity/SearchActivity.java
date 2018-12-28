@@ -23,8 +23,8 @@ public class SearchActivity extends BaseActivity implements
 
     private View contentView;
     private View errorView;
-    protected View loading;
-    private View logInBtn;
+    protected View progressView;
+    private View logInButton;
 
     @Override
     protected int initContentLayout() {
@@ -35,14 +35,14 @@ public class SearchActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contentView = findViewById(R.id.content);
-        logInBtn = findViewById(R.id.log_in_btn);
-        errorView = findViewById(R.id.error);
-        loading = findViewById(R.id.loading);
+        contentView = findViewById(R.id.contentView);
+        logInButton = findViewById(R.id.logInButton);
+        errorView = findViewById(R.id.errorView);
+        progressView = findViewById(R.id.progressView);
 
         if (!oauth.hasAccount()) {
-            logInBtn.setVisibility(View.VISIBLE);
-            logInBtn.setOnClickListener(v -> {
+            logInButton.setVisibility(View.VISIBLE);
+            logInButton.setOnClickListener(v -> {
                 if (!isLoading && !isError) {
                     ActivityFactory.startLoginActivity(this);
                 }
@@ -81,7 +81,7 @@ public class SearchActivity extends BaseActivity implements
     protected void onStart() {
         super.onStart();
         if (oauth.hasAccount()) {
-            logInBtn.setVisibility(View.GONE);
+            logInButton.setVisibility(View.GONE);
         }
     }
 
@@ -121,11 +121,11 @@ public class SearchActivity extends BaseActivity implements
         if (isView) {
             isLoading = true;
             contentView.setAlpha(0.25F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             contentView.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 

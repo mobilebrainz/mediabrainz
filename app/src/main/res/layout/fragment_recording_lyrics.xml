@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/content"
+            android:id="@+id/contentView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -75,7 +75,7 @@
         </LinearLayout>
 
         <ProgressBar
-            android:id="@+id/loading"
+            android:id="@+id/progressView"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             android:visibility="gone"/>
 
         <include
-            android:id="@+id/error"
+            android:id="@+id/errorView"
             layout="@layout/layout_retry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/noresults"
+            android:id="@+id/noresultsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

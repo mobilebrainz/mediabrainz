@@ -49,8 +49,8 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
     private TextView instructions;
     private TextView noResults;
     private View contentContainer;
-    private View loading;
-    private View error;
+    private View progressView;
+    private View errorView;
 
     public static BarcodeSearchFragment newInstance(String barcode) {
         Bundle args = new Bundle();
@@ -70,9 +70,9 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
         barcodeText = layout.findViewById(R.id.barcode_text);
         searchButton = layout.findViewById(R.id.barcode_search_btn);
         instructions = layout.findViewById(R.id.barcode_instructions);
-        noResults = layout.findViewById(R.id.noresults);
-        loading = layout.findViewById(R.id.loading);
-        error = layout.findViewById(R.id.error);
+        noResults = layout.findViewById(R.id.noresultsView);
+        progressView = layout.findViewById(R.id.progressView);
+        errorView = layout.findViewById(R.id.errorView);
         contentContainer = layout.findViewById(R.id.container);
         releaseRecycler = layout.findViewById(R.id.release_recycler);
 
@@ -184,7 +184,7 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
                     ShowUtil.showError(getActivity(), t);
                     viewProgressLoading(false);
                     viewError(true);
-                    error.findViewById(R.id.retry_button).setOnClickListener(v -> confirmSubmission(releaseMbid));
+                    errorView.findViewById(R.id.retry_button).setOnClickListener(v -> confirmSubmission(releaseMbid));
                 }
         );
     }
@@ -193,7 +193,7 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> search());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> search());
     }
 
     @Override
@@ -234,11 +234,11 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
         if (isView) {
             isLoading = true;
             contentContainer.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             contentContainer.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
@@ -246,11 +246,11 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
         if (isView) {
             isError = true;
             contentContainer.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
             contentContainer.setVisibility(View.VISIBLE);
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 

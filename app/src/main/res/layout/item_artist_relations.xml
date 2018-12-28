@@ -30,7 +30,7 @@
                 android:paddingBottom="4dp">
 
                 <TextView
-                    android:id="@+id/artist"
+                    android:id="@+id/artistView"
                     android:layout_marginTop="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                     android:textSize="@dimen/text_size_16"/>
 
                 <TextView
-                    android:id="@+id/type"
+                    android:id="@+id/typeView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"

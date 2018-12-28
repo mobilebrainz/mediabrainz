@@ -42,7 +42,7 @@ public class ReleaseCreditsFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_credits, container, false);
 
         recycler = layout.findViewById(R.id.credits_recycler);
-        noresults = layout.findViewById(R.id.noresults);
+        noresults = layout.findViewById(R.id.noresultsView);
 
         configReleaseRecycler();
         load();

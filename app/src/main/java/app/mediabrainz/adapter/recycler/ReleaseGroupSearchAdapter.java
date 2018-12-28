@@ -32,12 +32,12 @@ public class ReleaseGroupSearchAdapter extends BaseRecyclerViewAdapter<ReleaseGr
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_search_release_group;
 
-        private ImageView coverart;
-        private ProgressBar coverartLoading;
-        private TextView releaseName;
-        private TextView releaseType;
-        private TextView artistName;
-        private TextView tags;
+        private ImageView coverartView;
+        private ProgressBar coverartLoadingView;
+        private TextView releaseNameView;
+        private TextView releaseTypeView;
+        private TextView artistNameView;
+        private TextView tagsView;
 
         public static ReleaseGroupSearchViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -47,33 +47,33 @@ public class ReleaseGroupSearchAdapter extends BaseRecyclerViewAdapter<ReleaseGr
 
         private ReleaseGroupSearchViewHolder(View v) {
             super(v);
-            coverart = v.findViewById(R.id.coverart);
-            coverartLoading = v.findViewById(R.id.coverart_loading);
-            releaseName = v.findViewById(R.id.release_name);
-            releaseType = v.findViewById(R.id.release_type);
-            artistName = v.findViewById(R.id.artist_name);
-            tags = v.findViewById(R.id.tags);
+            coverartView = v.findViewById(R.id.coverartView);
+            coverartLoadingView = v.findViewById(R.id.coverartLoadingView);
+            releaseNameView = v.findViewById(R.id.releaseNameView);
+            releaseTypeView = v.findViewById(R.id.releaseTypeView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            tagsView = v.findViewById(R.id.tagsView);
         }
 
         public void bindTo(ReleaseGroup releaseGroup) {
-            releaseName.setText(releaseGroup.getTitle());
+            releaseNameView.setText(releaseGroup.getTitle());
             List<Artist.ArtistCredit> artists = releaseGroup.getArtistCredits();
             Artist artist;
             if (artists != null && !artists.isEmpty()) {
                 artist = artists.get(0).getArtist();
-                artistName.setText(artist.getName());
+                artistNameView.setText(artist.getName());
                 if (releaseGroup.getTags() != null && !releaseGroup.getTags().isEmpty()) {
-                    tags.setText(ApiUtils.getStringFromList(releaseGroup.getTags(), ", "));
+                    tagsView.setText(ApiUtils.getStringFromList(releaseGroup.getTags(), ", "));
                 } else {
-                    tags.setText(artist.getDisambiguation());
+                    tagsView.setText(artist.getDisambiguation());
                 }
             }
-            releaseType.setText(StringMapper.mapReleaseGroupOneType(releaseGroup));
+            releaseTypeView.setText(StringMapper.mapReleaseGroupOneType(releaseGroup));
 
             if (MediaBrainzApp.getPreferences().isLoadImagesEnabled()) {
                 loadImage(releaseGroup.getId());
             } else {
-                coverart.setVisibility(View.VISIBLE);
+                coverartView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -85,7 +85,7 @@ public class ReleaseGroupSearchAdapter extends BaseRecyclerViewAdapter<ReleaseGr
                         CoverArtImage.Thumbnails thumbnails = coverArt.getFrontThumbnails();
                         if (thumbnails != null && !TextUtils.isEmpty(thumbnails.getSmall())) {
                             Picasso.get().load(thumbnails.getSmall()).fit()
-                                    .into(coverart, new Callback() {
+                                    .into(coverartView, new Callback() {
                                         @Override
                                         public void onSuccess() {
                                             showImageProgressLoading(false);
@@ -105,11 +105,11 @@ public class ReleaseGroupSearchAdapter extends BaseRecyclerViewAdapter<ReleaseGr
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                coverart.setVisibility(View.INVISIBLE);
-                coverartLoading.setVisibility(View.VISIBLE);
+                coverartView.setVisibility(View.INVISIBLE);
+                coverartLoadingView.setVisibility(View.VISIBLE);
             } else {
-                coverartLoading.setVisibility(View.GONE);
-                coverart.setVisibility(View.VISIBLE);
+                coverartLoadingView.setVisibility(View.GONE);
+                coverartView.setVisibility(View.VISIBLE);
             }
         }
     }

@@ -7,7 +7,7 @@
 
     <!-- bug in android 28.0.0: left indent in preference screen -->
     <FrameLayout
-        android:id="@+id/settings_fragment"
+        android:id="@+id/settingsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="-40dp"/>

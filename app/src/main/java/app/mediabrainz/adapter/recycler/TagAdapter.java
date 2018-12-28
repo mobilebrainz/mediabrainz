@@ -25,9 +25,9 @@ public class TagAdapter extends BaseRecyclerViewAdapter<TagAdapter.TagViewHolder
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_tag;
 
-        private TextView tagName;
-        private TextView votesCount;
-        private ImageView voteBtn;
+        private TextView tagNameView;
+        private TextView votesCountView;
+        private ImageView voteButton;
 
         public static TagViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -37,21 +37,21 @@ public class TagAdapter extends BaseRecyclerViewAdapter<TagAdapter.TagViewHolder
 
         private TagViewHolder(View v) {
             super(v);
-            tagName = v.findViewById(R.id.tag_name);
-            votesCount = v.findViewById(R.id.votes_count);
-            voteBtn = v.findViewById(R.id.vote_btn);
+            tagNameView = v.findViewById(R.id.tagNameView);
+            votesCountView = v.findViewById(R.id.votesCountView);
+            voteButton = v.findViewById(R.id.voteButton);
         }
 
         public void bindTo(Tag tag, boolean votted) {
-            tagName.setText(tag.getName());
-            votesCount.setText(String.valueOf(tag.getCount()));
+            tagNameView.setText(tag.getName());
+            votesCountView.setText(String.valueOf(tag.getCount()));
             if (votted) {
-                voteBtn.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.colorAccent)));
+                voteButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.colorAccent)));
             }
         }
 
         public void setOnVoteTagListener(OnVoteTagListener listener) {
-            voteBtn.setOnClickListener(v -> {
+            voteButton.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onVote(getAdapterPosition());
                 }

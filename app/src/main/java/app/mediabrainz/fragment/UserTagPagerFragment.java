@@ -37,8 +37,8 @@ public class UserTagPagerFragment extends Fragment implements
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
 
     public static UserTagPagerFragment newInstance(String username, String tag) {
         Bundle args = new Bundle();
@@ -53,15 +53,15 @@ public class UserTagPagerFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_user_tag_pager, container, false);
 
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
+        viewPager = layout.findViewById(R.id.pagerView);
+        tabLayout = layout.findViewById(R.id.tabsView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
 
         username = getArguments().getString(USERNAME);
         userTag = getArguments().getString(USER_TAG);
 
-        ((ShowTitleCommunicator) getContext()).getTopTitle().setText(userTag);
+        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(userTag);
 
         load();
         return layout;
@@ -92,11 +92,11 @@ public class UserTagPagerFragment extends Fragment implements
         if (isView) {
             isLoading = true;
             viewPager.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             viewPager.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
@@ -104,10 +104,10 @@ public class UserTagPagerFragment extends Fragment implements
         if (isView) {
             isError = true;
             viewPager.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             viewPager.setVisibility(View.VISIBLE);
         }
     }
@@ -116,7 +116,7 @@ public class UserTagPagerFragment extends Fragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
     }
 
     @Override

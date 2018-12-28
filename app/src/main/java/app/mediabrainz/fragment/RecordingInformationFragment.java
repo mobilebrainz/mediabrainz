@@ -27,7 +27,7 @@ public class RecordingInformationFragment extends Fragment {
 
     private TextView recordingName;
     private TextView length;
-    private TextView artistName;
+    private TextView artistNameView;
 
     public static RecordingInformationFragment newInstance() {
         Bundle args = new Bundle();
@@ -40,9 +40,9 @@ public class RecordingInformationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recording_information, container, false);
 
-        recordingName = layout.findViewById(R.id.recording_name);
+        recordingName = layout.findViewById(R.id.recordingNameView);
         length = layout.findViewById(R.id.length);
-        artistName = layout.findViewById(R.id.artist_name);
+        artistNameView = layout.findViewById(R.id.artistNameView);
 
         load();
         return layout;
@@ -75,10 +75,10 @@ public class RecordingInformationFragment extends Fragment {
         }
         String artistNamesString = ApiUtils.getStringFromList(names, ", ");
         if (!TextUtils.isEmpty(artistNamesString)) {
-            artistName.setVisibility(View.VISIBLE);
-            artistName.setText(artistNamesString);
+            artistNameView.setVisibility(View.VISIBLE);
+            artistNameView.setText(artistNamesString);
         } else {
-            artistName.setVisibility(View.GONE);
+            artistNameView.setVisibility(View.GONE);
         }
     }
 

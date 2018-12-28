@@ -21,13 +21,13 @@ public class PagedLabelCollectionAdapter extends BasePagedListAdapter<Label> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_label_collection;
 
-        private TextView labelNameTextView;
-        private ImageView deleteButton;
+        private TextView labelNameView;
+        private ImageView deleteView;
 
         private PagedLabelCollectionViewHolder(View v) {
             super(v);
-            labelNameTextView = v.findViewById(R.id.label_name);
-            deleteButton = v.findViewById(R.id.delete);
+            labelNameView = v.findViewById(R.id.labelNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedLabelCollectionViewHolder create(ViewGroup parent) {
@@ -37,12 +37,12 @@ public class PagedLabelCollectionAdapter extends BasePagedListAdapter<Label> {
         }
 
         private void bindTo(Label label, boolean isPrivate) {
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            labelNameTextView.setText(label.getName());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            labelNameView.setText(label.getName());
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

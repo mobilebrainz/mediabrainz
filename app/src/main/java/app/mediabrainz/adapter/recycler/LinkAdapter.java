@@ -21,9 +21,9 @@ public class LinkAdapter extends BaseRecyclerViewAdapter<LinkAdapter.LinkViewHol
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_link;
 
-        private ImageView icon;
-        private TextView type;
-        private TextView link;
+        private ImageView iconView;
+        private TextView typeView;
+        private TextView linkView;
 
         public static LinkViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -33,14 +33,14 @@ public class LinkAdapter extends BaseRecyclerViewAdapter<LinkAdapter.LinkViewHol
 
         private LinkViewHolder(View v) {
             super(v);
-            icon = v.findViewById(R.id.icon);
-            type = v.findViewById(R.id.type);
-            link = v.findViewById(R.id.link);
+            iconView = v.findViewById(R.id.iconView);
+            typeView = v.findViewById(R.id.typeView);
+            linkView = v.findViewById(R.id.linkView);
         }
 
         public void bindTo(Url url) {
-            type.setText(url.getPrettyType());
-            link.setText(url.getPrettyUrl());
+            typeView.setText(url.getPrettyType());
+            linkView.setText(url.getPrettyUrl());
 
             String t = url.getType().toLowerCase();
             int iconId = R.drawable.ic_link_24_dark;
@@ -87,7 +87,7 @@ public class LinkAdapter extends BaseRecyclerViewAdapter<LinkAdapter.LinkViewHol
             } else if (r.contains("vimeo")) {
                 iconId = R.drawable.ic_vimeo_24;
             }
-            icon.setImageResource(iconId);
+            iconView.setImageResource(iconId);
         }
     }
 

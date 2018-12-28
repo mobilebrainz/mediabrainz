@@ -37,8 +37,8 @@ public class WikipediaWebViewFragment extends Fragment {
     private Map<String, String> urlMap;
 
     private WebView webView;
-    private ProgressBar loading;
-    private View error;
+    private ProgressBar progressView;
+    private View errorView;
     private Button langButton;
 
     public static WikipediaWebViewFragment newInstance() {
@@ -52,8 +52,8 @@ public class WikipediaWebViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_web_view, container, false);
 
-        loading = layout.findViewById(R.id.loading);
-        error = layout.findViewById(R.id.error);
+        progressView = layout.findViewById(R.id.progressView);
+        errorView = layout.findViewById(R.id.errorView);
         webView = layout.findViewById(R.id.web_view);
 
         webView.setWebViewClient(new WebViewClient() {
@@ -72,13 +72,13 @@ public class WikipediaWebViewFragment extends Fragment {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                loading.setVisibility(View.VISIBLE);
+                progressView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                loading.setVisibility(View.GONE);
+                progressView.setVisibility(View.GONE);
                 if (buttonLang != null) {
                     langButton.setText(buttonLang.equals("en") ? lang : "en");
                     langButton.setVisibility(View.VISIBLE);
@@ -91,7 +91,7 @@ public class WikipediaWebViewFragment extends Fragment {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 Toast.makeText(getActivity(), "Cannot getWikidata page", Toast.LENGTH_SHORT).show();
-                loading.setVisibility(View.GONE);
+                progressView.setVisibility(View.GONE);
             }
         });
         ((SetWebViewCommunicator) getContext()).setWebView(webView);
@@ -153,25 +153,25 @@ public class WikipediaWebViewFragment extends Fragment {
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 
     private void showConnectionWarning(Throwable t) {
         //ShowUtil.showError(getActivity(), t);
-        loading.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
     }
 
 }

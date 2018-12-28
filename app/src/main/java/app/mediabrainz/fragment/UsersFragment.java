@@ -25,8 +25,8 @@ public class UsersFragment extends LazyFragment {
 
     private View noresults;
     private RecyclerView recycler;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
 
     public static UsersFragment newInstance() {
         Bundle args = new Bundle();
@@ -39,9 +39,9 @@ public class UsersFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresults = layout.findViewById(R.id.noresultsView);
         recycler = layout.findViewById(R.id.recycler);
 
         configRecycler();
@@ -107,20 +107,20 @@ public class UsersFragment extends LazyFragment {
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 

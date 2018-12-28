@@ -62,13 +62,13 @@ public class ResultSearchActivity extends BaseActivity implements
     private boolean isLoading;
     private boolean isError;
 
-    private View content;
-    private RecyclerView searchRecycler;
-    private View error;
-    private View loading;
-    private View noresults;
-    private TextView topTitle;
-    private TextView bottomTitle;
+    private View contentView;
+    private RecyclerView searchRecyclerView;
+    private View errorView;
+    private View progressView;
+    private View noresultsView;
+    private TextView toolbarTopTitleView;
+    private TextView toolbarBottomTitleView;
 
     @Override
     protected int initContentLayout() {
@@ -80,12 +80,12 @@ public class ResultSearchActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        content = findViewById(R.id.content);
-        error = findViewById(R.id.error);
-        loading = findViewById(R.id.loading);
-        noresults = findViewById(R.id.noresults);
-        topTitle = findViewById(R.id.toolbar_title_top);
-        bottomTitle = findViewById(R.id.toolbar_title_bottom);
+        contentView = findViewById(R.id.contentView);
+        errorView = findViewById(R.id.errorView);
+        progressView = findViewById(R.id.progressView);
+        noresultsView = findViewById(R.id.noresultsView);
+        toolbarTopTitleView = findViewById(R.id.toolbarTopTitleView);
+        toolbarBottomTitleView = findViewById(R.id.toolbarBottomTitleView);
 
         if (savedInstanceState != null) {
             artistSearch = savedInstanceState.getString(QUERY);
@@ -115,44 +115,44 @@ public class ResultSearchActivity extends BaseActivity implements
     }
 
     private void configSearchRecycler() {
-        searchRecycler = findViewById(R.id.search_recycler);
-        searchRecycler.setLayoutManager(new LinearLayoutManager(this));
-        searchRecycler.setItemViewCacheSize(50);
-        searchRecycler.setDrawingCacheEnabled(true);
-        searchRecycler.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        searchRecycler.setHasFixedSize(true);
+        searchRecyclerView = findViewById(R.id.searchRecyclerView);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchRecyclerView.setItemViewCacheSize(50);
+        searchRecyclerView.setDrawingCacheEnabled(true);
+        searchRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        searchRecyclerView.setHasFixedSize(true);
     }
 
     private void search() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(true);
 
         if (searchType != -1) {
-            bottomTitle.setText(searchQuery);
+            toolbarBottomTitleView.setText(searchQuery);
 
             if (searchType == SearchType.TAG.ordinal()) {
-                topTitle.setText(R.string.search_tag_title);
+                toolbarTopTitleView.setText(R.string.search_tag_title);
                 searchTag();
             } else if (searchType == SearchType.USER.ordinal()) {
-                topTitle.setText(R.string.search_user_title);
+                toolbarTopTitleView.setText(R.string.search_user_title);
                 searchUser();
             } else if (searchType == SearchType.BARCODE.ordinal()) {
-                topTitle.setText(R.string.search_barcode_title);
+                toolbarTopTitleView.setText(R.string.search_barcode_title);
                 searchBarcode();
             }
 
         } else if (!TextUtils.isEmpty(trackSearch)) {
-            topTitle.setText(R.string.search_track_title);
-            bottomTitle.setText(!TextUtils.isEmpty(artistSearch) ? artistSearch + " / " + trackSearch : trackSearch);
+            toolbarTopTitleView.setText(R.string.search_track_title);
+            toolbarBottomTitleView.setText(!TextUtils.isEmpty(artistSearch) ? artistSearch + " / " + trackSearch : trackSearch);
             searchRecording();
         } else if (!TextUtils.isEmpty(albumSearch)) {
-            topTitle.setText(R.string.search_album_title);
-            bottomTitle.setText(!TextUtils.isEmpty(artistSearch) ? artistSearch + " / " + albumSearch : albumSearch);
+            toolbarTopTitleView.setText(R.string.search_album_title);
+            toolbarBottomTitleView.setText(!TextUtils.isEmpty(artistSearch) ? artistSearch + " / " + albumSearch : albumSearch);
             searchAlbum();
         } else if (!TextUtils.isEmpty(artistSearch)) {
-            topTitle.setText(R.string.search_artist_title);
-            bottomTitle.setText(artistSearch);
+            toolbarTopTitleView.setText(R.string.search_artist_title);
+            toolbarBottomTitleView.setText(artistSearch);
             searchArtist();
         }
     }
@@ -166,7 +166,7 @@ public class ResultSearchActivity extends BaseActivity implements
                         showAddBarcodeDialog();
                     } else {
                         ReleaseAdapter adapter = new ReleaseAdapter(releases, null);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position -> onRelease(releases.get(position).getId()));
                         if (releases.size() == 1) {
                             onRelease(releases.get(0).getId());
@@ -185,7 +185,7 @@ public class ResultSearchActivity extends BaseActivity implements
                     .setCustomTitle(titleView)
                     .setMessage(getString(R.string.barcode_info_log))
                     .setPositiveButton(R.string.barcode_btn, (dialog, which) ->
-                            getSupportFragmentManager().beginTransaction().add(R.id.content, BarcodeSearchFragment.newInstance(searchQuery)).commit())
+                            getSupportFragmentManager().beginTransaction().add(R.id.contentView, BarcodeSearchFragment.newInstance(searchQuery)).commit())
                     .setNegativeButton(R.string.barcode_cancel, (dialog, which) -> {
                         dialog.cancel();
                         ResultSearchActivity.this.finish();
@@ -208,10 +208,10 @@ public class ResultSearchActivity extends BaseActivity implements
                 strings -> {
                     viewProgressLoading(false);
                     if (strings.isEmpty()) {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     } else {
                         SearchListAdapter adapter = new SearchListAdapter(strings);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position ->
                                 ActivityFactory.startTagActivity(this, strings.get(position), false));
                         saveQueryAsSuggestion();
@@ -241,7 +241,7 @@ public class ResultSearchActivity extends BaseActivity implements
                             noresults.setVisibility(View.VISIBLE);
                         } else {
                             SearchListAdapter adapter = new SearchListAdapter(strings);
-                            searchRecycler.setAdapter(adapter);
+                            searchRecyclerView.setAdapter(adapter);
                             adapter.setHolderClickListener(position ->
                                     ActivityFactory.startTagActivity(this, strings.get(position)));
                             saveQueryAsSuggestion();
@@ -262,10 +262,10 @@ public class ResultSearchActivity extends BaseActivity implements
                 strings -> {
                     viewProgressLoading(false);
                     if (strings.isEmpty()) {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     } else {
                         SearchListAdapter adapter = new SearchListAdapter(strings);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position ->
                                 ActivityFactory.startUserActivity(this, strings.get(position)));
                         saveQueryAsSuggestion();
@@ -284,11 +284,11 @@ public class ResultSearchActivity extends BaseActivity implements
                 result -> {
                     viewProgressLoading(false);
                     if (result.getCount() == 0) {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     } else {
                         List<Recording> recordings = result.getRecordings();
                         TrackSearchAdapter adapter = new TrackSearchAdapter(recordings);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position ->
                                 ActivityFactory.startRecordingActivity(this, recordings.get(position).getId()));
                         saveQueryAsSuggestion();
@@ -307,11 +307,11 @@ public class ResultSearchActivity extends BaseActivity implements
                 result -> {
                     viewProgressLoading(false);
                     if (result.getCount() == 0) {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     } else {
                         List<ReleaseGroup> releaseGroups = result.getReleaseGroups();
                         ReleaseGroupSearchAdapter adapter = new ReleaseGroupSearchAdapter(releaseGroups);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position -> showReleases(releaseGroups.get(position).getId()));
                         saveQueryAsSuggestion();
                         if (releaseGroups.size() == 1) {
@@ -328,11 +328,11 @@ public class ResultSearchActivity extends BaseActivity implements
                 result -> {
                     viewProgressLoading(false);
                     if (result.getCount() == 0) {
-                        noresults.setVisibility(View.VISIBLE);
+                        noresultsView.setVisibility(View.VISIBLE);
                     } else {
                         List<Artist> artists = result.getArtists();
                         ArtistSearchAdapter adapter = new ArtistSearchAdapter(artists);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position ->
                                 ActivityFactory.startArtistActivity(this, artists.get(position).getId()));
                         saveQueryAsSuggestion();
@@ -373,7 +373,7 @@ public class ResultSearchActivity extends BaseActivity implements
         //ShowUtil.showError(this, t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> search());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> search());
     }
 
     private void saveQueryAsSuggestion() {
@@ -401,36 +401,36 @@ public class ResultSearchActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        searchRecycler.getRecycledViewPool().clear();
-        searchRecycler.setAdapter(null);
+        searchRecyclerView.getRecycledViewPool().clear();
+        searchRecyclerView.setAdapter(null);
     }
 
     @Override
     public void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            content.setAlpha(0.3F);
-            searchRecycler.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            contentView.setAlpha(0.3F);
+            searchRecyclerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            content.setAlpha(1.0F);
-            searchRecycler.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            contentView.setAlpha(1.0F);
+            searchRecyclerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            searchRecycler.setVisibility(View.INVISIBLE);
-            content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            searchRecyclerView.setVisibility(View.INVISIBLE);
+            contentView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
-            searchRecycler.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
+            searchRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 

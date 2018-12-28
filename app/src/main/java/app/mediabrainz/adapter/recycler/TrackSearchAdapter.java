@@ -23,10 +23,10 @@ public class TrackSearchAdapter extends BaseRecyclerViewAdapter<TrackSearchAdapt
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_search_track;
 
-        private TextView artistName;
-        private TextView albumName;
-        private TextView trackName;
-        private TextView tags;
+        private TextView artistNameView;
+        private TextView albumNameView;
+        private TextView trackNameView;
+        private TextView tagsView;
 
         public static TrackSearchViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -36,30 +36,30 @@ public class TrackSearchAdapter extends BaseRecyclerViewAdapter<TrackSearchAdapt
 
         private TrackSearchViewHolder(View v) {
             super(v);
-            artistName = v.findViewById(R.id.artist_name);
-            albumName = v.findViewById(R.id.album_name);
-            trackName = v.findViewById(R.id.track_name);
-            tags = v.findViewById(R.id.tags);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            albumNameView = v.findViewById(R.id.albumNameView);
+            trackNameView = v.findViewById(R.id.trackNameView);
+            tagsView = v.findViewById(R.id.tagsView);
         }
 
         public void bindTo(Recording recording) {
-            trackName.setText(recording.getTitle());
+            trackNameView.setText(recording.getTitle());
 
             List<Artist.ArtistCredit> artists = recording.getArtistCredits();
             Artist artist = null;
             if (artists != null && !artists.isEmpty()) {
                 artist = artists.get(0).getArtist();
-                artistName.setText(itemView.getResources().getString(R.string.search_track_artist_name, artist.getName()));
+                artistNameView.setText(itemView.getResources().getString(R.string.search_track_artist_name, artist.getName()));
                 if (recording.getTags() != null && !recording.getTags().isEmpty()) {
-                    tags.setText(ApiUtils.getStringFromList(recording.getTags(), ", "));
+                    tagsView.setText(ApiUtils.getStringFromList(recording.getTags(), ", "));
                 } else {
-                    tags.setText(artist.getDisambiguation());
+                    tagsView.setText(artist.getDisambiguation());
                 }
             }
 
             List<Release> releases = recording.getReleases();
             if (releases != null && !releases.isEmpty()) {
-                albumName.setText(itemView.getResources().getString(R.string.search_track_album_name, releases.get(0).getTitle()));
+                albumNameView.setText(itemView.getResources().getString(R.string.search_track_album_name, releases.get(0).getTitle()));
             }
         }
     }

@@ -52,8 +52,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
     private boolean isLoadRatingsEnabled;
 
     private View content;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private TextView loginWarning;
     private TextView allRatingText;
     private RatingBar userRatingBar;
@@ -88,9 +88,9 @@ public class ReleaseRatingsFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_release_ratings, container, false);
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
+        content = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
         loginWarning = layout.findViewById(R.id.login_warning);
         allRatingText = layout.findViewById(R.id.all_rating_text);
         userRatingBar = layout.findViewById(R.id.user_rating_bar);
@@ -130,7 +130,7 @@ public class ReleaseRatingsFragment extends LazyFragment {
 
     private void setEditListeners() {
         userRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            if (loading.getVisibility() == View.VISIBLE) {
+            if (progressView.getVisibility() == View.VISIBLE) {
                 return;
             }
             if (oauth.hasAccount()) {
@@ -339,20 +339,20 @@ public class ReleaseRatingsFragment extends LazyFragment {
         if (isView) {
             content.setAlpha(0.3F);
             userRatingBar.setIsIndicator(true);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             content.setAlpha(1.0F);
             userRatingBar.setIsIndicator(false);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
         }
     }
@@ -361,8 +361,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.setVisibility(View.VISIBLE);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.setVisibility(View.VISIBLE);
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
     }
 
 }

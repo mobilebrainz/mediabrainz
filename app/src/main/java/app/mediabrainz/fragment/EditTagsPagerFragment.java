@@ -64,8 +64,8 @@ public class EditTagsPagerFragment extends LazyFragment implements
     private int tagsTab = EditTagsPagerAdapter.TagsTab.GENRES.ordinal();
 
     private View content;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private TextView loginWarning;
     private AutoCompleteTextView tagInput;
     private ImageButton tagBtn;
@@ -87,15 +87,15 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
         tagsPagerType = TagsPagerType.values()[getArguments().getInt(TAGS_PAGER_TYPE, 0)];
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
+        content = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
         loginWarning = layout.findViewById(R.id.login_warning);
         tagInput = layout.findViewById(R.id.tag_input);
         tagBtn = layout.findViewById(R.id.tag_btn);
 
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
+        viewPager = layout.findViewById(R.id.pagerView);
+        tabLayout = layout.findViewById(R.id.tabsView);
 
         setEditListeners();
         loadView();
@@ -168,7 +168,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
     private void setEditListeners() {
         tagBtn.setOnClickListener(v -> {
-            if (loading.getVisibility() == View.VISIBLE) {
+            if (progressView.getVisibility() == View.VISIBLE) {
                 return;
             }
             if (oauth.hasAccount()) {
@@ -325,19 +325,19 @@ public class EditTagsPagerFragment extends LazyFragment implements
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             content.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             content.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
         }
     }
@@ -346,8 +346,8 @@ public class EditTagsPagerFragment extends LazyFragment implements
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.setVisibility(View.VISIBLE);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.setVisibility(View.VISIBLE);
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
     }
 
     @Override

@@ -33,10 +33,10 @@ public class YoutubeSearchActivity extends BaseActivity implements
     private boolean isLoading;
     private boolean isError;
 
-    private View content;
-    private RecyclerView searchRecycler;
-    private View error;
-    private View loading;
+    private View contentView;
+    private RecyclerView searchRecyclerView;
+    private View errorView;
+    private View progressView;
     private View noresults;
 
     @Override
@@ -49,10 +49,10 @@ public class YoutubeSearchActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        content = findViewById(R.id.content);
-        error = findViewById(R.id.error);
-        loading = findViewById(R.id.loading);
-        noresults = findViewById(R.id.noresults);
+        contentView = findViewById(R.id.contentView);
+        errorView = findViewById(R.id.errorView);
+        progressView = findViewById(R.id.progressView);
+        noresults = findViewById(R.id.noresultsView);
 
         if (savedInstanceState != null) {
             keyword = savedInstanceState.getString(KEYWORD);
@@ -60,10 +60,10 @@ public class YoutubeSearchActivity extends BaseActivity implements
             keyword = getIntent().getStringExtra(KEYWORD);
         }
 
-        TextView topTitle = findViewById(R.id.toolbar_title_top);
-        TextView bottomTitle = findViewById(R.id.toolbar_title_bottom);
-        topTitle.setText(R.string.youtube_search);
-        bottomTitle.setText(keyword);
+        TextView toolbarTopTitleView = findViewById(R.id.toolbarTopTitleView);
+        TextView toolbarBottomTitleView = findViewById(R.id.toolbarBottomTitleView);
+        toolbarTopTitleView.setText(R.string.youtube_search);
+        toolbarBottomTitleView.setText(keyword);
 
         configSearchRecycler();
         search();
@@ -93,12 +93,12 @@ public class YoutubeSearchActivity extends BaseActivity implements
     }
 
     private void configSearchRecycler() {
-        searchRecycler = findViewById(R.id.search_recycler);
-        searchRecycler.setLayoutManager(new LinearLayoutManager(this));
-        searchRecycler.setItemViewCacheSize(50);
-        searchRecycler.setDrawingCacheEnabled(true);
-        searchRecycler.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        searchRecycler.setHasFixedSize(true);
+        searchRecyclerView = findViewById(R.id.searchRecyclerView);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        searchRecyclerView.setItemViewCacheSize(50);
+        searchRecyclerView.setDrawingCacheEnabled(true);
+        searchRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        searchRecyclerView.setHasFixedSize(true);
     }
 
     private void search() {
@@ -111,7 +111,7 @@ public class YoutubeSearchActivity extends BaseActivity implements
                     List<YoutubeSearchResult> items = youtubeSearchListResponse.getItems();
                     if (!items.isEmpty()) {
                         YoutubeSearchAdapter adapter = new YoutubeSearchAdapter(items);
-                        searchRecycler.setAdapter(adapter);
+                        searchRecyclerView.setAdapter(adapter);
                         adapter.setHolderClickListener(position -> {
                             String videoId = items.get(position).getId().getVideoId();
                             if (MediaBrainzApp.getPreferences().isPlayYoutube()) {
@@ -139,42 +139,42 @@ public class YoutubeSearchActivity extends BaseActivity implements
         //ShowUtil.showError(this, t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> search());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> search());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        searchRecycler.getRecycledViewPool().clear();
-        searchRecycler.setAdapter(null);
+        searchRecyclerView.getRecycledViewPool().clear();
+        searchRecyclerView.setAdapter(null);
     }
 
     @Override
     public void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            content.setAlpha(0.3F);
-            searchRecycler.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            contentView.setAlpha(0.3F);
+            searchRecyclerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            content.setAlpha(1.0F);
-            searchRecycler.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            contentView.setAlpha(1.0F);
+            searchRecyclerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            searchRecycler.setVisibility(View.INVISIBLE);
-            content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            searchRecyclerView.setVisibility(View.INVISIBLE);
+            contentView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
-            searchRecycler.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
+            searchRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 

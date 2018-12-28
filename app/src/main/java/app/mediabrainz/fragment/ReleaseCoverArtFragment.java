@@ -26,7 +26,7 @@ import static app.mediabrainz.MediaBrainzApp.api;
 public class ReleaseCoverArtFragment extends LazyFragment {
 
     private RecyclerView coverartRecycler;
-    private View loading;
+    private View progressView;
     private View noresults;
 
     public static ReleaseCoverArtFragment newInstance() {
@@ -41,8 +41,8 @@ public class ReleaseCoverArtFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_cover_art, container, false);
 
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
+        progressView = layout.findViewById(R.id.progressView);
+        noresults = layout.findViewById(R.id.noresultsView);
         coverartRecycler = layout.findViewById(R.id.coverart_recycler);
 
         configCoverartRecycler();
@@ -56,12 +56,12 @@ public class ReleaseCoverArtFragment extends LazyFragment {
 
         String releaseMbid = ((GetReleaseCommunicator) getContext()).getReleaseMbid();
         if (!TextUtils.isEmpty(releaseMbid)) {
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
             api.getReleaseCoverArt(
                     releaseMbid,
                     this::displayResult,
                     t -> {
-                        loading.setVisibility(View.GONE);
+                        progressView.setVisibility(View.GONE);
                         noresults.setVisibility(View.VISIBLE);
                     }
             );
@@ -75,7 +75,7 @@ public class ReleaseCoverArtFragment extends LazyFragment {
     }
 
     private void displayResult(ReleaseCoverArt coverArt) {
-        loading.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
         List<CoverArtImage> images = coverArt.getImages();
         List<CoverArtImage> coverArts = new ArrayList<>();
         if (images != null && !images.isEmpty()) {

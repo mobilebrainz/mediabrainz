@@ -30,8 +30,8 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     private Release release;
 
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private View noresults;
 
     public static ReleaseTracksFragment newInstance() {
@@ -47,9 +47,9 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
         recyclerContainer.setVisibility(View.INVISIBLE);
         View frame = inflater.inflate(R.layout.fragment_release_tracks_frame, null);
-        error = frame.findViewById(R.id.error);
-        loading = frame.findViewById(R.id.loading);
-        noresults = frame.findViewById(R.id.noresults);
+        errorView = frame.findViewById(R.id.errorView);
+        progressView = frame.findViewById(R.id.progressView);
+        noresults = frame.findViewById(R.id.noresultsView);
         addFrameView(frame);
 
         loadView();
@@ -59,7 +59,7 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
     @Override
     protected void lazyLoad() {
         noresults.setVisibility(View.GONE);
-        error.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         recycler.removeAllViewsInLayout();
 
         release = ((GetReleaseCommunicator) getContext()).getRelease();
@@ -84,11 +84,11 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
     }
 
     private void loadRecordingRatings() {
-        loading.setVisibility(View.VISIBLE);
+        progressView.setVisibility(View.VISIBLE);
         api.getRecordingRatingsByRelease(
                 release.getId(),
                 resultRecordings -> {
-                    loading.setVisibility(View.GONE);
+                    progressView.setVisibility(View.GONE);
                     List<Media> medias = release.getMedia();
                     if (resultRecordings.getCount() > 0) {
                         List<Recording> recordings = resultRecordings.getRecordings();
@@ -179,10 +179,10 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
     }
 
     private void showConnectionWarning(Throwable t) {
-        loading.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
         //ShowUtil.showError(getActivity(), t);
-        error.setVisibility(View.VISIBLE);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.setVisibility(View.VISIBLE);
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
     }
 
 }

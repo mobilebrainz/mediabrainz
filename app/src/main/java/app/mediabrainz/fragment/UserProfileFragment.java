@@ -29,8 +29,8 @@ public class UserProfileFragment extends LazyFragment {
     private boolean isLoading;
     private boolean isError;
 
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private ProgressBar avatarLoading;
     private FrameLayout avatarFrame;
     private ImageView avatarView;
@@ -54,8 +54,8 @@ public class UserProfileFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
         avatarLoading = layout.findViewById(R.id.avatar_loading);
         avatarFrame = layout.findViewById(R.id.avatar_frame);
         avatarView = layout.findViewById(R.id.avatar);
@@ -141,20 +141,20 @@ public class UserProfileFragment extends LazyFragment {
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 
@@ -162,7 +162,7 @@ public class UserProfileFragment extends LazyFragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
     }
 
 }

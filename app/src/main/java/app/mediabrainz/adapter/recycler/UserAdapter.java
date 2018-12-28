@@ -22,7 +22,7 @@ public class UserAdapter extends BaseRecyclerViewAdapter<UserAdapter.UserViewHol
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_user;
 
         private TextView userNameView;
-        private ImageView deleteButton;
+        private ImageView deleteView;
 
         public static UserViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -32,8 +32,8 @@ public class UserAdapter extends BaseRecyclerViewAdapter<UserAdapter.UserViewHol
 
         private UserViewHolder(View v) {
             super(v);
-            userNameView = v.findViewById(R.id.user_name);
-            deleteButton = v.findViewById(R.id.delete);
+            userNameView = v.findViewById(R.id.userNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public void bindTo(User user) {
@@ -41,7 +41,7 @@ public class UserAdapter extends BaseRecyclerViewAdapter<UserAdapter.UserViewHol
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

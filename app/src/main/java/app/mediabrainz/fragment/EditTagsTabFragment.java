@@ -62,7 +62,7 @@ public class EditTagsTabFragment extends Fragment {
 
         tagsTab = getArguments().getInt(TAGS_TAB);
 
-        noresults = layout.findViewById(R.id.noresults);
+        noresults = layout.findViewById(R.id.noresultsView);
         tagsRecycler = layout.findViewById(R.id.recycler);
 
         load();

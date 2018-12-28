@@ -24,7 +24,7 @@ public class LabelCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public void load() {
-        error.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
 
         if (collection != null) {
             adapter = new PagedLabelCollectionAdapter(this, isPrivate);

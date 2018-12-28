@@ -55,7 +55,7 @@ public class CollectionsTabFragment extends Fragment {
     private int collectionTab;
     private boolean isPrivate;
 
-    private View loading;
+    private View progressView;
     private RecyclerView collectionsRecycler;
 
     public static CollectionsTabFragment newInstance(int collectionTab) {
@@ -72,7 +72,7 @@ public class CollectionsTabFragment extends Fragment {
 
         collectionTab = getArguments().getInt(COLLECTION_TAB);
         collectionsRecycler = layout.findViewById(R.id.collections_recycler);
-        loading = layout.findViewById(R.id.loading);
+        progressView = layout.findViewById(R.id.progressView);
 
         load();
         return layout;
@@ -149,10 +149,10 @@ public class CollectionsTabFragment extends Fragment {
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             collectionsRecycler.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             collectionsRecycler.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 }

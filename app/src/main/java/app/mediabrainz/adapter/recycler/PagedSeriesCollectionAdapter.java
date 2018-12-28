@@ -21,13 +21,13 @@ public class PagedSeriesCollectionAdapter extends BasePagedListAdapter<Series> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_series_collection;
 
-        private TextView seriesNameTextView;
-        private ImageView deleteButton;
+        private TextView seriesNameView;
+        private ImageView deleteView;
 
         private PagedSeriesCollectionViewHolder(View v) {
             super(v);
-            seriesNameTextView = v.findViewById(R.id.series_name);
-            deleteButton = v.findViewById(R.id.delete);
+            seriesNameView = v.findViewById(R.id.seriesNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedSeriesCollectionViewHolder create(ViewGroup parent) {
@@ -37,12 +37,12 @@ public class PagedSeriesCollectionAdapter extends BasePagedListAdapter<Series> {
         }
 
         public void bindTo(Series series, boolean isPrivate) {
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            seriesNameTextView.setText(series.getName());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            seriesNameView.setText(series.getName());
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

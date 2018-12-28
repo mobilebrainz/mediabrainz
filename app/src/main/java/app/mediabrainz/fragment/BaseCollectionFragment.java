@@ -46,8 +46,8 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
     protected ProgressBar loadingProgressBar;
     protected View itemNetworkState;
 
-    protected View error;
-    protected View loading;
+    protected View errorView;
+    protected View progressView;
 
     public abstract void load();
 
@@ -58,10 +58,10 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
         String username = ((GetUsernameCommunicator) getContext()).getUsername();
         isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
         collection = ((GetCollectionCommunicator) getContext()).getCollection();
-        ((ShowTitleCommunicator) getContext()).getTopTitle().setText(collection.getName());
+        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(collection.getName());
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
 
         swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
@@ -93,11 +93,11 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
                 .setCustomTitle(titleView)
                 .setMessage(getString(R.string.delete_alert_message))
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    loading.setVisibility(View.VISIBLE);
+                    progressView.setVisibility(View.VISIBLE);
                     if (!api.deleteEntityFromCollection(
                             collection, entity,
                             metadata -> {
-                                loading.setVisibility(View.GONE);
+                                progressView.setVisibility(View.GONE);
                                 if (metadata.getMessage().getText().equals("OK")) {
                                     if (action != null) {
                                         action.run();
@@ -110,7 +110,7 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
                                 }
                             },
                             this::showConnectionWarning)) {
-                        loading.setVisibility(View.GONE);
+                        progressView.setVisibility(View.GONE);
                     }
                 })
                 .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel())
@@ -118,9 +118,9 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
     }
 
     private void showConnectionWarning(Throwable t) {
-        loading.setVisibility(View.GONE);
-        error.setVisibility(View.VISIBLE);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        progressView.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> load());
     }
 
     @Override

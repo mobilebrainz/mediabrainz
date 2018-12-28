@@ -29,15 +29,15 @@ public class RecordingRatingsAdapter extends BasePagedListAdapter<Rating> {
 
         private TextView entityView;
         private TextView artistView;
-        private RatingBar ratingBar;
-        private View ratingContainer;
+        private RatingBar ratingView;
+        private View ratingContainerView;
 
         private RecordingRatingsViewHolder(View v) {
             super(v);
-            entityView = v.findViewById(R.id.entity);
-            artistView = v.findViewById(R.id.artist);
-            ratingBar = v.findViewById(R.id.rating);
-            ratingContainer = v.findViewById(R.id.rating_container);
+            entityView = v.findViewById(R.id.entityView);
+            artistView = v.findViewById(R.id.artistView);
+            ratingView = v.findViewById(R.id.ratingView);
+            ratingContainerView = v.findViewById(R.id.ratingContainerView);
         }
 
         public static RecordingRatingsViewHolder create(ViewGroup parent) {
@@ -49,10 +49,10 @@ public class RecordingRatingsAdapter extends BasePagedListAdapter<Rating> {
         private void bindTo(Rating rating) {
             entityView.setText(rating.getName());
             artistView.setText(rating.getArtistName());
-            ratingBar.setRating(rating.getRate());
+            ratingView.setRating(rating.getRate());
 
             if (oauth.hasAccount() && oauth.getName().equals(rating.getUser())) {
-                ratingContainer.setOnClickListener(v -> showRatingBar(rating));
+                ratingContainerView.setOnClickListener(v -> showRatingBar(rating));
             }
         }
 
@@ -63,29 +63,29 @@ public class RecordingRatingsAdapter extends BasePagedListAdapter<Rating> {
             if (win != null) {
                 win.setContentView(R.layout.dialog_rating_bar);
                 RatingBar rb = win.findViewById(R.id.rating_bar);
-                View ratingProgress = win.findViewById(R.id.loading);
+                View progressView = win.findViewById(R.id.progressView);
                 TextView title = win.findViewById(R.id.title_text);
                 title.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
-                rb.setRating(ratingBar.getRating());
+                rb.setRating(ratingView.getRating());
 
                 rb.setOnRatingBarChangeListener((RatingBar rateBar, float rate, boolean fromUser) -> {
-                    if (ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                        ratingProgress.setVisibility(View.VISIBLE);
+                    if (progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                        progressView.setVisibility(View.VISIBLE);
                         rb.setAlpha(0.3F);
                         api.postRecordingRating(
                                 rating.getMbid(), rate,
                                 metadata -> {
-                                    ratingProgress.setVisibility(View.INVISIBLE);
+                                    progressView.setVisibility(View.INVISIBLE);
                                     rb.setAlpha(1.0F);
                                     if (metadata.getMessage().getText().equals("OK")) {
-                                        ratingBar.setRating(rate);
+                                        ratingView.setRating(rate);
                                     } else {
                                         ShowUtil.showToast(itemView.getContext(), "Error");
                                     }
                                     alertDialog.dismiss();
                                 },
                                 t -> {
-                                    ratingProgress.setVisibility(View.INVISIBLE);
+                                    progressView.setVisibility(View.INVISIBLE);
                                     rb.setAlpha(1.0F);
                                     ShowUtil.showToast(itemView.getContext(), t.getMessage());
                                     alertDialog.dismiss();

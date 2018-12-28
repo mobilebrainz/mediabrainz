@@ -24,7 +24,7 @@ public class PlaceCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public void load() {
-        error.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
 
         if (collection != null) {
             adapter = new PagedPlaceCollectionAdapter(this, isPrivate);

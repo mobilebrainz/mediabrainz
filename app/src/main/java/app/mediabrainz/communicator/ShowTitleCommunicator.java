@@ -5,7 +5,7 @@ import android.widget.TextView;
 
 public interface ShowTitleCommunicator {
 
-    TextView getTopTitle();
+    TextView getToolbarTopTitleView();
 
-    TextView getBottomTitle();
+    TextView getToolbarBottomTitleView();
 }

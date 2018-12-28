@@ -30,8 +30,8 @@ public class ItemViewHolder extends BaseItemViewHolder {
 
     public ItemViewHolder(View itemView, boolean visible) {
         super(itemView, visible);
-        artistView = itemView.findViewById(R.id.artist);
-        typeView = itemView.findViewById(R.id.type);
+        artistView = itemView.findViewById(R.id.artistView);
+        typeView = itemView.findViewById(R.id.typeView);
         beginView = itemView.findViewById(R.id.begin);
         endView = itemView.findViewById(R.id.end);
     }

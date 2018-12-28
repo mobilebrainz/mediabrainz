@@ -21,13 +21,13 @@ public class PagedWorkCollectionAdapter extends BasePagedListAdapter<Work> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_work_collection;
 
-        private TextView workNameTextView;
-        private ImageView deleteButton;
+        private TextView workNameView;
+        private ImageView deleteView;
 
         private PagedWorkCollectionViewHolder(View v) {
             super(v);
-            workNameTextView = v.findViewById(R.id.work_name);
-            deleteButton = v.findViewById(R.id.delete);
+            workNameView = v.findViewById(R.id.workNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedWorkCollectionViewHolder create(ViewGroup parent) {
@@ -37,12 +37,12 @@ public class PagedWorkCollectionAdapter extends BasePagedListAdapter<Work> {
         }
 
         private void bindTo(Work work, boolean isPrivate) {
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            workNameTextView.setText(work.getTitle());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            workNameView.setText(work.getTitle());
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

@@ -38,21 +38,21 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
 
         private TextView recordingNameView;
         private TextView artistNameView;
-        private ImageView deleteButton;
-        private RatingBar userRating;
+        private ImageView deleteView;
+        private RatingBar userRatingView;
         private TextView allRatingView;
-        private LinearLayout ratingContainer;
+        private LinearLayout ratingContainerView;
         private ImageView playYoutubeView;
 
         private PagedRecordingCollectionViewHolder(View v) {
             super(v);
-            recordingNameView = v.findViewById(R.id.recording_name);
-            artistNameView = v.findViewById(R.id.artist_name);
-            deleteButton = v.findViewById(R.id.delete);
-            userRating = v.findViewById(R.id.user_rating);
-            allRatingView = v.findViewById(R.id.all_rating);
-            ratingContainer = v.findViewById(R.id.rating_container);
-            playYoutubeView = itemView.findViewById(R.id.play_youtube);
+            recordingNameView = v.findViewById(R.id.recordingNameView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            deleteView = v.findViewById(R.id.deleteView);
+            userRatingView = v.findViewById(R.id.userRatingView);
+            allRatingView = v.findViewById(R.id.allRatingView);
+            ratingContainerView = v.findViewById(R.id.ratingContainerView);
+            playYoutubeView = itemView.findViewById(R.id.playYoutubeView);
         }
 
         public static PagedRecordingCollectionViewHolder create(ViewGroup parent) {
@@ -63,7 +63,7 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
 
         public void bindTo(Recording recording, boolean isPrivate) {
             this.recording = recording;
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
             recordingNameView.setText(recording.getTitle());
             List<Artist.ArtistCredit> artistCredits = recording.getArtistCredits();
             if (artistCredits != null && !artistCredits.isEmpty()) {
@@ -73,7 +73,7 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
             setUserRating(recording);
             setAllRating(recording);
 
-            ratingContainer.setOnClickListener(v -> showRatingBar(recording));
+            ratingContainerView.setOnClickListener(v -> showRatingBar(recording));
         }
 
         private void showRatingBar(Recording recording) {
@@ -84,22 +84,22 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
                 if (win != null) {
                     win.setContentView(R.layout.dialog_rating_bar);
                     RatingBar rb = win.findViewById(R.id.rating_bar);
-                    View ratingProgress = win.findViewById(R.id.loading);
-                    rb.setRating(userRating.getRating());
+                    View progressView = win.findViewById(R.id.progressView);
+                    rb.setRating(userRatingView.getRating());
                     TextView title = win.findViewById(R.id.title_text);
                     title.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
 
                     rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
-                        if (oauth.hasAccount() && ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                            ratingProgress.setVisibility(View.VISIBLE);
+                        if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                            progressView.setVisibility(View.VISIBLE);
                             rb.setAlpha(0.3F);
                             api.postRecordingRating(
                                     recording.getId(), rating,
                                     metadata -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         if (metadata.getMessage().getText().equals("OK")) {
-                                            userRating.setRating(rating);
+                                            userRatingView.setRating(rating);
                                             api.getRecordingRatings(
                                                     recording.getId(),
                                                     this::setAllRating,
@@ -110,7 +110,7 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
                                         alertDialog.dismiss();
                                     },
                                     t -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         ShowUtil.showToast(itemView.getContext(), t.getMessage());
                                         alertDialog.dismiss();
@@ -143,12 +143,12 @@ public class PagedRecordingCollectionAdapter extends BasePagedListAdapter<Record
             if (rating != null) {
                 Float r = rating.getValue();
                 if (r == null) r = 0f;
-                userRating.setRating(r);
+                userRatingView.setRating(r);
             }
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

@@ -31,8 +31,8 @@ public class ArtistTagAdapter extends BaseRecyclerViewAdapter<ArtistTagAdapter.A
 
         private ArtistTagViewHolder(View v) {
             super(v);
-            artistNameView = v.findViewById(R.id.artist_name);
-            commentView = v.findViewById(R.id.comment);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            commentView = v.findViewById(R.id.commentView);
         }
 
         public void bindTo(TagEntity tag) {

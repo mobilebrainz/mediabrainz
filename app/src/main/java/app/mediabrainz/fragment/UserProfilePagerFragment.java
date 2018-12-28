@@ -33,8 +33,8 @@ public class UserProfilePagerFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_pager_without_icons, container, false);
 
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
+        viewPager = layout.findViewById(R.id.pagerView);
+        tabLayout = layout.findViewById(R.id.tabsView);
 
         loadView();
         return layout;

@@ -45,7 +45,7 @@ public class UserTagsTabFragment extends Fragment {
 
         tagType = Tag.TagType.values()[getArguments().getInt(TAGS_TAB)];
 
-        noresults = layout.findViewById(R.id.noresults);
+        noresults = layout.findViewById(R.id.noresultsView);
         tagsRecycler = layout.findViewById(R.id.recycler);
 
         load();

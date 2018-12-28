@@ -119,7 +119,7 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
                 //in the adapter is empty and disable swipe to scroll at the first loading
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
                     itemNetworkState.setVisibility(View.VISIBLE);
-                    //error message
+                    //errorView message
                     errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
                     if (networkState.getMessage() != null) {
                         errorMessageTextView.setText(networkState.getMessage());

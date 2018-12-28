@@ -26,7 +26,7 @@ public class RecordingCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public void load() {
-        error.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
 
         if (collection != null) {
             adapter = new PagedRecordingCollectionAdapter(this, isPrivate);

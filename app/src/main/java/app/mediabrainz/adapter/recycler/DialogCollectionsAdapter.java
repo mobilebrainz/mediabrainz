@@ -21,8 +21,8 @@ public class DialogCollectionsAdapter extends BaseRecyclerViewAdapter<DialogColl
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_dialog_collections;
 
-        private TextView collectionName;
-        private TextView collectionCount;
+        private TextView collectionNameView;
+        private TextView collectionCountView;
 
         public static DialogCollectionsViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -32,13 +32,13 @@ public class DialogCollectionsAdapter extends BaseRecyclerViewAdapter<DialogColl
 
         private DialogCollectionsViewHolder(View v) {
             super(v);
-            collectionName = v.findViewById(R.id.collection_name);
-            collectionCount = v.findViewById(R.id.collection_count);
+            collectionNameView = v.findViewById(R.id.collectionNameView);
+            collectionCountView = v.findViewById(R.id.collectionCountView);
         }
 
         public void bindTo(Collection collection) {
-            collectionName.setText(collection.getName());
-            collectionCount.setText(String.valueOf(collection.getCount()));
+            collectionNameView.setText(collection.getName());
+            collectionCountView.setText(String.valueOf(collection.getCount()));
         }
     }
 

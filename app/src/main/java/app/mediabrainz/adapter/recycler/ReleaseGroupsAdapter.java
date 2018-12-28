@@ -40,24 +40,24 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_release_group;
 
-        private ImageView imageView;
-        private ProgressBar progressLoading;
-        private RatingBar userRatingBar;
+        private ImageView releaseImageView;
+        private ProgressBar progressView;
+        private RatingBar userRatingView;
         private TextView ratingView;
         private TextView releaseNameView;
         private TextView releaseTypeYearView;
-        private LinearLayout ratingContainer;
+        private LinearLayout ratingContainerView;
 
         private ReleaseGroupsViewHolder(View v) {
             super(v);
-            imageView = itemView.findViewById(R.id.img);
-            progressLoading = itemView.findViewById(R.id.loading);
-            releaseNameView = itemView.findViewById(R.id.name);
-            releaseTypeYearView = itemView.findViewById(R.id.type_year);
+            releaseImageView = itemView.findViewById(R.id.releaseImageView);
+            progressView = itemView.findViewById(R.id.progressView);
+            releaseNameView = itemView.findViewById(R.id.releaseNameView);
+            releaseTypeYearView = itemView.findViewById(R.id.releaseTypeYearView);
 
-            ratingContainer = itemView.findViewById(R.id.rating_container);
-            userRatingBar = itemView.findViewById(R.id.user_ratingbar);
-            ratingView = itemView.findViewById(R.id.rating);
+            ratingContainerView = itemView.findViewById(R.id.ratingContainerView);
+            userRatingView = itemView.findViewById(R.id.userRatingView);
+            ratingView = itemView.findViewById(R.id.ratingView);
         }
 
         public static ReleaseGroupsViewHolder create(ViewGroup parent) {
@@ -81,9 +81,9 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
             if (MediaBrainzApp.getPreferences().isLoadImagesEnabled()) {
                 loadImage(releaseGroup.getId());
             } else {
-                imageView.setVisibility(View.VISIBLE);
+                releaseImageView.setVisibility(View.VISIBLE);
             }
-            ratingContainer.setOnClickListener(v -> showRatingBar(releaseGroup));
+            ratingContainerView.setOnClickListener(v -> showRatingBar(releaseGroup));
         }
 
         private void showRatingBar(ReleaseGroup releaseGroup) {
@@ -94,22 +94,22 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
                 if (win != null) {
                     win.setContentView(R.layout.dialog_rating_bar);
                     RatingBar rb = win.findViewById(R.id.rating_bar);
-                    View ratingProgress = win.findViewById(R.id.loading);
-                    rb.setRating(userRatingBar.getRating());
+                    View progressView = win.findViewById(R.id.progressView);
+                    rb.setRating(userRatingView.getRating());
                     TextView title = win.findViewById(R.id.title_text);
                     title.setText(itemView.getResources().getString(R.string.rate_entity, releaseGroup.getTitle()));
 
                     rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
-                        if (oauth.hasAccount() && ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                            ratingProgress.setVisibility(View.VISIBLE);
+                        if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                            progressView.setVisibility(View.VISIBLE);
                             rb.setAlpha(0.3F);
                             api.postAlbumRating(
                                     releaseGroup.getId(), rating,
                                     metadata -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         if (metadata.getMessage().getText().equals("OK")) {
-                                            userRatingBar.setRating(rating);
+                                            userRatingView.setRating(rating);
                                             api.getAlbumRatings(
                                                     releaseGroup.getId(),
                                                     this::setAllRating,
@@ -120,7 +120,7 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
                                         alertDialog.dismiss();
                                     },
                                     t -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         ShowUtil.showToast(itemView.getContext(), t.getMessage());
                                         alertDialog.dismiss();
@@ -144,7 +144,7 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
                         if (thumbnails != null && !TextUtils.isEmpty(thumbnails.getSmall())) {
                             Picasso.get().load(thumbnails.getSmall())
                                     .resize(SMALL_SIZE, SMALL_SIZE)
-                                    .into(imageView, new Callback() {
+                                    .into(releaseImageView, new Callback() {
                                         @Override
                                         public void onSuccess() {
                                             showImageProgressLoading(false);
@@ -164,11 +164,11 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                imageView.setVisibility(View.INVISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
+                releaseImageView.setVisibility(View.INVISIBLE);
+                progressView.setVisibility(View.VISIBLE);
             } else {
-                progressLoading.setVisibility(View.GONE);
-                imageView.setVisibility(View.VISIBLE);
+                progressView.setVisibility(View.GONE);
+                releaseImageView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -189,7 +189,7 @@ public class ReleaseGroupsAdapter extends BasePagedListAdapter<ReleaseGroup> {
             if (rating != null) {
                 Float r = rating.getValue();
                 if (r == null) r = 0f;
-                userRatingBar.setRating(r);
+                userRatingView.setRating(r);
             }
         }
 

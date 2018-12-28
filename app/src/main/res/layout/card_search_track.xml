@@ -19,7 +19,7 @@
         android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/track_name"
+            android:id="@+id/trackNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -29,7 +29,7 @@
             android:textSize="@dimen/text_size_18"/>
 
         <TextView
-            android:id="@+id/artist_name"
+            android:id="@+id/artistNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -38,7 +38,7 @@
             android:textSize="@dimen/text_size_16"/>
 
         <TextView
-            android:id="@+id/album_name"
+            android:id="@+id/albumNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -47,7 +47,7 @@
             android:textSize="@dimen/text_size_16"/>
 
         <TextView
-            android:id="@+id/tags"
+            android:id="@+id/tagsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"

@@ -20,12 +20,12 @@
             android:orientation="vertical">
 
             <FrameLayout
-                android:id="@+id/frameLayout"
+                android:id="@+id/frameView"
                 android:layout_width="64dp"
                 android:layout_height="64dp">
 
                 <ProgressBar
-                    android:id="@+id/coverart_loading"
+                    android:id="@+id/coverartLoadingView"
                     style="?android:attr/progressBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
                     android:visibility="gone"/>
 
                 <ImageView
-                    android:id="@+id/coverart"
+                    android:id="@+id/coverartView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_album_24_dark"
@@ -42,7 +42,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/release_type"
+                android:id="@+id/releaseTypeView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -62,7 +62,7 @@
             android:paddingTop="6dp">
 
             <TextView
-                android:id="@+id/release_name"
+                android:id="@+id/releaseNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -72,7 +72,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/artist_name"
+                android:id="@+id/artistNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -81,7 +81,7 @@
                 android:textSize="@dimen/text_size_16"/>
 
             <TextView
-                android:id="@+id/tags"
+                android:id="@+id/tagsView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"

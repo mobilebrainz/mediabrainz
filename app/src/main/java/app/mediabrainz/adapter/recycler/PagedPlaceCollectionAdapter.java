@@ -21,13 +21,13 @@ public class PagedPlaceCollectionAdapter extends BasePagedListAdapter<Place> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_place_collection;
 
-        private TextView placeNameTextView;
-        private ImageView deleteButton;
+        private TextView placeNameView;
+        private ImageView deleteView;
 
         private PagedPlaceCollectionViewHolder(View v) {
             super(v);
-            placeNameTextView = v.findViewById(R.id.place_name);
-            deleteButton = v.findViewById(R.id.delete);
+            placeNameView = v.findViewById(R.id.placeNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedPlaceCollectionViewHolder create(ViewGroup parent) {
@@ -37,12 +37,12 @@ public class PagedPlaceCollectionAdapter extends BasePagedListAdapter<Place> {
         }
 
         private void bindTo(Place place, boolean isPrivate) {
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            placeNameTextView.setText(place.getName());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            placeNameView.setText(place.getName());
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

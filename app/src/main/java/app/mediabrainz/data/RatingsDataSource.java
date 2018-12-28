@@ -70,7 +70,7 @@ public class RatingsDataSource extends PageKeyedDataSource<Integer, Rating> {
                     // keep a Completable for future retry
                     setRetry(() -> loadInitial(params, callback));
                     NetworkState error = NetworkState.error(throwable.getMessage());
-                    // publish the error
+                    // publish the errorView
                     networkState.postValue(error);
                     initialLoad.postValue(error);
                 }));
@@ -99,7 +99,7 @@ public class RatingsDataSource extends PageKeyedDataSource<Integer, Rating> {
                 throwable -> {
                     // keep a Completable for future retry
                     setRetry(() -> loadAfter(params, callback));
-                    // publish the error
+                    // publish the errorView
                     networkState.postValue(NetworkState.error(throwable.getMessage()));
                 }));
     }

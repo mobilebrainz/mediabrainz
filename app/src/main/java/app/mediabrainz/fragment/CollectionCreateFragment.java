@@ -21,7 +21,7 @@ import app.mediabrainz.communicator.ShowTitleCommunicator;
 
 public class CollectionCreateFragment extends Fragment {
 
-    private EditText nameEditText;
+    private EditText collectionNameView;
     private Spinner typeSpinner;
     private EditText descriptionEditText;
     private CheckBox publicCheckBox;
@@ -37,7 +37,7 @@ public class CollectionCreateFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_collection_create, container, false);
 
-        nameEditText = layout.findViewById(R.id.collection_name);
+        collectionNameView = layout.findViewById(R.id.collectionNameView);
         descriptionEditText = layout.findViewById(R.id.collection_description);
         publicCheckBox = layout.findViewById(R.id.collection_public);
 
@@ -50,20 +50,20 @@ public class CollectionCreateFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(adapter);
 
-        ((ShowTitleCommunicator) getContext()).getTopTitle().setText(R.string.title_create_collection);
+        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(R.string.title_create_collection);
 
         return layout;
     }
 
     private void create() {
-        nameEditText.setError(null);
-        String name = nameEditText.getText().toString().trim();
+        collectionNameView.setError(null);
+        String name = collectionNameView.getText().toString().trim();
         if (!TextUtils.isEmpty(name)) {
             ((OnCreateCollectionCommunicator) getContext()).onCreateCollection(
                     name, typeSpinner.getSelectedItemPosition() + 1,
                     descriptionEditText.getText().toString(),
                     publicCheckBox.isChecked() ? 1 : 0,
-                    nameEditText);
+                    collectionNameView);
         }
     }
 

@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/recording_name"
+            android:id="@+id/recordingNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -33,7 +33,7 @@
             android:textSize="14sp"/>
 
         <TextView
-            android:id="@+id/artist_name"
+            android:id="@+id/artistNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

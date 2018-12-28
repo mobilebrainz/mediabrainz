@@ -59,8 +59,8 @@ public class CollectionsPagerFragment extends LazyFragment implements
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private View error;
-    private View loading;
+    private View errorView;
+    private View progressView;
     private View noresults;
 
     public static CollectionsPagerFragment newInstance() {
@@ -74,11 +74,11 @@ public class CollectionsPagerFragment extends LazyFragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_collections_pager, container, false);
 
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
+        viewPager = layout.findViewById(R.id.pagerView);
+        tabLayout = layout.findViewById(R.id.tabsView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresults = layout.findViewById(R.id.noresultsView);
 
         loadView();
         return layout;
@@ -213,11 +213,11 @@ public class CollectionsPagerFragment extends LazyFragment implements
         if (isView) {
             isLoading = true;
             viewPager.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             viewPager.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
@@ -225,10 +225,10 @@ public class CollectionsPagerFragment extends LazyFragment implements
         if (isView) {
             isError = true;
             viewPager.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
             viewPager.setVisibility(View.VISIBLE);
         }
     }
@@ -237,7 +237,7 @@ public class CollectionsPagerFragment extends LazyFragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> update());
+        errorView.findViewById(R.id.retry_button).setOnClickListener(v -> update());
     }
 
 

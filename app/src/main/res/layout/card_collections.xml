@@ -21,7 +21,7 @@
         android:paddingStart="16dp">
 
         <TextView
-            android:id="@+id/collection_name"
+            android:id="@+id/collectionNameView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,7 +30,7 @@
             android:textSize="@dimen/text_size_16"/>
 
         <ImageView
-            android:id="@+id/collection_delete"
+            android:id="@+id/collectionDeleteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
@@ -38,7 +38,7 @@
             android:tint="@color/colorPrimaryLight"/>
 
         <TextView
-            android:id="@+id/collection_count"
+            android:id="@+id/collectionCountView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"

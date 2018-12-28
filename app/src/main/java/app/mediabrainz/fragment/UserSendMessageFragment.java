@@ -24,7 +24,7 @@ public class UserSendMessageFragment extends LazyFragment {
     private String username;
     private boolean isLoading;
 
-    private View loading;
+    private View progressView;
     private View contentFrame;
     private AutoCompleteTextView subjectView;
     private MultiAutoCompleteTextView messageView;
@@ -41,7 +41,7 @@ public class UserSendMessageFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_user_send_message, container, false);
 
-        loading = layout.findViewById(R.id.loading);
+        progressView = layout.findViewById(R.id.progressView);
         contentFrame = layout.findViewById(R.id.content_frame);
         subjectView = layout.findViewById(R.id.subject);
         messageView = layout.findViewById(R.id.message);
@@ -59,7 +59,7 @@ public class UserSendMessageFragment extends LazyFragment {
         viewProgressLoading(false);
         username = ((GetUsernameCommunicator) getContext()).getUsername();
         if (username != null) {
-            ((ShowTitleCommunicator) getContext()).getBottomTitle().setText(getString(R.string.send_email_to_title, username));
+            ((ShowTitleCommunicator) getContext()).getToolbarBottomTitleView().setText(getString(R.string.send_email_to_title, username));
         }
     }
 
@@ -104,11 +104,11 @@ public class UserSendMessageFragment extends LazyFragment {
         if (isView) {
             isLoading = true;
             contentFrame.setAlpha(0.25f);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
             contentFrame.setAlpha(1.0f);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
