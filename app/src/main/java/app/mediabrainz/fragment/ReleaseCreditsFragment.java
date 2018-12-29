@@ -27,7 +27,7 @@ public class ReleaseCreditsFragment extends Fragment {
 
     private List<Relation> artistRelations;
 
-    private RecyclerView creditsRecyclerView;
+    private RecyclerView recyclerView;
     private View noresultsView;
 
     public static ReleaseCreditsFragment newInstance() {
@@ -39,9 +39,9 @@ public class ReleaseCreditsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_credits, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        creditsRecyclerView = layout.findViewById(R.id.creditsRecyclerView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
         noresultsView = layout.findViewById(R.id.noresultsView);
 
         configReleaseRecycler();
@@ -59,7 +59,7 @@ public class ReleaseCreditsFragment extends Fragment {
                 Comparator<Relation> sortDate = (r1, r2) -> (r1.getType()).compareTo(r2.getType());
                 Collections.sort(artistRelations, sortDate);
                 CreditsAdapter adapter = new CreditsAdapter(artistRelations);
-                creditsRecyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
                 adapter.setHolderClickListener(position ->
                         ((OnArtistCommunicator) getContext()).onArtist(artistRelations.get(position).getArtist().getId()));
             } else {
@@ -69,9 +69,9 @@ public class ReleaseCreditsFragment extends Fragment {
     }
 
     private void configReleaseRecycler() {
-        creditsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        creditsRecyclerView.setItemViewCacheSize(50);
-        creditsRecyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(50);
+        recyclerView.setHasFixedSize(true);
     }
 
 }

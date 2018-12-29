@@ -38,7 +38,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
     private TagViewModel tagViewModel;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView tagRecyclerView;
+    private RecyclerView pagedRecyclerView;
     private BasePagedListAdapter<TagEntity> adapter;
 
     private TextView errorMessageTextView;
@@ -56,11 +56,11 @@ public class TagTabFragment extends Fragment implements RetryCallback {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_tag, container, false);
+        View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
 
         tagType = TagServiceInterface.TagType.values()[getArguments().getInt(TAG_TAB)];
 
-        tagRecyclerView = layout.findViewById(R.id.tagRecyclerView);
+        pagedRecyclerView = layout.findViewById(R.id.pagedRecyclerView);
         swipeRefreshLayout = layout.findViewById(R.id.swipeRefreshLayout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
         loadingProgressBar = layout.findViewById(R.id.loadingProgressBar);
@@ -101,10 +101,10 @@ public class TagTabFragment extends Fragment implements RetryCallback {
             tagViewModel.tagLiveData.observe(this, adapter::submitList);
             tagViewModel.getNetworkState().observe(this, adapter::setNetworkState);
 
-            tagRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            tagRecyclerView.setNestedScrollingEnabled(true);
+            pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            pagedRecyclerView.setNestedScrollingEnabled(true);
             //tagRecycler.setHasFixedSize(true);
-            tagRecyclerView.setAdapter(adapter);
+            pagedRecyclerView.setAdapter(adapter);
 
             initSwipeToRefresh();
         }
@@ -131,7 +131,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
                     loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
-                    tagRecyclerView.scrollToPosition(0);
+                    pagedRecyclerView.scrollToPosition(0);
                 }
             }
         });
@@ -139,7 +139,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             tagViewModel.refresh();
             swipeRefreshLayout.setRefreshing(false);
-            tagRecyclerView.scrollToPosition(0);
+            pagedRecyclerView.scrollToPosition(0);
         });
     }
 

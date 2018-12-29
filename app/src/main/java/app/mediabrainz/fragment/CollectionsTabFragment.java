@@ -56,7 +56,7 @@ public class CollectionsTabFragment extends Fragment {
     private boolean isPrivate;
 
     private View progressView;
-    private RecyclerView collectionsRecyclerView;
+    private RecyclerView recyclerView;
 
     public static CollectionsTabFragment newInstance(int collectionTab) {
         Bundle args = new Bundle();
@@ -68,10 +68,10 @@ public class CollectionsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_collections_tab, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         collectionTab = getArguments().getInt(COLLECTION_TAB);
-        collectionsRecyclerView = layout.findViewById(R.id.collectionsRecyclerView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
         progressView = layout.findViewById(R.id.progressView);
 
         load();
@@ -138,20 +138,20 @@ public class CollectionsTabFragment extends Fragment {
                                         .show();
                             });
                 }
-                collectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                collectionsRecyclerView.setItemViewCacheSize(100);
-                collectionsRecyclerView.setHasFixedSize(true);
-                collectionsRecyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setItemViewCacheSize(100);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(adapter);
             }
         }
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
-            collectionsRecyclerView.setAlpha(0.3F);
+            recyclerView.setAlpha(0.3F);
             progressView.setVisibility(View.VISIBLE);
         } else {
-            collectionsRecyclerView.setAlpha(1.0F);
+            recyclerView.setAlpha(1.0F);
             progressView.setVisibility(View.GONE);
         }
     }

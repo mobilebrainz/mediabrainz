@@ -29,12 +29,12 @@
 
             <Button
                 android:id="@+id/showSiteButton"
-                android:textAllCaps="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/colorPrimaryLight"
                 android:text="@string/show_lyrics_site"
+                android:textAllCaps="false"
                 android:textColor="@color/button_text_color"/>
 
             <!--
