@@ -8,15 +8,15 @@ import app.mediabrainz.R;
 
 public abstract class BaseItemViewHolder extends RecyclerView.ViewHolder {
 
-    protected View container;
+    protected View containerView;
 
     public BaseItemViewHolder(View itemView, boolean visible) {
         super(itemView);
-        container = itemView.findViewById(R.id.containerView);
+        containerView = itemView.findViewById(R.id.containerView);
         setVisibility(visible);
     }
 
     public void setVisibility(boolean visible) {
-        container.setVisibility(visible ? View.VISIBLE : View.GONE);
+        containerView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

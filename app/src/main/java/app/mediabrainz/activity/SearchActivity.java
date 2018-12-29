@@ -55,7 +55,6 @@ public class SearchActivity extends BaseActivity implements
             viewError(true);
             errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
         }
-
     }
 
     @Override

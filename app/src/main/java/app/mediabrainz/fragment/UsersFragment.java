@@ -24,7 +24,7 @@ public class UsersFragment extends LazyFragment {
     private boolean isError;
 
     private View noresultsView;
-    private RecyclerView recycler;
+    private RecyclerView recyclerView;
     private View errorView;
     private View progressView;
 
@@ -42,7 +42,7 @@ public class UsersFragment extends LazyFragment {
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
         noresultsView = layout.findViewById(R.id.noresultsView);
-        recycler = layout.findViewById(R.id.recyclerView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         configRecycler();
         loadView();
@@ -50,9 +50,9 @@ public class UsersFragment extends LazyFragment {
     }
 
     private void configRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(100);
-        recycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class UsersFragment extends LazyFragment {
                 UserAdapter userAdapter = new UserAdapter(users);
                 userAdapter.setHolderClickListener(position ->
                         ((OnUserCommunicator) getContext()).onUser(users.get(position).getName()));
-                recycler.setAdapter(userAdapter);
+                recyclerView.setAdapter(userAdapter);
 
                 userAdapter.setOnDeleteListener(position ->
                         onDelete(users.get(position), () -> {

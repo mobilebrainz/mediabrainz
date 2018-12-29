@@ -15,8 +15,8 @@ import app.mediabrainz.adapter.pager.UserProfilePagerAdapter;
 
 public class UserProfilePagerFragment extends LazyFragment {
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
 
     public interface UserProfileTabOrdinalCommunicator {
         int getUserProfileTabOrdinal();
@@ -33,8 +33,8 @@ public class UserProfilePagerFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_pager_without_icons, container, false);
 
-        viewPager = layout.findViewById(R.id.pagerView);
-        tabLayout = layout.findViewById(R.id.tabsView);
+        pagerView = layout.findViewById(R.id.pagerView);
+        tabsView = layout.findViewById(R.id.tabsView);
 
         loadView();
         return layout;
@@ -43,15 +43,15 @@ public class UserProfilePagerFragment extends LazyFragment {
     @Override
     protected void lazyLoad() {
         UserProfilePagerAdapter pagerAdapter = new UserProfilePagerAdapter(getChildFragmentManager(), getResources());
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        pagerAdapter.setupTabViews(tabLayout);
+        pagerView.setAdapter(pagerAdapter);
+        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+        tabsView.setupWithViewPager(pagerView);
+        tabsView.setTabMode(TabLayout.MODE_FIXED);
+        pagerAdapter.setupTabViews(tabsView);
 
         int userProfileTabOrdinal = ((UserProfileTabOrdinalCommunicator) getContext()).getUserProfileTabOrdinal();
         if (userProfileTabOrdinal >= 0 && userProfileTabOrdinal < UserProfilePagerAdapter.PAGE_COUNT) {
-            viewPager.setCurrentItem(userProfileTabOrdinal);
+            pagerView.setCurrentItem(userProfileTabOrdinal);
         }
     }
 }

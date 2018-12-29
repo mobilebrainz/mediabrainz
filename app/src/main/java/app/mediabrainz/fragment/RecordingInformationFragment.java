@@ -25,7 +25,7 @@ public class RecordingInformationFragment extends Fragment {
 
     private Recording recording;
 
-    private TextView recordingName;
+    private TextView recordingNameView;
     private TextView lengthView;
     private TextView artistNameView;
 
@@ -40,7 +40,7 @@ public class RecordingInformationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recording_information, container, false);
 
-        recordingName = layout.findViewById(R.id.recordingNameView);
+        recordingNameView = layout.findViewById(R.id.recordingNameView);
         lengthView = layout.findViewById(R.id.lengthView);
         artistNameView = layout.findViewById(R.id.artistNameView);
 
@@ -60,10 +60,10 @@ public class RecordingInformationFragment extends Fragment {
     private void setRecordingName() {
         String name = recording.getTitle();
         if (!TextUtils.isEmpty(name)) {
-            recordingName.setVisibility(View.VISIBLE);
-            recordingName.setText(name);
+            recordingNameView.setVisibility(View.VISIBLE);
+            recordingNameView.setText(name);
         } else {
-            recordingName.setVisibility(View.GONE);
+            recordingNameView.setVisibility(View.GONE);
         }
     }
 

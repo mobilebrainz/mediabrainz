@@ -48,7 +48,6 @@ public class PagedReleaseAdapter extends BasePagedListAdapter<Release> {
 
         private PagedReleaseViewHolder(View v) {
             super(v);
-
             coverartView = v.findViewById(R.id.coverartView);
             coverartLoadingView = v.findViewById(R.id.coverartLoadingView);
             dateView = v.findViewById(R.id.dateView);

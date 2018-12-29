@@ -38,7 +38,6 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_release;
 
-        private CardView cardView;
         private ImageView coverartView;
         private ProgressBar coverartLoadingView;
         private TextView dateView;
@@ -47,7 +46,7 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
         private TextView formatView;
         private TextView statusView;
         private TextView catalogView;
-        private TextView barcode;
+        private TextView barcodeView;
 
         public static ReleaseViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -57,7 +56,6 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
 
         private ReleaseViewHolder(View v) {
             super(v);
-            cardView = v.findViewById(R.id.release_card);
             coverartView = v.findViewById(R.id.coverartView);
             coverartLoadingView = v.findViewById(R.id.coverartLoadingView);
             dateView = v.findViewById(R.id.dateView);
@@ -66,12 +64,12 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
             formatView = v.findViewById(R.id.formatView);
             statusView = v.findViewById(R.id.statusView);
             catalogView = v.findViewById(R.id.catalogView);
-            barcode = v.findViewById(R.id.barcodeView);
+            barcodeView = v.findViewById(R.id.barcodeView);
         }
 
         public void bindTo(Release release, String releaseMbid) {
             if (release.getId().equals(releaseMbid)) {
-                cardView.setBackgroundResource(R.color.md_orange_50);
+                itemView.setBackgroundResource(R.color.md_orange_50);
             }
 
             dateView.setText(release.getDate());
@@ -83,9 +81,9 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
 
             releaseNameView.setText(release.getTitle());
             if (!TextUtils.isEmpty(release.getBarcode())) {
-                barcode.setText(itemView.getResources().getString(R.string.r_barcode, release.getBarcode()));
+                barcodeView.setText(itemView.getResources().getString(R.string.r_barcode, release.getBarcode()));
             } else {
-                barcode.setVisibility(View.GONE);
+                barcodeView.setVisibility(View.GONE);
             }
 
             List<Label.LabelInfo> labelInfos = release.getLabelInfo();

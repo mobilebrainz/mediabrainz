@@ -44,7 +44,7 @@ public class UserRecommendsTabFragment extends Fragment {
     private View errorView;
     private View progressView;
     private View noresultsView;
-    private RecyclerView recycler;
+    private RecyclerView recyclerView;
 
 
     public static UserRecommendsTabFragment newInstance(int recommendsTab) {
@@ -64,16 +64,16 @@ public class UserRecommendsTabFragment extends Fragment {
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
         noresultsView = layout.findViewById(R.id.noresultsView);
-        recycler = layout.findViewById(R.id.recyclerView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
     }
 
     private void configRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(100);
-        recycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     private void load() {
@@ -142,14 +142,14 @@ public class UserRecommendsTabFragment extends Fragment {
                     ArtistTagAdapter artistTagAdapter = new ArtistTagAdapter(recommends);
                     artistTagAdapter.setHolderClickListener(position ->
                             ((OnArtistCommunicator) getContext()).onArtist(recommends.get(position).getMbid()));
-                    recycler.setAdapter(artistTagAdapter);
+                    recyclerView.setAdapter(artistTagAdapter);
                     break;
 
                 case RELEASE_GROUP:
                     EntityTagAdapter rgAdapter = new EntityTagAdapter(recommends);
                     rgAdapter.setHolderClickListener(position ->
                             ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(recommends.get(position).getMbid()));
-                    recycler.setAdapter(rgAdapter);
+                    recyclerView.setAdapter(rgAdapter);
                     break;
 
                 case RECORDING:
@@ -158,7 +158,7 @@ public class UserRecommendsTabFragment extends Fragment {
                             ((OnRecordingCommunicator) getContext()).onRecording(recommends.get(position).getMbid()));
                     recordingAdapter.setOnPlayYoutubeListener(keyword ->
                             ((OnPlayYoutubeCommunicator) getContext()).onPlay(keyword));
-                    recycler.setAdapter(recordingAdapter);
+                    recyclerView.setAdapter(recordingAdapter);
                     break;
             }
         } else {
