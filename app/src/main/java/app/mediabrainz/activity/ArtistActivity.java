@@ -82,7 +82,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
         } else {
             mbid = getIntent().getStringExtra(ARTIST_MBID);
         }
-        floatingActionButton = findViewById(R.id.floatin_action_btn);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
         showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.ADD_TO_COLLECTION);
     }
@@ -113,27 +113,27 @@ public class ArtistActivity extends BaseBottomNavActivity implements
     @Override
     protected BottomNavigationView.OnNavigationItemSelectedListener initOnNavigationItemSelectedListener() {
         return item -> {
-            frameContainer.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            frameContainerView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
             switch (item.getItemId()) {
                 case R.id.artist_nav_releases:
-                    viewPager.setCurrentItem(TAB_RELEASES_POS);
-                    topTitle.setText(R.string.title_artist_releases);
+                    pagerView.setCurrentItem(TAB_RELEASES_POS);
+                    toolbarTopTitleView.setText(R.string.title_artist_releases);
                     break;
 
                 case R.id.artist_nav_info:
-                    viewPager.setCurrentItem(TAB_INFO_POS);
-                    topTitle.setText(R.string.title_artist_info);
+                    pagerView.setCurrentItem(TAB_INFO_POS);
+                    toolbarTopTitleView.setText(R.string.title_artist_info);
                     break;
 
                 case R.id.artist_nav_ratings:
-                    viewPager.setCurrentItem(TAB_RATINGS_POS);
-                    topTitle.setText(R.string.title_artist_ratings);
+                    pagerView.setCurrentItem(TAB_RATINGS_POS);
+                    toolbarTopTitleView.setText(R.string.title_artist_ratings);
                     break;
 
                 case R.id.artist_nav_tags:
-                    viewPager.setCurrentItem(TAB_TAGS_POS);
-                    topTitle.setText(R.string.title_tags_genres);
+                    pagerView.setCurrentItem(TAB_TAGS_POS);
+                    toolbarTopTitleView.setText(R.string.title_tags_genres);
                     break;
             }
             return true;
@@ -177,7 +177,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
                 artist -> {
                     viewProgressLoading(false);
                     if (!TextUtils.isEmpty(artist.getName())) {
-                        bottomTitle.setText(artist.getName());
+                        toolbarBottomTitleView.setText(artist.getName());
                     }
                     this.artist = artist;
                     configBottomNavigationPager();

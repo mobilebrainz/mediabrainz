@@ -24,8 +24,8 @@ public class CoverArtAdapter extends BaseRecyclerViewAdapter<CoverArtAdapter.Cov
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_coverart;
 
-        private ImageView coverart;
-        private ProgressBar coverartLoading;
+        private ImageView coverartView;
+        private ProgressBar coverartLoadingView;
 
         public static CoverArtViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -35,23 +35,23 @@ public class CoverArtAdapter extends BaseRecyclerViewAdapter<CoverArtAdapter.Cov
 
         private CoverArtViewHolder(View v) {
             super(v);
-            coverart = v.findViewById(R.id.coverart);
-            coverartLoading = v.findViewById(R.id.coverart_loading);
+            coverartView = v.findViewById(R.id.coverartView);
+            coverartLoadingView = v.findViewById(R.id.coverartLoadingView);
         }
 
         public void bindTo(@NonNull CoverArtImage coverArtImage) {
 
-            coverartLoading.setVisibility(View.VISIBLE);
+            coverartLoadingView.setVisibility(View.VISIBLE);
             Picasso.get().load(coverArtImage.getThumbnails().getLarge())
-                    .into(coverart, new Callback() {
+                    .into(coverartView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            coverartLoading.setVisibility(View.GONE);
+                            coverartLoadingView.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onError(Exception e) {
-                            coverartLoading.setVisibility(View.GONE);
+                            coverartLoadingView.setVisibility(View.GONE);
                         }
                     });
 

@@ -28,10 +28,10 @@ public class CreateCollectionDialogFragment extends DialogFragment {
 
     private List<Collection> collections = new ArrayList<>();
 
-    private EditText nameEditText;
-    private EditText descriptionEditText;
-    private CheckBox publicCheckBox;
-    private Button createButton;
+    private EditText collectionNameView;
+    private EditText collectionDescriptionView;
+    private CheckBox collectionPublicCheckBox;
+    private Button collectionCreateButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +44,12 @@ public class CreateCollectionDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.dialog_fragment_collection_create, container, false);
 
-        nameEditText = layout.findViewById(R.id.collection_name);
-        descriptionEditText = layout.findViewById(R.id.collection_description);
-        publicCheckBox = layout.findViewById(R.id.collection_public);
+        collectionNameView = layout.findViewById(R.id.collectionNameView);
+        collectionDescriptionView = layout.findViewById(R.id.collectionDescriptionView);
+        collectionPublicCheckBox = layout.findViewById(R.id.collectionPublicCheckBox);
 
-        createButton = layout.findViewById(R.id.collection_create_btn);
-        createButton.setOnClickListener(v -> create());
+        collectionCreateButton = layout.findViewById(R.id.collectionCreateButton);
+        collectionCreateButton.setOnClickListener(v -> create());
         return layout;
     }
 
@@ -60,8 +60,8 @@ public class CreateCollectionDialogFragment extends DialogFragment {
     }
 
     private void create() {
-        nameEditText.setError(null);
-        String name = nameEditText.getText().toString().trim();
+        collectionNameView.setError(null);
+        String name = collectionNameView.getText().toString().trim();
 
         if (!TextUtils.isEmpty(name)) {
             boolean existName = false;
@@ -69,7 +69,7 @@ public class CreateCollectionDialogFragment extends DialogFragment {
                 for (Collection collection : collections) {
                     if (collection.getName().equalsIgnoreCase(name)) {
                         existName = true;
-                        nameEditText.setError(getString(R.string.collection_create_exist_name));
+                        collectionNameView.setError(getString(R.string.collection_create_exist_name));
                         break;
                     }
                 }
@@ -77,8 +77,8 @@ public class CreateCollectionDialogFragment extends DialogFragment {
             if (!existName) {
                 ((DialogFragmentListener) getContext()).onCreateCollection(
                         name,
-                        descriptionEditText.getText().toString(),
-                        publicCheckBox.isChecked() ? 1 : 0);
+                        collectionDescriptionView.getText().toString(),
+                        collectionPublicCheckBox.isChecked() ? 1 : 0);
                 dismiss();
             }
         }

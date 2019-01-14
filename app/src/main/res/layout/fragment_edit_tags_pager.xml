@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/content"
+        android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -15,7 +15,7 @@
         android:paddingEnd="5dp">
 
         <TextView
-            android:id="@+id/login_warning"
+            android:id="@+id/loginWarningView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -38,7 +38,7 @@
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
-                    android:id="@+id/tag_input"
+                    android:id="@+id/tagInputView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/tag_hint"
@@ -50,7 +50,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/tag_btn"
+                android:id="@+id/tagButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:backgroundTint="@color/colorPrimaryLight"
@@ -59,7 +59,7 @@
         </LinearLayout>
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/tabsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
@@ -67,7 +67,7 @@
             app:tabTextAppearance="@style/MyCustomTabTextAppearance"/>
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+            android:id="@+id/pagerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"/>
@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/loading"
+        android:id="@+id/progressView"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
         android:visibility="gone"/>
 
     <include
-        android:id="@+id/error"
+        android:id="@+id/errorView"
         layout="@layout/layout_retry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -19,7 +19,7 @@ public class NetworkState {
     }
 
     public static NetworkState error(String message) {
-        return new NetworkState(Status.FAILED, message == null ? "unknown error" : message);
+        return new NetworkState(Status.FAILED, message == null ? "unknown errorView" : message);
     }
 
     public Status getStatus() {

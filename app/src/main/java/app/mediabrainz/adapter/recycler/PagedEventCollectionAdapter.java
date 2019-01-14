@@ -21,13 +21,13 @@ public class PagedEventCollectionAdapter extends BasePagedListAdapter<Event> {
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_event_collection;
 
-        private TextView eventNameTextView;
-        private ImageView deleteButton;
+        private TextView eventNameView;
+        private ImageView deleteView;
 
         private PagedEventCollectionViewHolder(View v) {
             super(v);
-            eventNameTextView = v.findViewById(R.id.event_name);
-            deleteButton = v.findViewById(R.id.delete);
+            eventNameView = v.findViewById(R.id.eventNameView);
+            deleteView = v.findViewById(R.id.deleteView);
         }
 
         public static PagedEventCollectionViewHolder create(ViewGroup parent) {
@@ -37,12 +37,12 @@ public class PagedEventCollectionAdapter extends BasePagedListAdapter<Event> {
         }
 
         private void bindTo(Event event, boolean isPrivate) {
-            deleteButton.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            eventNameTextView.setText(event.getName());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            eventNameView.setText(event.getName());
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteButton.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

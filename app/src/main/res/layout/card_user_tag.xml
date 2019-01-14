@@ -19,7 +19,7 @@
         android:paddingStart="16dp">
 
         <TextView
-            android:id="@+id/tag_name"
+            android:id="@+id/tagNameView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,7 +28,7 @@
             android:textSize="@dimen/text_size_16"/>
 
         <TextView
-            android:id="@+id/tag_count"
+            android:id="@+id/tagCountView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_16"/>

@@ -24,11 +24,11 @@ public class UserSendMessageFragment extends LazyFragment {
     private String username;
     private boolean isLoading;
 
-    private View loading;
-    private View contentFrame;
+    private View progressView;
+    private View contentFrameView;
     private AutoCompleteTextView subjectView;
     private MultiAutoCompleteTextView messageView;
-    private CheckBox revealEmailView;
+    private CheckBox revealEmailCheckbox;
 
     public static UserSendMessageFragment newInstance() {
         Bundle args = new Bundle();
@@ -41,14 +41,14 @@ public class UserSendMessageFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_user_send_message, container, false);
 
-        loading = layout.findViewById(R.id.loading);
-        contentFrame = layout.findViewById(R.id.content_frame);
-        subjectView = layout.findViewById(R.id.subject);
-        messageView = layout.findViewById(R.id.message);
-        revealEmailView = layout.findViewById(R.id.reveal_email_checkbox);
+        progressView = layout.findViewById(R.id.progressView);
+        contentFrameView = layout.findViewById(R.id.contentFrameView);
+        subjectView = layout.findViewById(R.id.subjectView);
+        messageView = layout.findViewById(R.id.messageView);
+        revealEmailCheckbox = layout.findViewById(R.id.revealEmailCheckbox);
 
-        Button sendBtn = layout.findViewById(R.id.send_btn);
-        sendBtn.setOnClickListener(this::send);
+        Button sendButton = layout.findViewById(R.id.sendButton);
+        sendButton.setOnClickListener(this::send);
 
         loadView();
         return layout;
@@ -59,7 +59,7 @@ public class UserSendMessageFragment extends LazyFragment {
         viewProgressLoading(false);
         username = ((GetUsernameCommunicator) getContext()).getUsername();
         if (username != null) {
-            ((ShowTitleCommunicator) getContext()).getBottomTitle().setText(getString(R.string.send_email_to_title, username));
+            ((ShowTitleCommunicator) getContext()).getToolbarBottomTitleView().setText(getString(R.string.send_email_to_title, username));
         }
     }
 
@@ -87,7 +87,7 @@ public class UserSendMessageFragment extends LazyFragment {
         } else {
             viewProgressLoading(true);
             api.sendEmail(
-                    username, subject, message, revealEmailView.isChecked(),
+                    username, subject, message, revealEmailCheckbox.isChecked(),
                     responseBody -> {
                         viewProgressLoading(false);
                         ShowUtil.showToast(getContext(), getString(R.string.send_email_success));
@@ -103,12 +103,12 @@ public class UserSendMessageFragment extends LazyFragment {
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            contentFrame.setAlpha(0.25f);
-            loading.setVisibility(View.VISIBLE);
+            contentFrameView.setAlpha(0.25f);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            contentFrame.setAlpha(1.0f);
-            loading.setVisibility(View.GONE);
+            contentFrameView.setAlpha(1.0f);
+            progressView.setVisibility(View.GONE);
         }
     }
 

@@ -27,7 +27,7 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/entity_name"
+                android:id="@+id/entityNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -36,7 +36,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/artist_name"
+                android:id="@+id/artistNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -46,7 +46,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/play_youtube"
+            android:id="@+id/playYoutubeView"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"

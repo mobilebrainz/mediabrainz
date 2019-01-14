@@ -35,8 +35,8 @@ public class UserTagListFragment extends Fragment {
     private TagServiceInterface.UserTagType userTagType;
 
 
-    private View noresults;
-    private RecyclerView recycler;
+    private View noresultsView;
+    private RecyclerView recyclerView;
 
     public static UserTagListFragment newInstance(int tagType) {
         Bundle args = new Bundle();
@@ -49,8 +49,8 @@ public class UserTagListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        noresults = layout.findViewById(R.id.noresults);
-        recycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         intTagType = getArguments().getInt(TAG_TYPE);
 
@@ -60,13 +60,13 @@ public class UserTagListFragment extends Fragment {
     }
 
     private void configRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(100);
-        recycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     public void load() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         switch (intTagType) {
             case TAB_ARTISTS_POS:
@@ -82,26 +82,26 @@ public class UserTagListFragment extends Fragment {
         List<TagEntity> tagEntities = ((GetUserTagEntitiesCommunicator) getParentFragment()).getEntities(userTagType);
         if (tagEntities != null) {
             if (tagEntities.isEmpty()) {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             } else {
                 switch (intTagType) {
                     case TAB_ARTISTS_POS:
                         ArtistTagAdapter artistTagAdapter = new ArtistTagAdapter(tagEntities);
                         artistTagAdapter.setHolderClickListener(position ->
                                 ((OnArtistCommunicator) getContext()).onArtist(tagEntities.get(position).getMbid()));
-                        recycler.setAdapter(artistTagAdapter);
+                        recyclerView.setAdapter(artistTagAdapter);
                         break;
                     case TAB_RELEASE_GROUPS_POS:
                         EntityTagAdapter rgAdapter = new EntityTagAdapter(tagEntities);
                         rgAdapter.setHolderClickListener(position ->
                                 ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(tagEntities.get(position).getMbid()));
-                        recycler.setAdapter(rgAdapter);
+                        recyclerView.setAdapter(rgAdapter);
                         break;
                     case TAB_RECORDINGS_POS:
                         EntityTagAdapter recordingAdapter = new EntityTagAdapter(tagEntities);
                         recordingAdapter.setHolderClickListener(position ->
                                 ((OnRecordingCommunicator) getContext()).onRecording(tagEntities.get(position).getMbid()));
-                        recycler.setAdapter(recordingAdapter);
+                        recyclerView.setAdapter(recordingAdapter);
                         break;
                 }
             }

@@ -38,10 +38,10 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loginFormView = findViewById(R.id.login_form);
-        progressView = findViewById(R.id.login_progress);
-        usernameView = findViewById(R.id.username);
-        passwordView = findViewById(R.id.password);
+        loginFormView = findViewById(R.id.loginFormView);
+        progressView = findViewById(R.id.progressView);
+        usernameView = findViewById(R.id.usernameView);
+        passwordView = findViewById(R.id.passwordView);
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin();
@@ -50,18 +50,18 @@ public class LoginActivity extends BaseActivity {
             return false;
         });
 
-        Button signInButton = findViewById(R.id.sign_in_button);
+        Button signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(view -> attemptLogin());
 
-        Button createAccountButton = findViewById(R.id.create_account_button);
+        Button createAccountButton = findViewById(R.id.createAccountButton);
         createAccountButton.setOnClickListener(
                 v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(CREATE_ACCOUNT_URI))));
 
-        Button forgotUsernameButton = findViewById(R.id.forgot_username_button);
+        Button forgotUsernameButton = findViewById(R.id.forgotUsernameButton);
         forgotUsernameButton.setOnClickListener(
                 v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FORGOT_USERNAME_URI))));
 
-        Button forgotPasswordButton = findViewById(R.id.forgot_password_button);
+        Button forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
         forgotPasswordButton.setOnClickListener(
                 v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FORGOT_PASSWORD_URI))));
     }

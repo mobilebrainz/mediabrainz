@@ -29,15 +29,15 @@ public class ArtistRatingsAdapter extends BasePagedListAdapter<Rating> {
 
         private TextView artistView;
         private TextView commentView;
-        private RatingBar ratingBar;
-        private View ratingContainer;
+        private RatingBar ratingView;
+        private View ratingContainerView;
 
         private ArtistRatingsViewHolder(View v) {
             super(v);
-            artistView = v.findViewById(R.id.artist);
-            commentView = v.findViewById(R.id.comment);
-            ratingBar = v.findViewById(R.id.rating);
-            ratingContainer = v.findViewById(R.id.rating_container);
+            artistView = v.findViewById(R.id.artistView);
+            commentView = v.findViewById(R.id.commentView);
+            ratingView = v.findViewById(R.id.ratingView);
+            ratingContainerView = v.findViewById(R.id.ratingContainerView);
         }
 
         public static ArtistRatingsViewHolder create(ViewGroup parent) {
@@ -49,10 +49,10 @@ public class ArtistRatingsAdapter extends BasePagedListAdapter<Rating> {
         private void bindTo(Rating rating) {
             artistView.setText(rating.getName());
             commentView.setText(rating.getArtistComment());
-            ratingBar.setRating(rating.getRate());
+            ratingView.setRating(rating.getRate());
 
             if (oauth.hasAccount() && oauth.getName().equals(rating.getUser())) {
-                ratingContainer.setOnClickListener(v -> showRatingBar(rating));
+                ratingContainerView.setOnClickListener(v -> showRatingBar(rating));
             }
         }
 
@@ -62,31 +62,31 @@ public class ArtistRatingsAdapter extends BasePagedListAdapter<Rating> {
             Window win = alertDialog.getWindow();
             if (win != null) {
                 win.setContentView(R.layout.dialog_rating_bar);
-                RatingBar rb = win.findViewById(R.id.rating_bar);
-                View ratingProgress = win.findViewById(R.id.loading);
-                TextView title = win.findViewById(R.id.title_text);
-                title.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
-                rb.setRating(ratingBar.getRating());
+                RatingBar ratingBar = win.findViewById(R.id.ratingBar);
+                View progressView = win.findViewById(R.id.progressView);
+                TextView titleTextView = win.findViewById(R.id.titleTextView);
+                titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, rating.getName()));
+                ratingBar.setRating(ratingView.getRating());
 
-                rb.setOnRatingBarChangeListener((RatingBar rateBar, float rate, boolean fromUser) -> {
-                    if (ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                        ratingProgress.setVisibility(View.VISIBLE);
-                        rb.setAlpha(0.3F);
+                ratingBar.setOnRatingBarChangeListener((RatingBar rateBar, float rate, boolean fromUser) -> {
+                    if (progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                        progressView.setVisibility(View.VISIBLE);
+                        ratingBar.setAlpha(0.3F);
                         api.postArtistRating(
                                 rating.getMbid(), rate,
                                 metadata -> {
-                                    ratingProgress.setVisibility(View.INVISIBLE);
-                                    rb.setAlpha(1.0F);
+                                    progressView.setVisibility(View.INVISIBLE);
+                                    ratingBar.setAlpha(1.0F);
                                     if (metadata.getMessage().getText().equals("OK")) {
-                                        ratingBar.setRating(rate);
+                                        ratingView.setRating(rate);
                                     } else {
                                         ShowUtil.showToast(itemView.getContext(), R.string.error_post_rating);
                                     }
                                     alertDialog.dismiss();
                                 },
                                 t -> {
-                                    ratingProgress.setVisibility(View.INVISIBLE);
-                                    rb.setAlpha(1.0F);
+                                    progressView.setVisibility(View.INVISIBLE);
+                                    ratingBar.setAlpha(1.0F);
                                     ShowUtil.showToast(itemView.getContext(), R.string.error_post_rating);
                                     alertDialog.dismiss();
                                 });

@@ -15,8 +15,8 @@ import app.mediabrainz.adapter.pager.UserRecommendsPagerAdapter;
 
 public class UserRecommendsPagerFragment extends LazyFragment {
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
 
     public static UserRecommendsPagerFragment newInstance() {
         Bundle args = new Bundle();
@@ -29,8 +29,8 @@ public class UserRecommendsPagerFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_pager_with_icons, container, false);
 
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
+        pagerView = layout.findViewById(R.id.pagerView);
+        tabsView = layout.findViewById(R.id.tabsView);
 
         loadView();
         return layout;
@@ -39,10 +39,10 @@ public class UserRecommendsPagerFragment extends LazyFragment {
     @Override
     protected void lazyLoad() {
         UserRecommendsPagerAdapter pagerAdapter = new UserRecommendsPagerAdapter(getChildFragmentManager(), getResources());
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-        tabLayout.setupWithViewPager(viewPager);
-        pagerAdapter.setupTabViews(tabLayout);
+        pagerView.setAdapter(pagerAdapter);
+        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+        tabsView.setupWithViewPager(pagerView);
+        pagerAdapter.setupTabViews(tabsView);
     }
 
 }

@@ -28,12 +28,12 @@ public class RecordingLyricsFragment extends LazyFragment {
     protected boolean isLoading;
     protected boolean isError;
 
-    private View content;
-    private View error;
-    private View loading;
-    private View noresults;
-    private TextView lyrics;
-    private Button showSiteBtn;
+    private View contentView;
+    private View errorView;
+    private View progressView;
+    private View noresultsView;
+    private TextView lyricsView;
+    private Button showSiteButton;
 
     public static RecordingLyricsFragment newInstance() {
         Bundle args = new Bundle();
@@ -46,12 +46,12 @@ public class RecordingLyricsFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recording_lyrics, container, false);
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
-        lyrics = layout.findViewById(R.id.lyrics);
-        showSiteBtn = layout.findViewById(R.id.show_site);
+        contentView = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        lyricsView = layout.findViewById(R.id.lyricsView);
+        showSiteButton = layout.findViewById(R.id.showSiteButton);
 
         loadView();
         return layout;
@@ -59,10 +59,10 @@ public class RecordingLyricsFragment extends LazyFragment {
 
     @Override
     public void lazyLoad() {
-        content.setVisibility(View.GONE);
-        loading.setVisibility(View.GONE);
-        error.setVisibility(View.GONE);
-        noresults.setVisibility(View.GONE);
+        contentView.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         Recording recording = ((GetRecordingCommunicator) getContext()).getRecording();
         if (recording != null) {
@@ -72,7 +72,7 @@ public class RecordingLyricsFragment extends LazyFragment {
                 viewProgressLoading(true);
                 // Получить лирику из сервиса http://lyrics.wikia.com/wikia.php
                 // Нестабильно даёт результат. Лучше парсить http://lyrics.wikia.com
-                // пример: Deep Purple Smoke On The Water. С сервиса - error, с парсинга - текст песни.
+                // пример: Deep Purple Smoke On The Water. С сервиса - errorView, с парсинга - текст песни.
                 /*
                 api.getLyricsWikia(
                         artists.get(0).getName(), recording.getTitle(),
@@ -84,7 +84,7 @@ public class RecordingLyricsFragment extends LazyFragment {
                             viewProgressLoading(false);
                             if (LyricsService.isNotFound(((HttpException) t).getContent())) {
                                 noresults.setVisibility(View.VISIBLE);
-                                content.setVisibility(View.GONE);
+                                contentView.setVisibility(View.GONE);
                             } else {
                                 showConnectionWarning(t);
                             }
@@ -96,11 +96,11 @@ public class RecordingLyricsFragment extends LazyFragment {
                             viewProgressLoading(false);
                             String text = lyricsApi.getLyrics();
                             if (text.equals(LYRICS_NOT_FOUND) || text.equals(LYRICS_INSTRUMENTAL)) {
-                                noresults.setVisibility(View.VISIBLE);
-                                content.setVisibility(View.GONE);
+                                noresultsView.setVisibility(View.VISIBLE);
+                                contentView.setVisibility(View.GONE);
                             } else {
-                                lyrics.setText(text);
-                                showSiteBtn.setOnClickListener(v -> {
+                                lyricsView.setText(text);
+                                showSiteButton.setOnClickListener(v -> {
                                     if (!isLoading) {
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(lyricsApi.getUrl())));
                                     }
@@ -110,8 +110,8 @@ public class RecordingLyricsFragment extends LazyFragment {
                         this::showConnectionWarning);
 
             } else {
-                noresults.setVisibility(View.VISIBLE);
-                content.setVisibility(View.GONE);
+                noresultsView.setVisibility(View.VISIBLE);
+                contentView.setVisibility(View.GONE);
             }
         }
     }
@@ -119,24 +119,24 @@ public class RecordingLyricsFragment extends LazyFragment {
     private void viewProgressLoading(boolean view) {
         if (view) {
             isLoading = true;
-            content.setVisibility(View.GONE);
-            loading.setVisibility(View.VISIBLE);
+            contentView.setVisibility(View.GONE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            content.setVisibility(View.VISIBLE);
-            loading.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean view) {
         if (view) {
             isError = true;
-            content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            contentView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -144,7 +144,7 @@ public class RecordingLyricsFragment extends LazyFragment {
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
 }

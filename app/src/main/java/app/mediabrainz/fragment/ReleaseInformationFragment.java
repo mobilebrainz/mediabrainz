@@ -33,10 +33,10 @@ public class ReleaseInformationFragment extends Fragment {
 
     private Release release;
 
-    private TextView releaseName;
-    private TextView typeYear;
-    private TextView artistName;
-    private TableLayout releaseInfoTable;
+    private TextView releaseNameView;
+    private TextView releaseTypeYearView;
+    private TextView artistNameView;
+    private TableLayout releaseInfoTableView;
 
     public static ReleaseInformationFragment newInstance() {
         Bundle args = new Bundle();
@@ -50,10 +50,10 @@ public class ReleaseInformationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_release_information, container, false);
 
-        releaseName = layout.findViewById(R.id.release_name);
-        typeYear = layout.findViewById(R.id.type_year);
-        artistName = layout.findViewById(R.id.artist_name);
-        releaseInfoTable = layout.findViewById(R.id.release_info_table);
+        releaseNameView = layout.findViewById(R.id.releaseNameView);
+        releaseTypeYearView = layout.findViewById(R.id.releaseTypeYearView);
+        artistNameView = layout.findViewById(R.id.artistNameView);
+        releaseInfoTableView = layout.findViewById(R.id.releaseInfoTableView);
 
         load();
         return layout;
@@ -73,10 +73,10 @@ public class ReleaseInformationFragment extends Fragment {
     private void setReleaseName() {
         String name = release.getTitle();
         if (!TextUtils.isEmpty(name)) {
-            releaseName.setVisibility(View.VISIBLE);
-            releaseName.setText(name);
+            releaseNameView.setVisibility(View.VISIBLE);
+            releaseNameView.setText(name);
         } else {
-            releaseName.setVisibility(View.GONE);
+            releaseNameView.setVisibility(View.GONE);
         }
     }
 
@@ -88,10 +88,10 @@ public class ReleaseInformationFragment extends Fragment {
         }
         String artistNamesString = ApiUtils.getStringFromList(artistNames, ", ");
         if (!TextUtils.isEmpty(artistNamesString)) {
-            artistName.setVisibility(View.VISIBLE);
-            artistName.setText(artistNamesString);
+            artistNameView.setVisibility(View.VISIBLE);
+            artistNameView.setText(artistNamesString);
         } else {
-            artistName.setVisibility(View.GONE);
+            artistNameView.setVisibility(View.GONE);
         }
     }
 
@@ -102,10 +102,10 @@ public class ReleaseInformationFragment extends Fragment {
         }, ", ");
 
         if (!TextUtils.isEmpty(typeYearStr)) {
-            typeYear.setVisibility(View.VISIBLE);
-            typeYear.setText(typeYearStr);
+            releaseTypeYearView.setVisibility(View.VISIBLE);
+            releaseTypeYearView.setText(typeYearStr);
         } else {
-            typeYear.setVisibility(View.GONE);
+            releaseTypeYearView.setVisibility(View.GONE);
         }
     }
 
@@ -126,7 +126,7 @@ public class ReleaseInformationFragment extends Fragment {
                 release.getStatus()
         }, ", ");
         if (!TextUtils.isEmpty(format)) {
-            releaseInfoTable.addView(getTableRow(getContext().getString(R.string.release_info_format), format));
+            releaseInfoTableView.addView(getTableRow(getContext().getString(R.string.release_info_format), format));
         }
     }
 
@@ -142,7 +142,7 @@ public class ReleaseInformationFragment extends Fragment {
                 }
             }
         }
-        releaseInfoTable.addView(getTableRow(
+        releaseInfoTableView.addView(getTableRow(
                 getContext().getString(R.string.release_info_details),
                 getContext().getString(R.string.release_info_details_template, trackCount, MbUtils.formatTime(length))
         ));
@@ -160,7 +160,7 @@ public class ReleaseInformationFragment extends Fragment {
             if (!TextUtils.isEmpty(labelCatalog)) {
                 labelName += ", " + labelCatalog;
             }
-            releaseInfoTable.addView(getTableRow(
+            releaseInfoTableView.addView(getTableRow(
                     getContext().getString(R.string.release_info_label), labelName));
         }
     }
@@ -175,7 +175,7 @@ public class ReleaseInformationFragment extends Fragment {
                     releaseEvent.getDate()
             }, ", ");
             if (!TextUtils.isEmpty(releasedStr)) {
-                releaseInfoTable.addView(getTableRow(
+                releaseInfoTableView.addView(getTableRow(
                         getContext().getString(R.string.release_info_released), releasedStr));
             }
         }
@@ -183,14 +183,14 @@ public class ReleaseInformationFragment extends Fragment {
 
     private void addBarcodeRow() {
         if (!TextUtils.isEmpty(release.getBarcode())) {
-            releaseInfoTable.addView(getTableRow(
+            releaseInfoTableView.addView(getTableRow(
                     getContext().getString(R.string.release_info_barcode), release.getBarcode()));
         }
     }
 
     private void addAsinRow() {
         if (!TextUtils.isEmpty(release.getAsin())) {
-            releaseInfoTable.addView(getTableRow(
+            releaseInfoTableView.addView(getTableRow(
                     getContext().getString(R.string.release_info_asin), release.getAsin()));
         }
     }
@@ -198,7 +198,7 @@ public class ReleaseInformationFragment extends Fragment {
     private void addLanguageRow() {
         Release.TextRepresentation textRepresentation = release.getTextRepresentation();
         if (textRepresentation != null && !TextUtils.isEmpty(textRepresentation.getLanguage())) {
-            releaseInfoTable.addView(getTableRow(
+            releaseInfoTableView.addView(getTableRow(
                     getContext().getString(R.string.release_info_language), textRepresentation.getLanguage()));
         }
     }

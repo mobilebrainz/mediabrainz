@@ -128,9 +128,9 @@ public class UserActivity extends BaseBottomNavActivity implements
             username = getIntent().getStringExtra(USERNAME);
         }
         isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
-        bottomTitle.setText(username);
+        toolbarBottomTitleView.setText(username);
 
-        floatingActionButton = findViewById(R.id.floatin_action_btn);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
     }
 
@@ -138,14 +138,14 @@ public class UserActivity extends BaseBottomNavActivity implements
     @Override
     protected BottomNavigationView.OnNavigationItemSelectedListener initOnNavigationItemSelectedListener() {
         return item -> {
-            frameContainer.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            frameContainerView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
             floatingActionButton.setVisibility(View.GONE);
 
             switch (item.getItemId()) {
                 case R.id.user_navigation_profile:
-                    viewPager.setCurrentItem(TAB_PROFILE_POS);
-                    topTitle.setText(R.string.title_user_profile);
+                    pagerView.setCurrentItem(TAB_PROFILE_POS);
+                    toolbarTopTitleView.setText(R.string.title_user_profile);
 
                     if (!isPrivate && oauth.hasAccount()) {
                         new UserRepository().findUser(username, user -> {
@@ -157,31 +157,31 @@ public class UserActivity extends BaseBottomNavActivity implements
                     break;
 
                 case R.id.user_navigation_collections:
-                    viewPager.setCurrentItem(TAB_COLLECTIONS_POS);
-                    topTitle.setText(R.string.title_user_collections);
+                    pagerView.setCurrentItem(TAB_COLLECTIONS_POS);
+                    toolbarTopTitleView.setText(R.string.title_user_collections);
                     if (isPrivate) {
                         showFloatingActionButton(true, FloatingButtonType.ADD_TO_COLLECTION);
                     }
                     break;
 
                 case R.id.user_navigation_ratings:
-                    viewPager.setCurrentItem(TAB_RATINGS_POS);
-                    topTitle.setText(R.string.title_user_ratings);
+                    pagerView.setCurrentItem(TAB_RATINGS_POS);
+                    toolbarTopTitleView.setText(R.string.title_user_ratings);
                     break;
 
                 case R.id.user_navigation_tags:
-                    viewPager.setCurrentItem(TAB_TAGS_POS);
-                    topTitle.setText(R.string.title_tags_genres);
+                    pagerView.setCurrentItem(TAB_TAGS_POS);
+                    toolbarTopTitleView.setText(R.string.title_tags_genres);
                     break;
 
                 case R.id.user_navigation_recommends:
-                    viewPager.setCurrentItem(TAB_RECOMMENDS_POS);
-                    topTitle.setText(R.string.title_user_recommends);
+                    pagerView.setCurrentItem(TAB_RECOMMENDS_POS);
+                    toolbarTopTitleView.setText(R.string.title_user_recommends);
                     break;
 
                 case R.id.user_navigation_send_email:
-                    viewPager.setCurrentItem(TAB_SEND_MESSAGE);
-                    topTitle.setText(R.string.title_send_message);
+                    pagerView.setCurrentItem(TAB_SEND_MESSAGE);
+                    toolbarTopTitleView.setText(R.string.title_send_message);
                     break;
             }
             return true;
@@ -202,18 +202,18 @@ public class UserActivity extends BaseBottomNavActivity implements
 
     @Override
     public void onBackPressed() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameContainerView);
         if (fragment instanceof BaseCollectionFragment) {
             if (collectionChanged) {
                 collectionChanged = false;
                 ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
             }
             //((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-            bottomNavigationView.setSelectedItemId(R.id.user_navigation_collections);
+            bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
         } else if (fragment instanceof CollectionCreateFragment) {
-            bottomNavigationView.setSelectedItemId(R.id.user_navigation_collections);
+            bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
         } else if (fragment instanceof UserTagPagerFragment) {
-            bottomNavigationView.setSelectedItemId(R.id.user_navigation_tags);
+            bottomNavView.setSelectedItemId(R.id.user_navigation_tags);
         }
         super.onBackPressed();
     }
@@ -386,7 +386,7 @@ public class UserActivity extends BaseBottomNavActivity implements
                                         viewProgressLoading(false);
                                         collectionTabOrdinal = CollectionsPagerAdapter.collectionTabTypeSpinner[type - 1].ordinal();
                                         ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-                                        bottomNavigationView.setSelectedItemId(R.id.user_navigation_collections);
+                                        bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
                                     },
                                     t -> {
                                         viewProgressLoading(false);
@@ -411,7 +411,7 @@ public class UserActivity extends BaseBottomNavActivity implements
                         viewProgressLoading(false);
                         collectionTabOrdinal = CollectionsPagerAdapter.collectionTabTypeSpinner[type - 1].ordinal();
                         ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-                        bottomNavigationView.setSelectedItemId(R.id.user_navigation_collections);
+                        bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
                     },
                     t -> {
                         viewProgressLoading(false);

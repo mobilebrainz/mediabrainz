@@ -30,9 +30,9 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     private Release release;
 
-    private View error;
-    private View loading;
-    private View noresults;
+    private View errorView;
+    private View progressView;
+    private View noresultsView;
 
     public static ReleaseTracksFragment newInstance() {
         Bundle args = new Bundle();
@@ -45,11 +45,11 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = super.onCreateView(inflater, container, savedInstanceState);
 
-        recyclerContainer.setVisibility(View.INVISIBLE);
+        recyclerContainerView.setVisibility(View.INVISIBLE);
         View frame = inflater.inflate(R.layout.fragment_release_tracks_frame, null);
-        error = frame.findViewById(R.id.error);
-        loading = frame.findViewById(R.id.loading);
-        noresults = frame.findViewById(R.id.noresults);
+        errorView = frame.findViewById(R.id.errorView);
+        progressView = frame.findViewById(R.id.progressView);
+        noresultsView = frame.findViewById(R.id.noresultsView);
         addFrameView(frame);
 
         loadView();
@@ -58,9 +58,9 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     @Override
     protected void lazyLoad() {
-        noresults.setVisibility(View.GONE);
-        error.setVisibility(View.GONE);
-        recycler.removeAllViewsInLayout();
+        noresultsView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+        recyclerView.removeAllViewsInLayout();
 
         release = ((GetReleaseCommunicator) getContext()).getRelease();
         if (release != null) {
@@ -75,20 +75,20 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
 
     private void showNoResult(boolean show) {
         if (show) {
-            noresults.setVisibility(View.VISIBLE);
-            recyclerContainer.setVisibility(View.GONE);
+            noresultsView.setVisibility(View.VISIBLE);
+            recyclerContainerView.setVisibility(View.GONE);
         } else {
-            noresults.setVisibility(View.GONE);
-            recyclerContainer.setVisibility(View.VISIBLE);
+            noresultsView.setVisibility(View.GONE);
+            recyclerContainerView.setVisibility(View.VISIBLE);
         }
     }
 
     private void loadRecordingRatings() {
-        loading.setVisibility(View.VISIBLE);
+        progressView.setVisibility(View.VISIBLE);
         api.getRecordingRatingsByRelease(
                 release.getId(),
                 resultRecordings -> {
-                    loading.setVisibility(View.GONE);
+                    progressView.setVisibility(View.GONE);
                     List<Media> medias = release.getMedia();
                     if (resultRecordings.getCount() > 0) {
                         List<Recording> recordings = resultRecordings.getRecordings();
@@ -163,10 +163,10 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
         tracksAdapter.setOnPlayYoutubeListener(track ->
                 ((OnPlayYoutubeCommunicator) getContext()).onPlay(track.getRecording().getTitle()));
 
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(50);
-        recycler.setHasFixedSize(true);
-        recycler.setAdapter(tracksAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(50);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(tracksAdapter);
 
         configRecyclerToolbar();
     }
@@ -179,10 +179,10 @@ public class ReleaseTracksFragment extends BaseComplexRecyclerFragment<Media.Tra
     }
 
     private void showConnectionWarning(Throwable t) {
-        loading.setVisibility(View.GONE);
+        progressView.setVisibility(View.GONE);
         //ShowUtil.showError(getActivity(), t);
-        error.setVisibility(View.VISIBLE);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.setVisibility(View.VISIBLE);
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
 }

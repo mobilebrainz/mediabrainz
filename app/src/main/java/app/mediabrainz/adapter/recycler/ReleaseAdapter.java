@@ -38,16 +38,15 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_release;
 
-        private CardView cardView;
-        private ImageView coverart;
-        private ProgressBar coverartLoading;
-        private TextView date;
-        private TextView releaseName;
-        private TextView countryLabel;
-        private TextView format;
-        private TextView status;
-        private TextView catalog;
-        private TextView barcode;
+        private ImageView coverartView;
+        private ProgressBar coverartLoadingView;
+        private TextView dateView;
+        private TextView releaseNameView;
+        private TextView countryLabelView;
+        private TextView formatView;
+        private TextView statusView;
+        private TextView catalogView;
+        private TextView barcodeView;
 
         public static ReleaseViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -57,35 +56,34 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
 
         private ReleaseViewHolder(View v) {
             super(v);
-            cardView = v.findViewById(R.id.release_card);
-            coverart = v.findViewById(R.id.coverart);
-            coverartLoading = v.findViewById(R.id.coverart_loading);
-            date = v.findViewById(R.id.date);
-            releaseName = v.findViewById(R.id.release_name);
-            countryLabel = v.findViewById(R.id.country_label);
-            format = v.findViewById(R.id.format);
-            status = v.findViewById(R.id.status);
-            catalog = v.findViewById(R.id.catalog);
-            barcode = v.findViewById(R.id.barcode);
+            coverartView = v.findViewById(R.id.coverartView);
+            coverartLoadingView = v.findViewById(R.id.coverartLoadingView);
+            dateView = v.findViewById(R.id.dateView);
+            releaseNameView = v.findViewById(R.id.releaseNameView);
+            countryLabelView = v.findViewById(R.id.countryLabelView);
+            formatView = v.findViewById(R.id.formatView);
+            statusView = v.findViewById(R.id.statusView);
+            catalogView = v.findViewById(R.id.catalogView);
+            barcodeView = v.findViewById(R.id.barcodeView);
         }
 
         public void bindTo(Release release, String releaseMbid) {
             if (release.getId().equals(releaseMbid)) {
-                cardView.setBackgroundResource(R.color.md_orange_50);
+                itemView.setBackgroundResource(R.color.md_orange_50);
             }
 
-            date.setText(release.getDate());
+            dateView.setText(release.getDate());
             if (!TextUtils.isEmpty(release.getStatus())) {
-                status.setText(release.getStatus());
+                statusView.setText(release.getStatus());
             } else {
-                status.setVisibility(View.GONE);
+                statusView.setVisibility(View.GONE);
             }
 
-            releaseName.setText(release.getTitle());
+            releaseNameView.setText(release.getTitle());
             if (!TextUtils.isEmpty(release.getBarcode())) {
-                barcode.setText(itemView.getResources().getString(R.string.r_barcode, release.getBarcode()));
+                barcodeView.setText(itemView.getResources().getString(R.string.r_barcode, release.getBarcode()));
             } else {
-                barcode.setVisibility(View.GONE);
+                barcodeView.setVisibility(View.GONE);
             }
 
             List<Label.LabelInfo> labelInfos = release.getLabelInfo();
@@ -97,12 +95,12 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
                 }
                 String labelCatalog = labelInfos.get(0).getCatalogNumber();
                 if (!TextUtils.isEmpty(labelCatalog)) {
-                    catalog.setText(itemView.getResources().getString(R.string.r_catalog, labelCatalog));
+                    catalogView.setText(itemView.getResources().getString(R.string.r_catalog, labelCatalog));
                 } else {
-                    catalog.setVisibility(View.GONE);
+                    catalogView.setVisibility(View.GONE);
                 }
             }
-            countryLabel.setText(release.getCountry() + " " + labelName);
+            countryLabelView.setText(release.getCountry() + " " + labelName);
 
             int trackCount = 0;
             List<Media> medias = release.getMedia();
@@ -110,7 +108,7 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
                 trackCount += media.getTrackCount();
             }
             String f = StringFormat.buildReleaseFormatsString(itemView.getContext(), medias);
-            format.setText(itemView.getResources().getString(R.string.r_tracks, f, trackCount));
+            formatView.setText(itemView.getResources().getString(R.string.r_tracks, f, trackCount));
 
             if (MediaBrainzApp.getPreferences().isLoadImagesEnabled()) {
                 showImageProgressLoading(true);
@@ -120,7 +118,7 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
                             CoverArtImage.Thumbnails thumbnails = coverArt.getFrontThumbnails();
                             if (thumbnails != null && !TextUtils.isEmpty(thumbnails.getSmall())) {
                                 Picasso.get().load(thumbnails.getSmall()).fit()
-                                        .into(coverart, new Callback() {
+                                        .into(coverartView, new Callback() {
                                             @Override
                                             public void onSuccess() {
                                                 showImageProgressLoading(false);
@@ -143,11 +141,11 @@ public class ReleaseAdapter extends BaseRecyclerViewAdapter<ReleaseAdapter.Relea
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                coverart.setVisibility(View.INVISIBLE);
-                coverartLoading.setVisibility(View.VISIBLE);
+                coverartView.setVisibility(View.INVISIBLE);
+                coverartLoadingView.setVisibility(View.VISIBLE);
             } else {
-                coverartLoading.setVisibility(View.GONE);
-                coverart.setVisibility(View.VISIBLE);
+                coverartLoadingView.setVisibility(View.GONE);
+                coverartView.setVisibility(View.VISIBLE);
             }
         }
     }

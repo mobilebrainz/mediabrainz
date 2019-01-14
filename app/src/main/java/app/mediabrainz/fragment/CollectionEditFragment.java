@@ -32,12 +32,12 @@ public class CollectionEditFragment extends Fragment {
     boolean isError;
     private Collection collection;
 
-    private View error;
-    private View loading;
-    private View content;
-    private EditText nameEditText;
-    private EditText descriptionEditText;
-    private CheckBox publicCheckBox;
+    private View errorView;
+    private View progressView;
+    private View contentView;
+    private EditText collectionNameView;
+    private EditText collectionDescriptionView;
+    private CheckBox collectionPublicCheckBox;
 
     public static CollectionEditFragment newInstance() {
         Bundle args = new Bundle();
@@ -50,30 +50,30 @@ public class CollectionEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_collection_edit, container, false);
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        nameEditText = layout.findViewById(R.id.collection_name);
-        descriptionEditText = layout.findViewById(R.id.collection_description);
-        publicCheckBox = layout.findViewById(R.id.collection_public);
+        contentView = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        collectionNameView = layout.findViewById(R.id.collectionNameView);
+        collectionDescriptionView = layout.findViewById(R.id.collectionDescriptionView);
+        collectionPublicCheckBox = layout.findViewById(R.id.collectionPublicCheckBox);
 
-        Button editButton = layout.findViewById(R.id.collection_edit_btn);
-        editButton.setOnClickListener(v -> edit());
+        Button collectionEditButton = layout.findViewById(R.id.collectionEditButton);
+        collectionEditButton.setOnClickListener(v -> edit());
 
         collection = ((GetCollectionCommunicator) getContext()).getCollection();
         if (collection != null) {
-            nameEditText.setText(collection.getName());
-            nameEditText.setError(null);
+            collectionNameView.setText(collection.getName());
+            collectionNameView.setError(null);
         }
 
-        ((ShowTitleCommunicator) getContext()).getTopTitle().setText(R.string.title_edit_collection);
+        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(R.string.title_edit_collection);
         return layout;
     }
 
     private void edit() {
-        nameEditText.setError(null);
+        collectionNameView.setError(null);
 
-        String name = nameEditText.getText().toString().trim();
+        String name = collectionNameView.getText().toString().trim();
         if (!TextUtils.isEmpty(name)) {
             viewProgressLoading(true);
             //TODO: make .browse(n, m)
@@ -86,7 +86,7 @@ public class CollectionEditFragment extends Fragment {
                             for (Collection coll : collections) {
                                 if (coll.getName().equalsIgnoreCase(name) && coll.getType().equals(collection.getType())) {
                                     existName = true;
-                                    nameEditText.setError(getString(R.string.collection_create_exist_name));
+                                    collectionNameView.setError(getString(R.string.collection_create_exist_name));
                                     break;
                                 }
                             }
@@ -95,8 +95,8 @@ public class CollectionEditFragment extends Fragment {
                             ((OnEditCollectionCommunicator) getContext()).onEditCollection(
                                     name,
                                     SiteService.getCollectionTypeFromSpinner(collection.getType()),
-                                    descriptionEditText.getText().toString(),
-                                    publicCheckBox.isChecked() ? 1 : 0);
+                                    collectionDescriptionView.getText().toString(),
+                                    collectionPublicCheckBox.isChecked() ? 1 : 0);
                         }
                     },
                     this::showConnectionWarning,
@@ -108,30 +108,30 @@ public class CollectionEditFragment extends Fragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> edit());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> edit());
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            content.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            contentView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            content.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            contentView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            contentView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
         }
     }
 

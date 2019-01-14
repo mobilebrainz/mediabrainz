@@ -18,7 +18,7 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/iconView"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -32,7 +32,7 @@
             android:paddingStart="16sp">
 
             <TextView
-                android:id="@+id/type"
+                android:id="@+id/typeView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorPrimary"
@@ -40,7 +40,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/link"
+                android:id="@+id/linkView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

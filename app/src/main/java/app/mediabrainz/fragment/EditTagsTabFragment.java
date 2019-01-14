@@ -45,8 +45,8 @@ public class EditTagsTabFragment extends Fragment {
 
     private int tagsTab = 0;
 
-    private View noresults;
-    private RecyclerView tagsRecycler;
+    private View noresultsView;
+    private RecyclerView recyclerView;
 
     public static EditTagsTabFragment newInstance(int tagsTab) {
         Bundle args = new Bundle();
@@ -62,26 +62,28 @@ public class EditTagsTabFragment extends Fragment {
 
         tagsTab = getArguments().getInt(TAGS_TAB);
 
-        noresults = layout.findViewById(R.id.noresults);
-        tagsRecycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
     }
 
     private void configRecycler() {
-        tagsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        tagsRecycler.setItemViewCacheSize(100);
-        tagsRecycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     private void load() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         TagInterface parent = (TagInterface) getParentFragment();
 
         final List<Tag> tags = new ArrayList<>();
         final List<Tag> userTags = new ArrayList<>();
+        final List<Tag> parentUserGenres = parent.getUserGenres();
+        final List<Tag> parentUserTags = parent.getUserTags();
 
         EditTagsPagerAdapter.TagsTab tagType = EditTagsPagerAdapter.TagsTab.values()[tagsTab];
         switch (tagType) {
@@ -92,17 +94,20 @@ public class EditTagsTabFragment extends Fragment {
                         tags.add(tag);
                     }
                 }
-                List<Tag> userGenres = parent.getUserGenres();
-                for (Tag tag : parent.getUserTags()) {
-                    if (!userGenres.contains(tag)) {
-                        userTags.add(tag);
+                if (parentUserGenres != null && parentUserTags != null) {
+                    for (Tag tag : parentUserTags) {
+                        if (!parentUserGenres.contains(tag)) {
+                            userTags.add(tag);
+                        }
                     }
                 }
                 break;
 
             case GENRES:
                 tags.addAll(parent.getGenres());
-                userTags.addAll(parent.getUserGenres());
+                if (parentUserGenres != null) {
+                    userTags.addAll(parentUserGenres);
+                }
                 break;
         }
 
@@ -112,7 +117,7 @@ public class EditTagsTabFragment extends Fragment {
 
             adapter.setHolderClickListener(pos ->
                     ((OnTagCommunicator) getContext()).onTag(tags.get(pos).getName(), tagType.equals(EditTagsPagerAdapter.TagsTab.GENRES)));
-            tagsRecycler.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);
 
             adapter.setOnVoteTagListener((position) -> {
                 if (oauth.hasAccount()) {
@@ -122,21 +127,21 @@ public class EditTagsTabFragment extends Fragment {
                     Window win = alertDialog.getWindow();
                     if (win != null) {
                         win.setContentView(R.layout.dialog_vote_tag);
-                        ImageView voteUpBtn = win.findViewById(R.id.vote_up_btn);
+                        ImageView voteUpButton = win.findViewById(R.id.voteUpButton);
 
-                        voteUpBtn.setOnClickListener(v -> {
+                        voteUpButton.setOnClickListener(v -> {
                             alertDialog.dismiss();
                             parent.postTag(tag, UserTagXML.VoteType.UPVOTE, tagsTab);
                         });
 
-                        ImageView voteWithdrawBtn = win.findViewById(R.id.vote_withdraw_btn);
-                        voteWithdrawBtn.setOnClickListener(v -> {
+                        ImageView voteWithdrawButton = win.findViewById(R.id.voteWithdrawButton);
+                        voteWithdrawButton.setOnClickListener(v -> {
                             alertDialog.dismiss();
                             parent.postTag(tag, UserTagXML.VoteType.WITHDRAW, tagsTab);
                         });
 
-                        ImageView voteDownBtn = win.findViewById(R.id.vote_down_btn);
-                        voteDownBtn.setOnClickListener(v -> {
+                        ImageView voteDownButton = win.findViewById(R.id.voteDownButton);
+                        voteDownButton.setOnClickListener(v -> {
                             alertDialog.dismiss();
                             parent.postTag(tag, UserTagXML.VoteType.DOWNVOTE, tagsTab);
                         });

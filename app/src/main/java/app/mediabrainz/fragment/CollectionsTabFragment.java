@@ -55,8 +55,8 @@ public class CollectionsTabFragment extends Fragment {
     private int collectionTab;
     private boolean isPrivate;
 
-    private View loading;
-    private RecyclerView collectionsRecycler;
+    private View progressView;
+    private RecyclerView recyclerView;
 
     public static CollectionsTabFragment newInstance(int collectionTab) {
         Bundle args = new Bundle();
@@ -68,11 +68,11 @@ public class CollectionsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_collections_tab, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         collectionTab = getArguments().getInt(COLLECTION_TAB);
-        collectionsRecycler = layout.findViewById(R.id.collections_recycler);
-        loading = layout.findViewById(R.id.loading);
+        recyclerView = layout.findViewById(R.id.recyclerView);
+        progressView = layout.findViewById(R.id.progressView);
 
         load();
         return layout;
@@ -114,8 +114,8 @@ public class CollectionsTabFragment extends Fragment {
                             pos -> {
                                 Collection collection = tabCollections.get(pos);
                                 View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-                                TextView titleText = titleView.findViewById(R.id.title_text);
-                                titleText.setText(getString(R.string.collection_alert_title, collection.getName()));
+                                TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+                                titleTextView.setText(getString(R.string.collection_alert_title, collection.getName()));
 
                                 new AlertDialog.Builder(getContext())
                                         .setCustomTitle(titleView)
@@ -138,21 +138,21 @@ public class CollectionsTabFragment extends Fragment {
                                         .show();
                             });
                 }
-                collectionsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-                collectionsRecycler.setItemViewCacheSize(100);
-                collectionsRecycler.setHasFixedSize(true);
-                collectionsRecycler.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setItemViewCacheSize(100);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setAdapter(adapter);
             }
         }
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
-            collectionsRecycler.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            recyclerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
-            collectionsRecycler.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            recyclerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 }

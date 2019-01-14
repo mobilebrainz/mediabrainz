@@ -41,10 +41,10 @@ public class UserRecommendsTabFragment extends Fragment {
     private String secondaryTag;
     private int tagRate = 0;
 
-    private View error;
-    private View loading;
-    private View noresults;
-    private RecyclerView recycler;
+    private View errorView;
+    private View progressView;
+    private View noresultsView;
+    private RecyclerView recyclerView;
 
 
     public static UserRecommendsTabFragment newInstance(int recommendsTab) {
@@ -61,24 +61,24 @@ public class UserRecommendsTabFragment extends Fragment {
 
         tagType = TagServiceInterface.TagType.values()[getArguments().getInt(RECOMMENDS_TAB)];
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
-        recycler = layout.findViewById(R.id.recycler);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
     }
 
     private void configRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(100);
-        recycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     private void load() {
         viewError(false);
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         viewProgressLoading(true);
         new RecommendRepository().getAll(recommends -> {
@@ -104,7 +104,7 @@ public class UserRecommendsTabFragment extends Fragment {
 
             } else {
                 viewProgressLoading(false);
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -142,14 +142,14 @@ public class UserRecommendsTabFragment extends Fragment {
                     ArtistTagAdapter artistTagAdapter = new ArtistTagAdapter(recommends);
                     artistTagAdapter.setHolderClickListener(position ->
                             ((OnArtistCommunicator) getContext()).onArtist(recommends.get(position).getMbid()));
-                    recycler.setAdapter(artistTagAdapter);
+                    recyclerView.setAdapter(artistTagAdapter);
                     break;
 
                 case RELEASE_GROUP:
                     EntityTagAdapter rgAdapter = new EntityTagAdapter(recommends);
                     rgAdapter.setHolderClickListener(position ->
                             ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(recommends.get(position).getMbid()));
-                    recycler.setAdapter(rgAdapter);
+                    recyclerView.setAdapter(rgAdapter);
                     break;
 
                 case RECORDING:
@@ -158,31 +158,31 @@ public class UserRecommendsTabFragment extends Fragment {
                             ((OnRecordingCommunicator) getContext()).onRecording(recommends.get(position).getMbid()));
                     recordingAdapter.setOnPlayYoutubeListener(keyword ->
                             ((OnPlayYoutubeCommunicator) getContext()).onPlay(keyword));
-                    recycler.setAdapter(recordingAdapter);
+                    recyclerView.setAdapter(recordingAdapter);
                     break;
             }
         } else {
-            noresults.setVisibility(View.VISIBLE);
+            noresultsView.setVisibility(View.VISIBLE);
         }
     }
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 
@@ -190,7 +190,7 @@ public class UserRecommendsTabFragment extends Fragment {
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
 }

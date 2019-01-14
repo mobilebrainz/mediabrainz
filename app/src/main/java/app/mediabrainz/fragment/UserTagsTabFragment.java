@@ -28,8 +28,8 @@ public class UserTagsTabFragment extends Fragment {
 
     private Tag.TagType tagType;
 
-    private View noresults;
-    private RecyclerView tagsRecycler;
+    private View noresultsView;
+    private RecyclerView recyclerView;
 
     public static UserTagsTabFragment newInstance(int tagsTab) {
         Bundle args = new Bundle();
@@ -45,21 +45,21 @@ public class UserTagsTabFragment extends Fragment {
 
         tagType = Tag.TagType.values()[getArguments().getInt(TAGS_TAB)];
 
-        noresults = layout.findViewById(R.id.noresults);
-        tagsRecycler = layout.findViewById(R.id.recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
     }
 
     private void configRecycler() {
-        tagsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        tagsRecycler.setItemViewCacheSize(100);
-        tagsRecycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     private void load() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
 
         String username = ((GetUsernameCommunicator) getContext()).getUsername();
 
@@ -75,13 +75,13 @@ public class UserTagsTabFragment extends Fragment {
         }
         if (username != null) {
             if (tags.isEmpty()) {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             } else {
                 configRecycler();
                 UserTagsAdapter adapter = new UserTagsAdapter(tags);
                 adapter.setHolderClickListener(position ->
                         ((OnUserTagCommunicator) getContext()).onUserTag(username, tags.get(position).getName()));
-                tagsRecycler.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
             }
         }
     }

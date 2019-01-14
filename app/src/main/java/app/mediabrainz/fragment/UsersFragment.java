@@ -23,10 +23,10 @@ public class UsersFragment extends LazyFragment {
     private boolean isLoading;
     private boolean isError;
 
-    private View noresults;
-    private RecyclerView recycler;
-    private View error;
-    private View loading;
+    private View noresultsView;
+    private RecyclerView recyclerView;
+    private View errorView;
+    private View progressView;
 
     public static UsersFragment newInstance() {
         Bundle args = new Bundle();
@@ -39,10 +39,10 @@ public class UsersFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        noresults = layout.findViewById(R.id.noresults);
-        recycler = layout.findViewById(R.id.recycler);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         configRecycler();
         loadView();
@@ -50,14 +50,14 @@ public class UsersFragment extends LazyFragment {
     }
 
     private void configRecycler() {
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setItemViewCacheSize(100);
-        recycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
     @Override
     protected void lazyLoad() {
-        noresults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(true);
 
@@ -68,18 +68,18 @@ public class UsersFragment extends LazyFragment {
                 UserAdapter userAdapter = new UserAdapter(users);
                 userAdapter.setHolderClickListener(position ->
                         ((OnUserCommunicator) getContext()).onUser(users.get(position).getName()));
-                recycler.setAdapter(userAdapter);
+                recyclerView.setAdapter(userAdapter);
 
                 userAdapter.setOnDeleteListener(position ->
                         onDelete(users.get(position), () -> {
                             users.remove(position);
                             userAdapter.notifyItemRemoved(position);
                             if (users.size() == 0) {
-                                noresults.setVisibility(View.VISIBLE);
+                                noresultsView.setVisibility(View.VISIBLE);
                             }
                         }));
             } else {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -87,8 +87,8 @@ public class UsersFragment extends LazyFragment {
 
     public void onDelete(User user, Action action) {
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(R.string.user_delete_user);
+        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+        titleTextView.setText(R.string.user_delete_user);
 
         new AlertDialog.Builder(getContext())
                 .setCustomTitle(titleView)
@@ -107,20 +107,20 @@ public class UsersFragment extends LazyFragment {
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            error.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
+            errorView.setVisibility(View.GONE);
         }
     }
 

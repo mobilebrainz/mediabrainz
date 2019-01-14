@@ -32,8 +32,8 @@ public class CreditsAdapter extends BaseRecyclerViewAdapter<CreditsAdapter.Credi
 
         private CreditsViewHolder(View v) {
             super(v);
-            typeView = v.findViewById(R.id.type);
-            artistView = v.findViewById(R.id.artist);
+            typeView = v.findViewById(R.id.typeView);
+            artistView = v.findViewById(R.id.artistView);
         }
 
         public void bindTo(Relation relation) {

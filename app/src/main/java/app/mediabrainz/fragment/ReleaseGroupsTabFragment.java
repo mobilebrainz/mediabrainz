@@ -40,13 +40,13 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
     private ReleaseGroupsViewModel releaseGroupsViewModel;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView pagedRecycler;
+    private RecyclerView pagedRecyclerView;
     private ReleaseGroupsAdapter adapter;
 
     private TextView errorMessageTextView;
     private Button retryLoadingButton;
     private ProgressBar loadingProgressBar;
-    private View itemNetworkState;
+    private View itemNetworkStateView;
 
     private MutableLiveData<Boolean> mutableIsOfficial = new MutableLiveData<>();
 
@@ -61,15 +61,15 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_release_groups, container, false);
+        View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
 
         releaseGroupType = ReleaseGroupsPagerAdapter.ReleaseTab.values()[getArguments().getInt(RELEASES_TAB)];
 
-        pagedRecycler = layout.findViewById(R.id.paged_recycler);
-        swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
+        pagedRecyclerView = layout.findViewById(R.id.pagedRecyclerView);
+        swipeRefreshLayout = layout.findViewById(R.id.swipeRefreshLayout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
         loadingProgressBar = layout.findViewById(R.id.loadingProgressBar);
-        itemNetworkState = layout.findViewById(R.id.item_network_state);
+        itemNetworkStateView = layout.findViewById(R.id.itemNetworkStateView);
 
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
@@ -91,11 +91,11 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
             releaseGroupsViewModel.realeseGroupLiveData.observe(this, adapter::submitList);
             releaseGroupsViewModel.getNetworkState().observe(this, adapter::setNetworkState);
 
-            pagedRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            pagedRecycler.setNestedScrollingEnabled(true);
-            pagedRecycler.setItemViewCacheSize(100);
-            pagedRecycler.setHasFixedSize(true);
-            pagedRecycler.setAdapter(adapter);
+            pagedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            pagedRecyclerView.setNestedScrollingEnabled(true);
+            pagedRecyclerView.setItemViewCacheSize(100);
+            pagedRecyclerView.setHasFixedSize(true);
+            pagedRecyclerView.setAdapter(adapter);
 
             MediaBrainzApp.getPreferences().registerOnSharedPreferenceChangeListener(this);
 
@@ -107,7 +107,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
         releaseGroupsViewModel.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
-                    itemNetworkState.setVisibility(View.VISIBLE);
+                    itemNetworkStateView.setVisibility(View.VISIBLE);
 
                     errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
                     if (networkState.getMessage() != null) {
@@ -118,7 +118,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
                     loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
-                    pagedRecycler.scrollToPosition(0);
+                    pagedRecyclerView.scrollToPosition(0);
                 }
             }
         });
@@ -126,7 +126,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
         swipeRefreshLayout.setOnRefreshListener(() -> {
             releaseGroupsViewModel.refresh();
             swipeRefreshLayout.setRefreshing(false);
-            pagedRecycler.scrollToPosition(0);
+            pagedRecyclerView.scrollToPosition(0);
         });
     }
 
@@ -141,7 +141,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(RELEASE_GROUP_OFFICIAL)) {
             if (!loadView()) {
-                pagedRecycler.setAdapter(null);
+                pagedRecyclerView.setAdapter(null);
                 setLoaded(false);
             }
             /*

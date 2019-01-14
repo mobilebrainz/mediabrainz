@@ -27,7 +27,7 @@ public class YoutubeSearchAdapter extends BaseRecyclerViewAdapter<YoutubeSearchA
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_search_youtube;
 
         private ImageView imageView;
-        private ProgressBar progressLoading;
+        private ProgressBar imageProgressView;
         private TextView titleView;
         private TextView descriptionView;
 
@@ -39,10 +39,10 @@ public class YoutubeSearchAdapter extends BaseRecyclerViewAdapter<YoutubeSearchA
 
         private YoutubeSearchViewHolder(View v) {
             super(v);
-            imageView = v.findViewById(R.id.image);
-            progressLoading = v.findViewById(R.id.image_loading);
-            titleView = v.findViewById(R.id.title);
-            descriptionView = v.findViewById(R.id.description);
+            imageView = v.findViewById(R.id.imageView);
+            imageProgressView = v.findViewById(R.id.imageProgressView);
+            titleView = v.findViewById(R.id.titleView);
+            descriptionView = v.findViewById(R.id.descriptionView);
         }
 
         public void bindTo(YoutubeSearchResult youtubeSearchResult) {
@@ -73,9 +73,9 @@ public class YoutubeSearchAdapter extends BaseRecyclerViewAdapter<YoutubeSearchA
         private void showImageProgressLoading(boolean show) {
             if (show) {
                 imageView.setVisibility(View.INVISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
+                imageProgressView.setVisibility(View.VISIBLE);
             } else {
-                progressLoading.setVisibility(View.GONE);
+                imageProgressView.setVisibility(View.GONE);
                 imageView.setVisibility(View.VISIBLE);
             }
         }

@@ -51,30 +51,30 @@ public class ReleaseRatingsFragment extends LazyFragment {
     private ReleaseGroup releaseGroup;
     private boolean isLoadRatingsEnabled;
 
-    private View content;
-    private View error;
-    private View loading;
-    private TextView loginWarning;
-    private TextView allRatingText;
+    private View contentView;
+    private View errorView;
+    private View progressView;
+    private TextView loginWarningView;
+    private TextView allRatingView;
     private RatingBar userRatingBar;
 
-    private TableLayout ratingsTable;
+    private TableLayout ratingsTableView;
     private View lastfmPlaycountTableRow;
     private View lastfmListenersTableRow;
-    private TextView lastfmListeners;
-    private TextView lastfmPlaycount;
+    private TextView lastfmListenersView;
+    private TextView lastfmPlaycountView;
     private RatingBar lastfmListenersRatingBar;
     private RatingBar lastfmPlaycountRatingBar;
 
     private View rateyourmusicTableRow;
     private RatingBar rateyourmusicRatingBar;
-    private TextView rateyourmusicNumber;
-    private View rateyourmusicLoading;
+    private TextView rateyourmusicNumberView;
+    private View rateyourmusicProgressBar;
 
     private View progarchivesTableRow;
     private RatingBar progarchivesRatingBar;
-    private TextView progarchivesNumber;
-    private View progarchivesLoading;
+    private TextView progarchivesNumberView;
+    private View progarchivesProgressBar;
 
 
     public static ReleaseRatingsFragment newInstance() {
@@ -88,30 +88,30 @@ public class ReleaseRatingsFragment extends LazyFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_release_ratings, container, false);
 
-        content = layout.findViewById(R.id.content);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
-        loginWarning = layout.findViewById(R.id.login_warning);
-        allRatingText = layout.findViewById(R.id.all_rating_text);
-        userRatingBar = layout.findViewById(R.id.user_rating_bar);
+        contentView = layout.findViewById(R.id.contentView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
+        loginWarningView = layout.findViewById(R.id.loginWarningView);
+        allRatingView = layout.findViewById(R.id.allRatingView);
+        userRatingBar = layout.findViewById(R.id.userRatingBar);
 
-        ratingsTable = layout.findViewById(R.id.ratings_table);
-        lastfmPlaycountTableRow = layout.findViewById(R.id.lastfm_playcount_tableRow);
-        lastfmListenersTableRow = layout.findViewById(R.id.lastfm_listeners_tableRow);
-        lastfmListeners = layout.findViewById(R.id.lastfm_listeners);
-        lastfmPlaycount = layout.findViewById(R.id.lastfm_playcount);
-        lastfmListenersRatingBar = layout.findViewById(R.id.lastfm_listeners_rating_bar);
-        lastfmPlaycountRatingBar = layout.findViewById(R.id.lastfm_playcount_rating_bar);
+        ratingsTableView = layout.findViewById(R.id.ratingsTableView);
+        lastfmPlaycountTableRow = layout.findViewById(R.id.lastfmPlaycountTableRow);
+        lastfmListenersTableRow = layout.findViewById(R.id.lastfmListenersTableRow);
+        lastfmListenersView = layout.findViewById(R.id.lastfmListenersView);
+        lastfmPlaycountView = layout.findViewById(R.id.lastfmPlaycountView);
+        lastfmListenersRatingBar = layout.findViewById(R.id.lastfmListenersRatingBar);
+        lastfmPlaycountRatingBar = layout.findViewById(R.id.lastfmPlaycountRatingBar);
 
-        rateyourmusicTableRow = layout.findViewById(R.id.rateyourmusic_tableRow);
-        rateyourmusicRatingBar = layout.findViewById(R.id.rateyourmusic_rating_bar);
-        rateyourmusicNumber = layout.findViewById(R.id.rateyourmusic_number);
-        rateyourmusicLoading = layout.findViewById(R.id.rateyourmusic_loading);
+        rateyourmusicTableRow = layout.findViewById(R.id.rateyourmusicTableRow);
+        rateyourmusicRatingBar = layout.findViewById(R.id.rateyourmusicRatingBar);
+        rateyourmusicNumberView = layout.findViewById(R.id.rateyourmusicNumberView);
+        rateyourmusicProgressBar = layout.findViewById(R.id.rateyourmusicProgressBar);
 
-        progarchivesTableRow = layout.findViewById(R.id.progarchives_tableRow);
-        progarchivesRatingBar = layout.findViewById(R.id.progarchives_rating_bar);
-        progarchivesNumber = layout.findViewById(R.id.progarchives_number);
-        progarchivesLoading = layout.findViewById(R.id.progarchives_loading);
+        progarchivesTableRow = layout.findViewById(R.id.progarchivesTableRow);
+        progarchivesRatingBar = layout.findViewById(R.id.progarchivesRatingBar);
+        progarchivesNumberView = layout.findViewById(R.id.progarchivesNumberView);
+        progarchivesProgressBar = layout.findViewById(R.id.progarchivesProgressBar);
 
         setEditListeners();
         loadView();
@@ -122,7 +122,7 @@ public class ReleaseRatingsFragment extends LazyFragment {
     @Override
     public void onStart() {
         super.onStart();
-        loginWarning.setVisibility(oauth.hasAccount() ? View.GONE : View.VISIBLE);
+        loginWarningView.setVisibility(oauth.hasAccount() ? View.GONE : View.VISIBLE);
         if (isLoadRatingsEnabled != MediaBrainzApp.getPreferences().isLoadRatingsEnabled()) {
             lazyLoad();
         }
@@ -130,7 +130,7 @@ public class ReleaseRatingsFragment extends LazyFragment {
 
     private void setEditListeners() {
         userRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            if (loading.getVisibility() == View.VISIBLE) {
+            if (progressView.getVisibility() == View.VISIBLE) {
                 return;
             }
             if (oauth.hasAccount()) {
@@ -156,12 +156,12 @@ public class ReleaseRatingsFragment extends LazyFragment {
 
             isLoadRatingsEnabled = MediaBrainzApp.getPreferences().isLoadRatingsEnabled();
             if (isLoadRatingsEnabled) {
-                ratingsTable.setVisibility(View.VISIBLE);
+                ratingsTableView.setVisibility(View.VISIBLE);
                 setLastfmInfo();
                 setRateyourmusicRating();
                 setProgarchivesRating();
             } else {
-                ratingsTable.setVisibility(View.GONE);
+                ratingsTableView.setVisibility(View.GONE);
             }
         }
     }
@@ -172,9 +172,9 @@ public class ReleaseRatingsFragment extends LazyFragment {
             Float r = rating.getValue();
             if (r != null) {
                 Integer votesCount = rating.getVotesCount();
-                allRatingText.setText(getString(R.string.rating_text, r, votesCount));
+                allRatingView.setText(getString(R.string.rating_text, r, votesCount));
             } else {
-                allRatingText.setText(getString(R.string.rating_text, 0.0, 0));
+                allRatingView.setText(getString(R.string.rating_text, 0.0, 0));
             }
         }
     }
@@ -198,7 +198,7 @@ public class ReleaseRatingsFragment extends LazyFragment {
                 if (res.contains("rateyourmusic")) {
 
                     rateyourmusicTableRow.setVisibility(View.VISIBLE);
-                    rateyourmusicLoading.setVisibility(View.VISIBLE);
+                    rateyourmusicProgressBar.setVisibility(View.VISIBLE);
                     rateyourmusicRatingBar.setVisibility(View.GONE);
 
                     RequestQueue requestQueue = ((GetRequestQueueCommunicator) getContext()).getRequestQueue();
@@ -211,8 +211,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
 
                                 if (!TextUtils.isEmpty(avgRating) && !TextUtils.isEmpty(numRating)) {
                                     rateyourmusicRatingBar.setRating(Float.valueOf(avgRating));
-                                    rateyourmusicNumber.setText(avgRating + "(" + numRating + ")");
-                                    rateyourmusicLoading.setVisibility(View.GONE);
+                                    rateyourmusicNumberView.setText(avgRating + "(" + numRating + ")");
+                                    rateyourmusicProgressBar.setVisibility(View.GONE);
                                     rateyourmusicRatingBar.setVisibility(View.VISIBLE);
                                     rateyourmusicTableRow.setOnClickListener(
                                             v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(httpsRes))));
@@ -240,7 +240,7 @@ public class ReleaseRatingsFragment extends LazyFragment {
                 if (res.contains("progarchives")) {
 
                     progarchivesTableRow.setVisibility(View.VISIBLE);
-                    progarchivesLoading.setVisibility(View.VISIBLE);
+                    progarchivesProgressBar.setVisibility(View.VISIBLE);
                     progarchivesRatingBar.setVisibility(View.GONE);
 
                     RequestQueue requestQueue = ((GetRequestQueueCommunicator) getContext()).getRequestQueue();
@@ -253,8 +253,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
 
                                 if (!TextUtils.isEmpty(avgRating) && !TextUtils.isEmpty(numRating)) {
                                     progarchivesRatingBar.setRating(Float.valueOf(avgRating));
-                                    progarchivesNumber.setText(avgRating + "(" + numRating + ")");
-                                    progarchivesLoading.setVisibility(View.GONE);
+                                    progarchivesNumberView.setText(avgRating + "(" + numRating + ")");
+                                    progarchivesProgressBar.setVisibility(View.GONE);
                                     progarchivesRatingBar.setVisibility(View.VISIBLE);
                                     progarchivesTableRow.setOnClickListener(
                                             v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(httpsRes))));
@@ -288,8 +288,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
                             int listeners = album.getListeners();
                             int playCount = album.getPlaycount();
 
-                            lastfmListeners.setText(StringFormat.decimalFormat(listeners));
-                            lastfmPlaycount.setText(StringFormat.decimalFormat(playCount));
+                            lastfmListenersView.setText(StringFormat.decimalFormat(listeners));
+                            lastfmPlaycountView.setText(StringFormat.decimalFormat(playCount));
 
                             lastfmListenersRatingBar.setRating((float) Math.sqrt(listeners) / LASTFM_ALBUM_LISTENERS_COEFF);
                             lastfmPlaycountRatingBar.setRating((float) Math.sqrt(playCount) / LASTFM_ALBUM_PLAYCOUNT_COEFF);
@@ -337,23 +337,23 @@ public class ReleaseRatingsFragment extends LazyFragment {
 
     private void viewProgressLoading(boolean isView) {
         if (isView) {
-            content.setAlpha(0.3F);
+            contentView.setAlpha(0.3F);
             userRatingBar.setIsIndicator(true);
-            loading.setVisibility(View.VISIBLE);
+            progressView.setVisibility(View.VISIBLE);
         } else {
-            content.setAlpha(1.0F);
+            contentView.setAlpha(1.0F);
             userRatingBar.setIsIndicator(false);
-            loading.setVisibility(View.GONE);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
-            content.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            contentView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
-            error.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            contentView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -361,8 +361,8 @@ public class ReleaseRatingsFragment extends LazyFragment {
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.setVisibility(View.VISIBLE);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> lazyLoad());
+        errorView.setVisibility(View.VISIBLE);
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
 }

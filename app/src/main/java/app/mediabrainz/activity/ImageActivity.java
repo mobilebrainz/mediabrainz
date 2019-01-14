@@ -24,7 +24,7 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        final PhotoView photoView = findViewById(R.id.iv_photo);
+        final PhotoView photoView = findViewById(R.id.photoView);
 
         if (savedInstanceState != null) {
             imageUrl = savedInstanceState.getString(IMAGE_URL);
@@ -32,17 +32,17 @@ public class ImageActivity extends AppCompatActivity {
             imageUrl = getIntent().getStringExtra(IMAGE_URL);
         }
 
-        ProgressBar loading = findViewById(R.id.loading);
-        loading.setVisibility(View.VISIBLE);
+        ProgressBar progressView = findViewById(R.id.progressView);
+        progressView.setVisibility(View.VISIBLE);
         Picasso.get().load(imageUrl).into(photoView, new Callback() {
             @Override
             public void onSuccess() {
-                loading.setVisibility(View.GONE);
+                progressView.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(Exception e) {
-                loading.setVisibility(View.GONE);
+                progressView.setVisibility(View.GONE);
                 Toast.makeText(ImageActivity.this, getString(R.string.error_image_loading), Toast.LENGTH_SHORT).show();
             }
         });

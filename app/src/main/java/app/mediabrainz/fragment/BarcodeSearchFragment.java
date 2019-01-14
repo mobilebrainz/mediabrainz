@@ -41,16 +41,16 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
     private boolean isLoading;
     private boolean isError;
 
-    private RecyclerView releaseRecycler;
-    private AutoCompleteTextView barcodeText;
-    private AutoCompleteTextView searchBox;
-    private AutoCompleteTextView searchArtist;
-    private ImageButton searchButton;
-    private TextView instructions;
-    private TextView noResults;
-    private View contentContainer;
-    private View loading;
-    private View error;
+    private RecyclerView releaseRecyclerView;
+    private AutoCompleteTextView barcodeTextView;
+    private AutoCompleteTextView releaseSearchView;
+    private AutoCompleteTextView artistSearchView;
+    private ImageButton barcodeSearchView;
+    private TextView barcodeInstructionsView;
+    private TextView noresultsView;
+    private View containerView;
+    private View progressView;
+    private View errorView;
 
     public static BarcodeSearchFragment newInstance(String barcode) {
         Bundle args = new Bundle();
@@ -65,19 +65,19 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_barcode_search, container, false);
 
-        searchBox = layout.findViewById(R.id.release_search);
-        searchArtist = layout.findViewById(R.id.artist_search);
-        barcodeText = layout.findViewById(R.id.barcode_text);
-        searchButton = layout.findViewById(R.id.barcode_search_btn);
-        instructions = layout.findViewById(R.id.barcode_instructions);
-        noResults = layout.findViewById(R.id.noresults);
-        loading = layout.findViewById(R.id.loading);
-        error = layout.findViewById(R.id.error);
-        contentContainer = layout.findViewById(R.id.container);
-        releaseRecycler = layout.findViewById(R.id.release_recycler);
+        releaseSearchView = layout.findViewById(R.id.releaseSearchView);
+        artistSearchView = layout.findViewById(R.id.artistSearchView);
+        barcodeTextView = layout.findViewById(R.id.barcodeTextView);
+        barcodeSearchView = layout.findViewById(R.id.barcodeSearchView);
+        barcodeInstructionsView = layout.findViewById(R.id.barcodeInstructionsView);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        progressView = layout.findViewById(R.id.progressView);
+        errorView = layout.findViewById(R.id.errorView);
+        containerView = layout.findViewById(R.id.containerView);
+        releaseRecyclerView = layout.findViewById(R.id.releaseRecyclerView);
 
         barcode = getArguments().getString(BARCODE);
-        barcodeText.setText(barcode);
+        barcodeTextView.setText(barcode);
 
         setListeners();
         configReleaseRecycler();
@@ -85,59 +85,59 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
     }
 
     private void configReleaseRecycler() {
-        releaseRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        releaseRecycler.setItemViewCacheSize(50);
-        releaseRecycler.setHasFixedSize(true);
+        releaseRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        releaseRecyclerView.setItemViewCacheSize(50);
+        releaseRecyclerView.setHasFixedSize(true);
     }
 
     private void setListeners() {
-        searchBox.setOnEditorActionListener((v, actionId, event) -> {
-            if (v.getId() == R.id.release_search && actionId == EditorInfo.IME_NULL && !isLoading) {
+        releaseSearchView.setOnEditorActionListener((v, actionId, event) -> {
+            if (v.getId() == R.id.releaseSearchView && actionId == EditorInfo.IME_NULL && !isLoading) {
                 search();
             }
             return false;
         });
-        searchButton.setOnClickListener(v -> {
+        barcodeSearchView.setOnClickListener(v -> {
             if (!isLoading) {
                 search();
             }
         });
-        barcodeText.addTextChangedListener(this);
+        barcodeTextView.addTextChangedListener(this);
     }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchBox.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(releaseSearchView.getWindowToken(), 0);
     }
 
     private void search() {
-        noResults.setVisibility(View.GONE);
+        noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(false);
 
-        instructions.setVisibility(View.INVISIBLE);
-        releaseRecycler.setAdapter(null);
+        barcodeInstructionsView.setVisibility(View.INVISIBLE);
+        releaseRecyclerView.setAdapter(null);
 
-        String term = searchBox.getText().toString().trim();
+        String term = releaseSearchView.getText().toString().trim();
         if (!TextUtils.isEmpty(term)) {
             hideKeyboard();
 
             viewProgressLoading(true);
             api.searchRelease(
-                    searchArtist.getText().toString().trim(), term,
+                    artistSearchView.getText().toString().trim(), term,
                     releaseSearch -> {
                         viewProgressLoading(false);
                         if (releaseSearch.getCount() > 0) {
                             List<Release> releases = releaseSearch.getReleases();
                             ReleaseAdapter adapter = new ReleaseAdapter(releases, "");
-                            releaseRecycler.setAdapter(adapter);
+                            releaseRecyclerView.setAdapter(adapter);
                             adapter.setHolderClickListener(position -> {
                                 if (!isLoading) {
                                     showAddBarcodeDialog(releases.get(position).getId());
                                 }
                             });
                         } else {
-                            noResults.setVisibility(View.VISIBLE);
+                            noresultsView.setVisibility(View.VISIBLE);
                         }
                     },
                     this::showConnectionWarning,
@@ -150,8 +150,8 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
 
     private void showAddBarcodeDialog(String releaseMbid) {
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleText = titleView.findViewById(R.id.title_text);
-        titleText.setText(getString(R.string.barcode_add_header));
+        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+        titleTextView.setText(getString(R.string.barcode_add_header));
         if (oauth.hasAccount()) {
             new AlertDialog.Builder(getContext())
                     .setCustomTitle(titleView)
@@ -184,7 +184,7 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
                     ShowUtil.showError(getActivity(), t);
                     viewProgressLoading(false);
                     viewError(true);
-                    error.findViewById(R.id.retry_button).setOnClickListener(v -> confirmSubmission(releaseMbid));
+                    errorView.findViewById(R.id.retryButton).setOnClickListener(v -> confirmSubmission(releaseMbid));
                 }
         );
     }
@@ -193,7 +193,7 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
         //ShowUtil.showError(getActivity(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> search());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> search());
     }
 
     @Override
@@ -203,11 +203,11 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!isDigits(s)) {
-            barcodeText.setError(getString(R.string.barcode_invalid_chars));
+            barcodeTextView.setError(getString(R.string.barcode_invalid_chars));
         } else if (!isBarcodeLengthValid(s)) {
-            barcodeText.setError(getString(R.string.barcode_invalid_length));
+            barcodeTextView.setError(getString(R.string.barcode_invalid_length));
         } else {
-            barcodeText.setError(null);
+            barcodeTextView.setError(null);
         }
     }
 
@@ -233,24 +233,24 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
     protected void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            contentContainer.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            containerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            contentContainer.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            containerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     protected void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            contentContainer.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            containerView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            contentContainer.setVisibility(View.VISIBLE);
-            error.setVisibility(View.GONE);
+            containerView.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
         }
     }
 

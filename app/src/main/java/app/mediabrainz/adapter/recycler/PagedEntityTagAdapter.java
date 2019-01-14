@@ -25,8 +25,8 @@ public class PagedEntityTagAdapter extends BasePagedListAdapter<TagEntity> {
 
         private PagedEntityTagViewHolder(View v) {
             super(v);
-            entityNameView = v.findViewById(R.id.entity_name);
-            artistNameView = v.findViewById(R.id.artist_name);
+            entityNameView = v.findViewById(R.id.entityNameView);
+            artistNameView = v.findViewById(R.id.artistNameView);
         }
 
         public void bindView(TagEntity tag) {

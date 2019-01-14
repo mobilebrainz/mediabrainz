@@ -35,10 +35,10 @@ public class UserTagPagerFragment extends Fragment implements
     private boolean isError;
     private Map<TagServiceInterface.UserTagType, List<TagEntity>> entitiesMap;
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private View error;
-    private View loading;
+    private ViewPager pagerView;
+    private TabLayout tabsView;
+    private View errorView;
+    private View progressView;
 
     public static UserTagPagerFragment newInstance(String username, String tag) {
         Bundle args = new Bundle();
@@ -51,17 +51,17 @@ public class UserTagPagerFragment extends Fragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_user_tag_pager, container, false);
+        View layout = inflater.inflate(R.layout.fragment_pager_with_icons, container, false);
 
-        viewPager = layout.findViewById(R.id.pager);
-        tabLayout = layout.findViewById(R.id.tabs);
-        error = layout.findViewById(R.id.error);
-        loading = layout.findViewById(R.id.loading);
+        pagerView = layout.findViewById(R.id.pagerView);
+        tabsView = layout.findViewById(R.id.tabsView);
+        errorView = layout.findViewById(R.id.errorView);
+        progressView = layout.findViewById(R.id.progressView);
 
         username = getArguments().getString(USERNAME);
         userTag = getArguments().getString(USER_TAG);
 
-        ((ShowTitleCommunicator) getContext()).getTopTitle().setText(userTag);
+        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(userTag);
 
         load();
         return layout;
@@ -69,10 +69,10 @@ public class UserTagPagerFragment extends Fragment implements
 
     private void configurePager() {
         UserTagPagerAdapter pagerAdapter = new UserTagPagerAdapter(getChildFragmentManager(), getResources());
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
-        tabLayout.setupWithViewPager(viewPager);
-        pagerAdapter.setupTabViews(tabLayout);
+        pagerView.setAdapter(pagerAdapter);
+        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+        tabsView.setupWithViewPager(pagerView);
+        pagerAdapter.setupTabViews(tabsView);
     }
 
     private void load() {
@@ -91,24 +91,24 @@ public class UserTagPagerFragment extends Fragment implements
     private void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            viewPager.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            pagerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            viewPager.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            pagerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     private void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            viewPager.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            pagerView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -116,7 +116,7 @@ public class UserTagPagerFragment extends Fragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
     @Override

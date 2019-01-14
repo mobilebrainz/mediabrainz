@@ -12,30 +12,30 @@ import app.mediabrainz.adapter.recycler.expandedRecycler.BaseHeaderViewHolder;
 
 public class HeaderViewHolder extends BaseHeaderViewHolder {
 
-    private ImageView expandView;
+    private ImageView expandImageView;
     private ImageView infoView;
-    private TextView title;
+    private TextView headerTitleView;
 
     public HeaderViewHolder(View itemView) {
         super(itemView);
-        title = itemView.findViewById(R.id.header_title);
-        expandView = itemView.findViewById(R.id.expand_image);
-        infoView = itemView.findViewById(R.id.info);
+        headerTitleView = itemView.findViewById(R.id.headerTitleView);
+        expandImageView = itemView.findViewById(R.id.expandImageView);
+        infoView = itemView.findViewById(R.id.infoView);
     }
 
     @Override
     protected void expand(boolean expand) {
         if (expand) {
-            expandView.setImageResource(R.drawable.ic_expand_less_24);
+            expandImageView.setImageResource(R.drawable.ic_expand_less_24);
         } else {
-            expandView.setImageResource(R.drawable.ic_expand_more_24);
+            expandImageView.setImageResource(R.drawable.ic_expand_more_24);
         }
     }
 
     @Override
     protected void bind(BaseHeader header) {
         Header h = (Header) header;
-        title.setText(h.getTitle());
+        headerTitleView.setText(h.getTitle());
         expand(h.isExpand());
 
         infoView.setOnClickListener(

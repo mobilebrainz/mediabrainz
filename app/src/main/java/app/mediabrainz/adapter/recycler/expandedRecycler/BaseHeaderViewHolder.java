@@ -12,12 +12,12 @@ public abstract class BaseHeaderViewHolder extends RecyclerView.ViewHolder {
         void onClick(BaseHeader header);
     }
 
-    protected View container;
+    protected View containerView;
     protected BaseHeader header;
 
     public BaseHeaderViewHolder(View itemView) {
         super(itemView);
-        container = itemView.findViewById(R.id.container);
+        containerView = itemView.findViewById(R.id.containerView);
     }
 
     protected abstract void bind(BaseHeader header);
@@ -40,10 +40,10 @@ public abstract class BaseHeaderViewHolder extends RecyclerView.ViewHolder {
     public void setVisibility(boolean visible) {
         header.setVisible(visible);
         setVisibility();
-        //container.setVisibility(visible ? View.VISIBLE : View.GONE);
+        //containerView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void setVisibility() {
-        container.setVisibility(header.isVisible() ? View.VISIBLE : View.GONE);
+        containerView.setVisibility(header.isVisible() ? View.VISIBLE : View.GONE);
     }
 }

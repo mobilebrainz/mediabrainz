@@ -41,27 +41,27 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_release_group_collection;
 
-        private ImageView coverart;
-        private ProgressBar progressLoading;
-        private TextView releaseGroupName;
-        private RatingBar userRating;
+        private ImageView coverartView;
+        private ProgressBar imageProgressView;
+        private TextView releaseGroupNameView;
+        private RatingBar userRatingView;
         private TextView allRatingView;
-        private ImageView deleteBtn;
-        private LinearLayout ratingContainer;
+        private ImageView deleteView;
+        private LinearLayout ratingContainerView;
         private TextView artistNameView;
         private TextView typeView;
 
         private PagedReleaseGroupCollectionViewHolder(View v) {
             super(v);
-            coverart = v.findViewById(R.id.rg_image);
-            progressLoading = v.findViewById(R.id.image_loading);
-            releaseGroupName = v.findViewById(R.id.rg_name);
-            deleteBtn = v.findViewById(R.id.delete);
-            userRating = v.findViewById(R.id.user_rating);
-            allRatingView = v.findViewById(R.id.all_rating);
-            ratingContainer = v.findViewById(R.id.rating_container);
-            artistNameView = v.findViewById(R.id.artist_name);
-            typeView = v.findViewById(R.id.rg_type);
+            coverartView = v.findViewById(R.id.coverartView);
+            imageProgressView = v.findViewById(R.id.imageProgressView);
+            releaseGroupNameView = v.findViewById(R.id.releaseGroupNameView);
+            deleteView = v.findViewById(R.id.deleteView);
+            userRatingView = v.findViewById(R.id.userRatingView);
+            allRatingView = v.findViewById(R.id.allRatingView);
+            ratingContainerView = v.findViewById(R.id.ratingContainerView);
+            artistNameView = v.findViewById(R.id.artistNameView);
+            typeView = v.findViewById(R.id.typeView);
         }
 
         public static PagedReleaseGroupCollectionViewHolder create(ViewGroup parent) {
@@ -71,8 +71,8 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
         }
 
         private void bindTo(ReleaseGroup releaseGroup, boolean isPrivate) {
-            deleteBtn.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
-            releaseGroupName.setText(releaseGroup.getTitle());
+            deleteView.setVisibility(isPrivate ? View.VISIBLE : View.GONE);
+            releaseGroupNameView.setText(releaseGroup.getTitle());
             List<Artist.ArtistCredit> artistCredits = releaseGroup.getArtistCredits();
             if (artistCredits != null && !artistCredits.isEmpty()) {
                 artistNameView.setText(artistCredits.get(0).getArtist().getName());
@@ -85,9 +85,9 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
             if (MediaBrainzApp.getPreferences().isLoadImagesEnabled()) {
                 loadImage(releaseGroup.getId());
             } else {
-                coverart.setVisibility(View.VISIBLE);
+                coverartView.setVisibility(View.VISIBLE);
             }
-            ratingContainer.setOnClickListener(v -> showRatingBar(releaseGroup));
+            ratingContainerView.setOnClickListener(v -> showRatingBar(releaseGroup));
         }
 
         private void showRatingBar(ReleaseGroup releaseGroup) {
@@ -97,23 +97,23 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
                 Window win = alertDialog.getWindow();
                 if (win != null) {
                     win.setContentView(R.layout.dialog_rating_bar);
-                    RatingBar rb = win.findViewById(R.id.rating_bar);
-                    View ratingProgress = win.findViewById(R.id.loading);
-                    rb.setRating(userRating.getRating());
-                    TextView title = win.findViewById(R.id.title_text);
-                    title.setText(itemView.getResources().getString(R.string.rate_entity, releaseGroup.getTitle()));
+                    RatingBar rb = win.findViewById(R.id.ratingBar);
+                    View progressView = win.findViewById(R.id.progressView);
+                    rb.setRating(userRatingView.getRating());
+                    TextView titleTextView = win.findViewById(R.id.titleTextView);
+                    titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, releaseGroup.getTitle()));
 
                     rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
-                        if (oauth.hasAccount() && ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                            ratingProgress.setVisibility(View.VISIBLE);
+                        if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                            progressView.setVisibility(View.VISIBLE);
                             rb.setAlpha(0.3F);
                             api.postAlbumRating(
                                     releaseGroup.getId(), rating,
                                     metadata -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         if (metadata.getMessage().getText().equals("OK")) {
-                                            userRating.setRating(rating);
+                                            userRatingView.setRating(rating);
                                             api.getAlbumRatings(
                                                     releaseGroup.getId(),
                                                     this::setAllRating,
@@ -124,7 +124,7 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
                                         alertDialog.dismiss();
                                     },
                                     t -> {
-                                        ratingProgress.setVisibility(View.INVISIBLE);
+                                        progressView.setVisibility(View.INVISIBLE);
                                         rb.setAlpha(1.0F);
                                         ShowUtil.showToast(itemView.getContext(), t.getMessage());
                                         alertDialog.dismiss();
@@ -158,7 +158,7 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
             if (rating != null) {
                 Float r = rating.getValue();
                 if (r == null) r = 0f;
-                userRating.setRating(r);
+                userRatingView.setRating(r);
             }
         }
 
@@ -170,7 +170,7 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
                         CoverArtImage.Thumbnails thumbnails = coverArt.getFrontThumbnails();
                         if (thumbnails != null && !TextUtils.isEmpty(thumbnails.getSmall())) {
                             Picasso.get().load(thumbnails.getSmall()).fit()
-                                    .into(coverart, new Callback() {
+                                    .into(coverartView, new Callback() {
                                         @Override
                                         public void onSuccess() {
                                             showImageProgressLoading(false);
@@ -190,16 +190,16 @@ public class PagedReleaseGroupCollectionAdapter extends BasePagedListAdapter<Rel
 
         private void showImageProgressLoading(boolean show) {
             if (show) {
-                coverart.setVisibility(View.INVISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
+                coverartView.setVisibility(View.INVISIBLE);
+                imageProgressView.setVisibility(View.VISIBLE);
             } else {
-                progressLoading.setVisibility(View.GONE);
-                coverart.setVisibility(View.VISIBLE);
+                imageProgressView.setVisibility(View.GONE);
+                coverartView.setVisibility(View.VISIBLE);
             }
         }
 
         public void setOnDeleteListener(OnDeleteListener listener) {
-            deleteBtn.setOnClickListener(v -> {
+            deleteView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onDelete(getAdapterPosition());
                 }

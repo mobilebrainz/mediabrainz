@@ -20,8 +20,8 @@ public class UserTagsAdapter extends BaseRecyclerViewAdapter<UserTagsAdapter.Use
 
         static final int VIEW_HOLDER_LAYOUT = R.layout.card_user_tag;
 
-        private TextView tagName;
-        private TextView tagCount;
+        private TextView tagNameView;
+        private TextView tagCountView;
 
         public static UserTagsViewHolder create(ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -31,13 +31,13 @@ public class UserTagsAdapter extends BaseRecyclerViewAdapter<UserTagsAdapter.Use
 
         private UserTagsViewHolder(View v) {
             super(v);
-            tagName = v.findViewById(R.id.tag_name);
-            tagCount = v.findViewById(R.id.tag_count);
+            tagNameView = v.findViewById(R.id.tagNameView);
+            tagCountView = v.findViewById(R.id.tagCountView);
         }
 
         public void bindTo(Tag tag) {
-            tagName.setText(tag.getName());
-            tagCount.setText(String.valueOf(tag.getCount()));
+            tagNameView.setText(tag.getName());
+            tagCountView.setText(String.valueOf(tag.getCount()));
         }
     }
 

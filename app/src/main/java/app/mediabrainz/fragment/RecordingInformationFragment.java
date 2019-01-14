@@ -25,9 +25,9 @@ public class RecordingInformationFragment extends Fragment {
 
     private Recording recording;
 
-    private TextView recordingName;
-    private TextView length;
-    private TextView artistName;
+    private TextView recordingNameView;
+    private TextView lengthView;
+    private TextView artistNameView;
 
     public static RecordingInformationFragment newInstance() {
         Bundle args = new Bundle();
@@ -40,9 +40,9 @@ public class RecordingInformationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_recording_information, container, false);
 
-        recordingName = layout.findViewById(R.id.recording_name);
-        length = layout.findViewById(R.id.length);
-        artistName = layout.findViewById(R.id.artist_name);
+        recordingNameView = layout.findViewById(R.id.recordingNameView);
+        lengthView = layout.findViewById(R.id.lengthView);
+        artistNameView = layout.findViewById(R.id.artistNameView);
 
         load();
         return layout;
@@ -60,10 +60,10 @@ public class RecordingInformationFragment extends Fragment {
     private void setRecordingName() {
         String name = recording.getTitle();
         if (!TextUtils.isEmpty(name)) {
-            recordingName.setVisibility(View.VISIBLE);
-            recordingName.setText(name);
+            recordingNameView.setVisibility(View.VISIBLE);
+            recordingNameView.setText(name);
         } else {
-            recordingName.setVisibility(View.GONE);
+            recordingNameView.setVisibility(View.GONE);
         }
     }
 
@@ -75,20 +75,20 @@ public class RecordingInformationFragment extends Fragment {
         }
         String artistNamesString = ApiUtils.getStringFromList(names, ", ");
         if (!TextUtils.isEmpty(artistNamesString)) {
-            artistName.setVisibility(View.VISIBLE);
-            artistName.setText(artistNamesString);
+            artistNameView.setVisibility(View.VISIBLE);
+            artistNameView.setText(artistNamesString);
         } else {
-            artistName.setVisibility(View.GONE);
+            artistNameView.setVisibility(View.GONE);
         }
     }
 
     private void setLength() {
         Long len = recording.getLength();
         if (len != null) {
-            length.setVisibility(View.VISIBLE);
-            length.setText(MbUtils.formatTime(len));
+            lengthView.setVisibility(View.VISIBLE);
+            lengthView.setText(MbUtils.formatTime(len));
         } else {
-            length.setVisibility(View.GONE);
+            lengthView.setVisibility(View.GONE);
         }
     }
 

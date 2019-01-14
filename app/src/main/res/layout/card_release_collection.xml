@@ -15,12 +15,12 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:id="@+id/frameLayout"
+            android:id="@+id/frameView"
             android:layout_width="64dp"
             android:layout_height="64dp">
 
             <ProgressBar
-                android:id="@+id/image_loading"
+                android:id="@+id/imageProgressView"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/release_image"
+                android:id="@+id/releaseImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_album_24_dark"
@@ -45,7 +45,7 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/release_name"
+                android:id="@+id/releaseNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -54,7 +54,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/artist_name"
+                android:id="@+id/artistNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -65,7 +65,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/delete"
+            android:id="@+id/deleteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

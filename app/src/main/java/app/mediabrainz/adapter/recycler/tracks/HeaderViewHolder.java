@@ -12,31 +12,31 @@ import app.mediabrainz.util.MbUtils;
 
 public class HeaderViewHolder extends BaseHeaderViewHolder {
 
-    private ImageView expandView;
-    private TextView title;
-    private TextView details;
+    private ImageView expandImageView;
+    private TextView headerTitleView;
+    private TextView detailsView;
 
     public HeaderViewHolder(View itemView) {
         super(itemView);
-        title = itemView.findViewById(R.id.header_title);
-        expandView = itemView.findViewById(R.id.expand_image);
-        details = itemView.findViewById(R.id.details);
+        headerTitleView = itemView.findViewById(R.id.headerTitleView);
+        expandImageView = itemView.findViewById(R.id.expandImageView);
+        detailsView = itemView.findViewById(R.id.detailsView);
     }
 
     @Override
     protected void expand(boolean expand) {
         if (expand) {
-            expandView.setImageResource(R.drawable.ic_expand_less_24);
+            expandImageView.setImageResource(R.drawable.ic_expand_less_24);
         } else {
-            expandView.setImageResource(R.drawable.ic_expand_more_24);
+            expandImageView.setImageResource(R.drawable.ic_expand_more_24);
         }
     }
 
     @Override
     protected void bind(BaseHeader header) {
         Header h = (Header) header;
-        title.setText(h.getTitle());
-        details.setText(itemView.getResources().getString(
+        headerTitleView.setText(h.getTitle());
+        detailsView.setText(itemView.getResources().getString(
                 R.string.release_tracks_details,
                 MbUtils.formatTime(h.getLength()),
                 h.getSize()));

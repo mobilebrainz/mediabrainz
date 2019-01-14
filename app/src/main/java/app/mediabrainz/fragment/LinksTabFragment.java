@@ -23,8 +23,8 @@ import app.mediabrainz.communicator.GetUrlsCommunicator;
 
 public class LinksTabFragment extends Fragment {
 
-    private View noresults;
-    private RecyclerView linksRecycler;
+    private View noresultsView;
+    private RecyclerView recyclerView;
     private List<Url> urls;
 
     public static LinksTabFragment newInstance() {
@@ -36,10 +36,10 @@ public class LinksTabFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_links_tab, container, false);
+        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        noresults = layout.findViewById(R.id.noresults);
-        linksRecycler = layout.findViewById(R.id.links_recycler);
+        noresultsView = layout.findViewById(R.id.noresultsView);
+        recyclerView = layout.findViewById(R.id.recyclerView);
 
         load();
         return layout;
@@ -50,23 +50,23 @@ public class LinksTabFragment extends Fragment {
         if (urls != null) {
             Collections.sort(urls);
             if (urls.isEmpty()) {
-                noresults.setVisibility(View.VISIBLE);
+                noresultsView.setVisibility(View.VISIBLE);
             } else {
-                noresults.setVisibility(View.GONE);
+                noresultsView.setVisibility(View.GONE);
                 configLinksRecycler();
                 LinkAdapter adapter = new LinkAdapter(urls);
                 adapter.setHolderClickListener(position ->
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urls.get(position).getResource())))
                 );
-                linksRecycler.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
             }
         }
     }
 
     private void configLinksRecycler() {
-        linksRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        linksRecycler.setItemViewCacheSize(100);
-        linksRecycler.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemViewCacheSize(100);
+        recyclerView.setHasFixedSize(true);
     }
 
 }

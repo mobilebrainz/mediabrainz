@@ -101,7 +101,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         } else {
             releaseMbid = getIntent().getStringExtra(RELEASE_MBID);
         }
-        floatingActionButton = findViewById(R.id.floatin_action_btn);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
         showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.ADD_TO_COLLECTION);
 
@@ -158,27 +158,27 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     @Override
     protected BottomNavigationView.OnNavigationItemSelectedListener initOnNavigationItemSelectedListener() {
         return item -> {
-            frameContainer.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            frameContainerView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
             switch (item.getItemId()) {
                 case R.id.release_nav_tracks:
-                    viewPager.setCurrentItem(TAB_TRACKS_POS);
+                    pagerView.setCurrentItem(TAB_TRACKS_POS);
                     break;
 
                 case R.id.release_nav_info:
-                    viewPager.setCurrentItem(TAB_INFO_POS);
+                    pagerView.setCurrentItem(TAB_INFO_POS);
                     break;
 
                 case R.id.release_nav_releases:
-                    viewPager.setCurrentItem(TAB_RELEASES_POS);
+                    pagerView.setCurrentItem(TAB_RELEASES_POS);
                     break;
 
                 case R.id.release_nav_ratings:
-                    viewPager.setCurrentItem(TAB_RATINGS_POS);
+                    pagerView.setCurrentItem(TAB_RATINGS_POS);
                     break;
 
                 case R.id.release_nav_tags:
-                    viewPager.setCurrentItem(TAB_TAGS_POS);
+                    pagerView.setCurrentItem(TAB_TAGS_POS);
                     break;
             }
             return true;
@@ -201,11 +201,11 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                 releaseGroup = rg;
                                 if (!rg.getArtistCredits().isEmpty()) {
                                     Artist.ArtistCredit artistCredit = rg.getArtistCredits().get(0);
-                                    topTitle.setText(artistCredit.getName());
-                                    topTitle.setOnClickListener(v -> onArtist(artistCredit.getArtist().getId()));
+                                    toolbarTopTitleView.setText(artistCredit.getName());
+                                    toolbarTopTitleView.setOnClickListener(v -> onArtist(artistCredit.getArtist().getId()));
                                 }
                                 if (!TextUtils.isEmpty(rg.getTitle())) {
-                                    bottomTitle.setText(rg.getTitle());
+                                    toolbarBottomTitleView.setText(rg.getTitle());
                                 }
                                 release.setReleaseGroup(rg);
                                 configBottomNavigationPager();
@@ -262,8 +262,8 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                 String[] entityTypes = {RELEASE_GROUP_ENTITY_TYPE, RELEASE_ENTITY_TYPE};
 
                                 View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-                                TextView titleText = titleView.findViewById(R.id.title_text);
-                                titleText.setText(R.string.release_collection_selector);
+                                TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+                                titleTextView.setText(R.string.release_collection_selector);
 
                                 new AlertDialog.Builder(this)
                                         .setCustomTitle(titleView)

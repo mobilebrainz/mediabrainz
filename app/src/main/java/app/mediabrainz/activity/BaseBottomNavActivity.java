@@ -27,13 +27,13 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
     protected boolean isLoading;
     protected boolean isError;
 
-    protected BottomNavigationView bottomNavigationView;
-    protected TextView topTitle;
-    protected TextView bottomTitle;
-    protected FrameLayout frameContainer;
-    protected View error;
-    protected View loading;
-    protected CustomViewPager viewPager;
+    protected BottomNavigationView bottomNavView;
+    protected TextView toolbarTopTitleView;
+    protected TextView toolbarBottomTitleView;
+    protected FrameLayout frameContainerView;
+    protected View errorView;
+    protected View progressView;
+    protected CustomViewPager pagerView;
     protected BaseFragmentPagerAdapter bottomNavigationPagerAdapter;
 
     @Override
@@ -54,32 +54,32 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
             fragmentViewId = getIntent().getIntExtra(FRAGMENT_VIEW, -1);
         }
 
-        error = findViewById(R.id.error);
-        loading = findViewById(R.id.loading);
-        frameContainer = findViewById(R.id.frame_container);
-        viewPager = findViewById(R.id.viewpager);
-        topTitle = findViewById(R.id.toolbar_title_top);
-        bottomTitle = findViewById(R.id.toolbar_title_bottom);
+        errorView = findViewById(R.id.errorView);
+        progressView = findViewById(R.id.progressView);
+        frameContainerView = findViewById(R.id.frameContainerView);
+        pagerView = findViewById(R.id.pagerView);
+        toolbarTopTitleView = findViewById(R.id.toolbarTopTitleView);
+        toolbarBottomTitleView = findViewById(R.id.toolbarBottomTitleView);
 
         onCreateActivity(savedInstanceState);
 
-        bottomNavigationView = findViewById(R.id.bottom_nav);
-        bottomNavigationView.inflateMenu(initBottomMenuId());
-        bottomNavigationView.setOnNavigationItemSelectedListener(initOnNavigationItemSelectedListener());
+        bottomNavView = findViewById(R.id.bottomNavView);
+        bottomNavView.inflateMenu(initBottomMenuId());
+        bottomNavView.setOnNavigationItemSelectedListener(initOnNavigationItemSelectedListener());
 
         // attaching behaviours - hide / showFloatingActionButton on scroll
-        ((CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams()).setBehavior(new BottomNavigationBehavior());
+        ((CoordinatorLayout.LayoutParams) bottomNavView.getLayoutParams()).setBehavior(new BottomNavigationBehavior());
 
         load();
     }
 
     protected void configBottomNavigationPager() {
         bottomNavigationPagerAdapter = initBottomNavigationPagerAdapter();
-        viewPager.setAdapter(bottomNavigationPagerAdapter);
-        viewPager.setPagingEnabled(false);
+        pagerView.setAdapter(bottomNavigationPagerAdapter);
+        pagerView.setPagingEnabled(false);
         // lazy loading of pager fragments
-        viewPager.setOffscreenPageLimit(bottomNavigationPagerAdapter.getCount());
-        bottomNavigationView.setSelectedItemId(getNavViewId());
+        pagerView.setOffscreenPageLimit(bottomNavigationPagerAdapter.getCount());
+        bottomNavView.setSelectedItemId(getNavViewId());
     }
 
     @Override
@@ -114,26 +114,26 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
     protected void viewProgressLoading(boolean isView) {
         if (isView) {
             isLoading = true;
-            frameContainer.setAlpha(0.3F);
-            viewPager.setAlpha(0.3F);
-            loading.setVisibility(View.VISIBLE);
+            frameContainerView.setAlpha(0.3F);
+            pagerView.setAlpha(0.3F);
+            progressView.setVisibility(View.VISIBLE);
         } else {
             isLoading = false;
-            frameContainer.setAlpha(1.0F);
-            viewPager.setAlpha(1.0F);
-            loading.setVisibility(View.GONE);
+            frameContainerView.setAlpha(1.0F);
+            pagerView.setAlpha(1.0F);
+            progressView.setVisibility(View.GONE);
         }
     }
 
     protected void viewError(boolean isView) {
         if (isView) {
             isError = true;
-            viewPager.setVisibility(View.INVISIBLE);
-            error.setVisibility(View.VISIBLE);
+            pagerView.setVisibility(View.INVISIBLE);
+            errorView.setVisibility(View.VISIBLE);
         } else {
             isError = false;
-            error.setVisibility(View.GONE);
-            viewPager.setVisibility(View.VISIBLE);
+            errorView.setVisibility(View.GONE);
+            pagerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -141,26 +141,26 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
         //ShowUtil.showError(this, t);
         viewProgressLoading(false);
         viewError(true);
-        error.findViewById(R.id.retry_button).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
     }
 
     protected void loadFragment(Fragment fragment) {
-        viewPager.setVisibility(View.INVISIBLE);
-        frameContainer.setVisibility(View.VISIBLE);
+        pagerView.setVisibility(View.INVISIBLE);
+        frameContainerView.setVisibility(View.VISIBLE);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, fragment);
+        transaction.replace(R.id.frameContainerView, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     @Override
-    public TextView getTopTitle() {
-        return topTitle;
+    public TextView getToolbarTopTitleView() {
+        return toolbarTopTitleView;
     }
 
     @Override
-    public TextView getBottomTitle() {
-        return bottomTitle;
+    public TextView getToolbarBottomTitleView() {
+        return toolbarBottomTitleView;
     }
 
     public int getNavViewId() {

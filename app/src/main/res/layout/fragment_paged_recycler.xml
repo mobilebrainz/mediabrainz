@@ -10,30 +10,23 @@
         android:layout_height="match_parent">
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/paged_recycler"
+                android:id="@+id/pagedRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="5dp"
                 android:paddingStart="5dp"
                 android:paddingTop="5dp"
+                android:paddingEnd="5dp"
                 android:scrollbars="vertical"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <include
-            android:id="@+id/item_network_state"
-            layout="@layout/item_network_state"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
         <ProgressBar
-            android:id="@+id/loading"
+            android:id="@+id/progressView"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,12 +34,28 @@
             android:layout_marginTop="32dp"
             android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/noresultsView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/no_results"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone"/>
+
         <include
-            android:id="@+id/error"
+            android:id="@+id/errorView"
             layout="@layout/layout_retry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
+            android:visibility="gone"/>
+
+        <include
+            android:id="@+id/itemNetworkStateView"
+            layout="@layout/item_network_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="gone"/>
 
     </FrameLayout>

@@ -33,13 +33,13 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
     private ReleasesViewModel releasesViewModel;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView pagedRecycler;
+    private RecyclerView pagedRecyclerView;
     private PagedReleaseAdapter adapter;
 
     private TextView errorMessageTextView;
     private Button retryLoadingButton;
     private ProgressBar loadingProgressBar;
-    private View itemNetworkState;
+    private View itemNetworkStateView;
 
     public static PagedReleaseDialogFragment newInstance(String mbid) {
         Bundle args = new Bundle();
@@ -62,11 +62,11 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
 
         albumMbid = getArguments().getString(RG_MBID);
 
-        pagedRecycler = layout.findViewById(R.id.paged_recycler);
-        swipeRefreshLayout = layout.findViewById(R.id.swipe_refresh_layout);
+        pagedRecyclerView = layout.findViewById(R.id.pagedRecyclerView);
+        swipeRefreshLayout = layout.findViewById(R.id.swipeRefreshLayout);
         errorMessageTextView = layout.findViewById(R.id.errorMessageTextView);
         loadingProgressBar = layout.findViewById(R.id.loadingProgressBar);
-        itemNetworkState = layout.findViewById(R.id.item_network_state);
+        itemNetworkStateView = layout.findViewById(R.id.itemNetworkStateView);
 
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
@@ -106,12 +106,12 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
         releasesViewModel.realeseLiveData.observe(this, adapter::submitList);
         releasesViewModel.getNetworkState().observe(this, adapter::setNetworkState);
 
-        pagedRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        pagedRecycler.setNestedScrollingEnabled(true);
-        pagedRecycler.setItemViewCacheSize(100);
-        pagedRecycler.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        pagedRecycler.setHasFixedSize(true);
-        pagedRecycler.setAdapter(adapter);
+        pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        pagedRecyclerView.setNestedScrollingEnabled(true);
+        pagedRecyclerView.setItemViewCacheSize(100);
+        pagedRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        pagedRecyclerView.setHasFixedSize(true);
+        pagedRecyclerView.setAdapter(adapter);
 
         initSwipeToRefresh();
     }
@@ -121,7 +121,7 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
             if (networkState != null) {
 
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
-                    itemNetworkState.setVisibility(View.VISIBLE);
+                    itemNetworkStateView.setVisibility(View.VISIBLE);
 
                     errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
                     if (networkState.getMessage() != null) {
@@ -131,7 +131,7 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
                     loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
-                    pagedRecycler.scrollToPosition(0);
+                    pagedRecyclerView.scrollToPosition(0);
                 }
             }
         });
@@ -139,7 +139,7 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
         swipeRefreshLayout.setOnRefreshListener(() -> {
             releasesViewModel.refresh();
             swipeRefreshLayout.setRefreshing(false);
-            pagedRecycler.scrollToPosition(0);
+            pagedRecyclerView.scrollToPosition(0);
         });
     }
 

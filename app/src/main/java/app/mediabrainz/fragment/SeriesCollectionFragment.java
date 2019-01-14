@@ -24,7 +24,7 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public void load() {
-        error.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
 
         if (collection != null) {
             adapter = new PagedSeriesCollectionAdapter(this, isPrivate);
@@ -39,7 +39,7 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
             viewModel.seriesCollectionLiveData.observe(this, adapter::submitList);
             viewModel.getNetworkState().observe(this, adapter::setNetworkState);
 
-            pagedRecycler.setAdapter(adapter);
+            pagedRecyclerView.setAdapter(adapter);
 
             initSwipeToRefresh();
         }
@@ -49,7 +49,7 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
         viewModel.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
-                    itemNetworkState.setVisibility(View.VISIBLE);
+                    itemNetworkStateView.setVisibility(View.VISIBLE);
 
                     errorMessageTextView.setVisibility(networkState.getMessage() != null ? View.VISIBLE : View.GONE);
                     if (networkState.getMessage() != null) {
@@ -60,7 +60,7 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
                     loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
-                    pagedRecycler.scrollToPosition(0);
+                    pagedRecyclerView.scrollToPosition(0);
                 }
             }
         });
@@ -68,7 +68,7 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             viewModel.refresh();
             swipeRefreshLayout.setRefreshing(false);
-            pagedRecycler.scrollToPosition(0);
+            pagedRecyclerView.scrollToPosition(0);
         });
     }
 

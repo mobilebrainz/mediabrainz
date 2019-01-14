@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/release_name"
+            android:id="@+id/releaseNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -26,14 +26,14 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/type_year"
+            android:id="@+id/releaseTypeYearView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="14sp"/>
 
         <TextView
-            android:id="@+id/artist_name"
+            android:id="@+id/artistNameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -58,7 +58,7 @@
             android:textStyle="bold"/>
 
         <TableLayout
-            android:id="@+id/release_info_table"
+            android:id="@+id/releaseInfoTableView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="10dp"

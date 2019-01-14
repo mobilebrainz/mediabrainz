@@ -1,5 +1,6 @@
 package app.mediabrainz.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -36,15 +37,16 @@ import static app.mediabrainz.MediaBrainzApp.SUPPORT_MAIL;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
+
 public abstract class BaseActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         SearchView.OnQueryTextListener {
 
     private final int DEFAULT_OPTIONS_MENU = R.menu.base_top_nav;
 
-    protected DrawerLayout drawer;
-    protected NavigationView navigationView;
-    protected Toolbar toolbar;
+    protected DrawerLayout drawerView;
+    protected NavigationView navView;
+    protected Toolbar toolbarView;
 
     abstract protected int initContentLayout();
 
@@ -53,20 +55,20 @@ public abstract class BaseActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(initContentLayout());
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbarView = findViewById(R.id.toolbarView);
+        setSupportActionBar(toolbarView);
 
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navView = findViewById(R.id.navView);
+        navView.setNavigationItemSelectedListener(this);
 
-        drawer = findViewById(R.id.drawer_layout);
+        drawerView = findViewById(R.id.drawerView);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
-                drawer,
-                toolbar,
+                drawerView,
+                toolbarView,
                 R.string.nav_open_drawer,
                 R.string.nav_close_drawer);
-        drawer.addDrawerListener(toggle);
+        drawerView.addDrawerListener(toggle);
         toggle.syncState();
     }
 
@@ -74,14 +76,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         if (oauth.hasAccount()) {
-            if (navigationView.getMenu().findItem(R.id.nav_user_logout) == null) {
-                navigationView.getMenu().clear();
-                navigationView.inflateMenu(R.menu.drawer_nav);
+            if (navView.getMenu().findItem(R.id.nav_user_logout) == null) {
+                navView.getMenu().clear();
+                navView.inflateMenu(R.menu.drawer_nav);
             }
         } else {
-            if (navigationView.getMenu().findItem(R.id.nav_user_login) == null) {
-                navigationView.getMenu().clear();
-                navigationView.inflateMenu(R.menu.guest_drawer_nav);
+            if (navView.getMenu().findItem(R.id.nav_user_login) == null) {
+                navView.getMenu().clear();
+                navView.inflateMenu(R.menu.guest_drawer_nav);
             }
         }
     }
@@ -153,7 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 ActivityFactory.startAboutActivity(this);
                 break;
         }
-        drawer.closeDrawer(GravityCompat.START);
+        drawerView.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -194,13 +196,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerView.isDrawerOpen(GravityCompat.START)) {
+            drawerView.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(getOptionsMenu(), menu);
@@ -211,6 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         return true;
     }
 
+    @SuppressLint("RestrictedApi")
     private void createSearchOptionsMenu(Menu menu) {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();

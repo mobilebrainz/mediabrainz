@@ -12,7 +12,6 @@
         android:paddingStart="6dp">
 
         <TextView
-            android:id="@+id/collection_create_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -27,7 +26,7 @@
             android:background="@color/card_background">
 
             <EditText
-                android:id="@+id/collection_name"
+                android:id="@+id/collectionNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/collection_create_name"
@@ -48,7 +47,7 @@
             android:paddingTop="4dp">
 
             <Spinner
-                android:id="@+id/collection_type"
+                android:id="@+id/collectionTypeSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dialog"
@@ -62,7 +61,7 @@
             android:background="@color/card_background">
 
             <EditText
-                android:id="@+id/collection_description"
+                android:id="@+id/collectionDescriptionView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -75,7 +74,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <CheckBox
-            android:id="@+id/collection_public"
+            android:id="@+id/collectionPublicCheckBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -84,7 +83,7 @@
             android:textSize="16sp"/>
 
         <Button
-            android:id="@+id/collection_create_btn"
+            android:id="@+id/collectionCreateButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

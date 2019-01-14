@@ -42,23 +42,23 @@ public class ItemViewHolder extends BaseItemViewHolder {
         this.onPlayYoutubeListener = onPlayYoutubeListener;
     }
 
-    private TextView num;
-    private TextView name;
-    private TextView length;
-    private RatingBar userRating;
+    private TextView trackNumView;
+    private TextView trackNameView;
+    private TextView trackLengthView;
+    private RatingBar userRatingView;
     private TextView allRatingView;
-    private LinearLayout ratingContainer;
+    private LinearLayout ratingContainerView;
     private ImageView playYoutubeView;
 
     public ItemViewHolder(View itemView, boolean visible) {
         super(itemView, visible);
-        num = itemView.findViewById(R.id.track_num);
-        name = itemView.findViewById(R.id.track_name);
-        length = itemView.findViewById(R.id.track_length);
-        userRating = itemView.findViewById(R.id.user_rating);
-        allRatingView = itemView.findViewById(R.id.all_rating);
-        ratingContainer = itemView.findViewById(R.id.rating_container);
-        playYoutubeView = itemView.findViewById(R.id.play_youtube);
+        trackNumView = itemView.findViewById(R.id.trackNumView);
+        trackNameView = itemView.findViewById(R.id.trackNameView);
+        trackLengthView = itemView.findViewById(R.id.trackLengthView);
+        userRatingView = itemView.findViewById(R.id.userRatingView);
+        allRatingView = itemView.findViewById(R.id.allRatingView);
+        ratingContainerView = itemView.findViewById(R.id.ratingContainerView);
+        playYoutubeView = itemView.findViewById(R.id.playYoutubeView);
     }
 
     public void bindView(Media.Track track) {
@@ -73,14 +73,14 @@ public class ItemViewHolder extends BaseItemViewHolder {
             }
         });
 
-        num.setText(track.getNumber());
-        name.setText(track.getTitle());
-        length.setText(MbUtils.formatTime(track.getLength()));
+        trackNumView.setText(track.getNumber());
+        trackNameView.setText(track.getTitle());
+        trackLengthView.setText(MbUtils.formatTime(track.getLength()));
 
         setUserRating(track.getRecording());
         setAllRating(track.getRecording());
 
-        ratingContainer.setOnClickListener(v -> showRatingBar(track.getRecording()));
+        ratingContainerView.setOnClickListener(v -> showRatingBar(track.getRecording()));
     }
 
     private void showRatingBar(Recording recording) {
@@ -90,23 +90,23 @@ public class ItemViewHolder extends BaseItemViewHolder {
             Window win = alertDialog.getWindow();
             if (win != null) {
                 win.setContentView(R.layout.dialog_rating_bar);
-                RatingBar rb = win.findViewById(R.id.rating_bar);
-                rb.setRating(userRating.getRating());
-                View ratingProgress = win.findViewById(R.id.loading);
-                TextView title = win.findViewById(R.id.title_text);
-                title.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
+                RatingBar rb = win.findViewById(R.id.ratingBar);
+                rb.setRating(userRatingView.getRating());
+                View progressView = win.findViewById(R.id.progressView);
+                TextView titleTextView = win.findViewById(R.id.titleTextView);
+                titleTextView.setText(itemView.getResources().getString(R.string.rate_entity, recording.getTitle()));
 
                 rb.setOnRatingBarChangeListener((RatingBar ratingBar, float rating, boolean fromUser) -> {
-                    if (oauth.hasAccount() && ratingProgress.getVisibility() == View.INVISIBLE && fromUser) {
-                        ratingProgress.setVisibility(View.VISIBLE);
+                    if (oauth.hasAccount() && progressView.getVisibility() == View.INVISIBLE && fromUser) {
+                        progressView.setVisibility(View.VISIBLE);
                         rb.setAlpha(0.3F);
                         api.postRecordingRating(
                                 recording.getId(), rating,
                                 metadata -> {
-                                    ratingProgress.setVisibility(View.INVISIBLE);
+                                    progressView.setVisibility(View.INVISIBLE);
                                     rb.setAlpha(1.0F);
                                     if (metadata.getMessage().getText().equals("OK")) {
-                                        userRating.setRating(rating);
+                                        userRatingView.setRating(rating);
                                         api.getRecordingRatings(
                                                 recording.getId(),
                                                 this::setAllRating,
@@ -117,7 +117,7 @@ public class ItemViewHolder extends BaseItemViewHolder {
                                     alertDialog.dismiss();
                                 },
                                 t -> {
-                                    ratingProgress.setVisibility(View.INVISIBLE);
+                                    progressView.setVisibility(View.INVISIBLE);
                                     rb.setAlpha(1.0F);
                                     ShowUtil.showToast(itemView.getContext(), t.getMessage());
                                     alertDialog.dismiss();
@@ -150,7 +150,7 @@ public class ItemViewHolder extends BaseItemViewHolder {
         if (rating != null) {
             Float r = rating.getValue();
             if (r == null) r = 0f;
-            userRating.setRating(r);
+            userRatingView.setRating(r);
         }
     }
 
