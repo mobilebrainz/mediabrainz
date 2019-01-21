@@ -22,14 +22,14 @@ import app.mediabrainz.api.model.Release;
 import app.mediabrainz.communicator.GetRecordingCommunicator;
 import app.mediabrainz.communicator.GetReleaseCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
-import app.mediabrainz.data.Status;
-import app.mediabrainz.ui.ReleasesViewModel;
+import app.mediabrainz.viewModels.Status;
+import app.mediabrainz.viewModels.ReleasesVM;
 
 
 public class ReleasesFragment extends LazyFragment implements RetryCallback {
 
     private int type = 1;
-    private ReleasesViewModel releasesViewModel;
+    private ReleasesVM releasesVM;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView pagedRecyclerView;
@@ -98,10 +98,10 @@ public class ReleasesFragment extends LazyFragment implements RetryCallback {
             adapter = new PagedReleaseAdapter(this, releaseId);
             adapter.setHolderClickListener(r -> ((OnReleaseCommunicator) getContext()).onRelease(r.getId()));
 
-            releasesViewModel = ViewModelProviders.of(this).get(ReleasesViewModel.class);
-            releasesViewModel.load(mbid, entityType);
-            releasesViewModel.realeseLiveData.observe(this, adapter::submitList);
-            releasesViewModel.getNetworkState().observe(this, adapter::setNetworkState);
+            releasesVM = ViewModelProviders.of(this).get(ReleasesVM.class);
+            releasesVM.load(mbid, entityType);
+            releasesVM.realesesLiveData.observe(this, adapter::submitList);
+            releasesVM.getNetworkState().observe(this, adapter::setNetworkState);
 
             pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             pagedRecyclerView.setNestedScrollingEnabled(true);
@@ -114,7 +114,7 @@ public class ReleasesFragment extends LazyFragment implements RetryCallback {
     }
 
     private void initSwipeToRefresh() {
-        releasesViewModel.getRefreshState().observe(this, networkState -> {
+        releasesVM.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
 
                 //Show the current network state for the first getWikidata when the rating list
@@ -127,8 +127,8 @@ public class ReleasesFragment extends LazyFragment implements RetryCallback {
                         errorMessageTextView.setText(networkState.getMessage());
                     }
                     //loading and retry
-                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
                     pagedRecyclerView.scrollToPosition(0);
@@ -137,7 +137,7 @@ public class ReleasesFragment extends LazyFragment implements RetryCallback {
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            releasesViewModel.refresh();
+            releasesVM.refresh();
             swipeRefreshLayout.setRefreshing(false);
             pagedRecyclerView.scrollToPosition(0);
         });
@@ -145,8 +145,8 @@ public class ReleasesFragment extends LazyFragment implements RetryCallback {
 
     @Override
     public void retry() {
-        if (releasesViewModel != null) {
-            releasesViewModel.retry();
+        if (releasesVM != null) {
+            releasesVM.retry();
         }
     }
 

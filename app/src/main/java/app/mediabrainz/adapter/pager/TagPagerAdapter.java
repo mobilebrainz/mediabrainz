@@ -9,7 +9,7 @@ import app.mediabrainz.api.site.TagServiceInterface.TagType;
 import app.mediabrainz.fragment.TagTabFragment;
 
 
-public class TagPagerAdapter extends BaseFragmentPagerAdapter {
+public class TagPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public enum TagTab {
         ARTIST(TagType.ARTIST, R.string.tag_tab_artists, R.drawable.ic_artist_24),

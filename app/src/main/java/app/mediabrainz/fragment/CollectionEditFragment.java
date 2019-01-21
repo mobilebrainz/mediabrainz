@@ -1,8 +1,10 @@
 package app.mediabrainz.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,32 +14,37 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import java.util.List;
-
 import app.mediabrainz.R;
 import app.mediabrainz.api.model.Collection;
 import app.mediabrainz.api.site.SiteService;
 import app.mediabrainz.communicator.GetCollectionCommunicator;
-import app.mediabrainz.communicator.OnEditCollectionCommunicator;
 import app.mediabrainz.communicator.ShowTitleCommunicator;
+import app.mediabrainz.util.ShowUtil;
+import app.mediabrainz.viewModels.CollectionCreateEditVM;
+import app.mediabrainz.viewModels.UserCollectionsSharedVM;
 
-import static app.mediabrainz.MediaBrainzApp.api;
+import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
 public class CollectionEditFragment extends Fragment {
 
     public static final String TAG = "CollectionEditFragment";
 
+    String name;
     boolean isLoading;
     boolean isError;
     private Collection collection;
+    private UserCollectionsSharedVM userCollectionsSharedVM;
+    private CollectionCreateEditVM collectionCreateEditVM;
 
     private View errorView;
     private View progressView;
+
     private View contentView;
     private EditText collectionNameView;
     private EditText collectionDescriptionView;
     private CheckBox collectionPublicCheckBox;
+    private Button collectionEditButton;
 
     public static CollectionEditFragment newInstance() {
         Bundle args = new Bundle();
@@ -56,51 +63,88 @@ public class CollectionEditFragment extends Fragment {
         collectionNameView = layout.findViewById(R.id.collectionNameView);
         collectionDescriptionView = layout.findViewById(R.id.collectionDescriptionView);
         collectionPublicCheckBox = layout.findViewById(R.id.collectionPublicCheckBox);
+        collectionEditButton = layout.findViewById(R.id.collectionEditButton);
 
-        Button collectionEditButton = layout.findViewById(R.id.collectionEditButton);
-        collectionEditButton.setOnClickListener(v -> edit());
-
-        collection = ((GetCollectionCommunicator) getContext()).getCollection();
-        if (collection != null) {
-            collectionNameView.setText(collection.getName());
-            collectionNameView.setError(null);
+        if (getContext() instanceof ShowTitleCommunicator) {
+            ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(R.string.title_edit_collection);
         }
-
-        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(R.string.title_edit_collection);
         return layout;
     }
 
-    private void edit() {
-        collectionNameView.setError(null);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        String name = collectionNameView.getText().toString().trim();
+        if (getContext() instanceof GetCollectionCommunicator &&
+                (collection = ((GetCollectionCommunicator) getContext()).getCollection()) != null) {
+
+            collectionNameView.setText(collection.getName());
+            collectionNameView.setError(null);
+
+            if (getActivity() != null) {
+                userCollectionsSharedVM = ViewModelProviders
+                        .of(getActivity(), new UserCollectionsSharedVM.Factory(oauth.getName()))
+                        .get(UserCollectionsSharedVM.class);
+
+                collectionCreateEditVM = ViewModelProviders
+                        .of(this)
+                        .get(CollectionCreateEditVM.class);
+
+                observeEvents();
+                collectionEditButton.setOnClickListener(v -> edit());
+            }
+        }
+    }
+
+    private void observeEvents() {
+        collectionCreateEditVM.existEvent.observeEvent(this, resource -> {
+            if (resource == null) return;
+            switch (resource.getStatus()) {
+                case LOADING:
+                    viewProgressLoading(true);
+                    break;
+                case ERROR:
+                    showConnectionWarning(resource.getThrowable());
+                    break;
+                case SUCCESS:
+                    viewProgressLoading(false);
+                    if (resource.getData() != null && !resource.getData()) {
+                        collectionCreateEditVM.editCollection(collection, name,
+                                SiteService.getCollectionTypeFromSpinner(collection.getType()),
+                                collectionDescriptionView.getText().toString(),
+                                collectionPublicCheckBox.isChecked() ? 1 : 0);
+                    } else {
+                        collectionNameView.setError(getString(R.string.collection_create_exist_name));
+                    }
+                    break;
+            }
+        });
+
+        collectionCreateEditVM.editEvent.observeEvent(this, resource -> {
+            if (resource == null) return;
+            switch (resource.getStatus()) {
+                case LOADING:
+                    viewProgressLoading(true);
+                    break;
+                case ERROR:
+                    showConnectionWarning(resource.getThrowable());
+                    break;
+                case SUCCESS:
+                    viewProgressLoading(false);
+                    collection.setName(name);
+                    ShowUtil.showToast(getContext(), R.string.collection_edited);
+                    userCollectionsSharedVM.invalidateUserCollections();
+                    break;
+            }
+        });
+    }
+
+    private void edit() {
+        viewError(false);
+        collectionNameView.setError(null);
+        name = collectionNameView.getText().toString().trim();
         if (!TextUtils.isEmpty(name)) {
-            viewProgressLoading(true);
-            //TODO: make .browse(n, m)
-            api.getCollections(
-                    collectionBrowse -> {
-                        viewProgressLoading(false);
-                        boolean existName = false;
-                        if (collectionBrowse.getCount() > 0) {
-                            List<Collection> collections = collectionBrowse.getCollections();
-                            for (Collection coll : collections) {
-                                if (coll.getName().equalsIgnoreCase(name) && coll.getType().equals(collection.getType())) {
-                                    existName = true;
-                                    collectionNameView.setError(getString(R.string.collection_create_exist_name));
-                                    break;
-                                }
-                            }
-                        }
-                        if (!existName) {
-                            ((OnEditCollectionCommunicator) getContext()).onEditCollection(
-                                    name,
-                                    SiteService.getCollectionTypeFromSpinner(collection.getType()),
-                                    collectionDescriptionView.getText().toString(),
-                                    collectionPublicCheckBox.isChecked() ? 1 : 0);
-                        }
-                    },
-                    this::showConnectionWarning,
-                    100, 0);
+            collectionCreateEditVM.existCollection(name, collection.getType());
         }
     }
 

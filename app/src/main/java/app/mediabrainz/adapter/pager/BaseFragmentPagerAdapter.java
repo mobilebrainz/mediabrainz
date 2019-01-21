@@ -1,86 +1,123 @@
 package app.mediabrainz.adapter.pager;
 
-import android.content.res.Resources;
-import android.support.design.widget.TabLayout;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashMap;
-import java.util.Map;
 
+public abstract class BaseFragmentPagerAdapter extends PagerAdapter {
 
-public abstract class BaseFragmentPagerAdapter extends FragmentPagerAdapter implements FragmentPagerAdapterInterface {
+    private final FragmentManager mFragmentManager;
+    private FragmentTransaction mCurTransaction;
+    private Fragment mCurrentPrimaryItem;
 
-    public interface Updatable {
-        void update();
+    public BaseFragmentPagerAdapter(FragmentManager fragmentManager) {
+        this.mFragmentManager = fragmentManager;
     }
 
-    private int pageCount;
-    protected int[] tabTitles;
-    protected int[] tabIcons;
-    protected Resources resources;
-    private FragmentManager fragmentManager;
-    private Map<Integer, String> fragmentTags = new HashMap<>();
-
-    public BaseFragmentPagerAdapter(int pageCount, FragmentManager fragmentManager, Resources resources) {
-        super(fragmentManager);
-        this.fragmentManager = fragmentManager;
-        this.resources = resources;
-        this.pageCount = pageCount;
-        this.tabTitles = new int[pageCount];
-        this.tabIcons = new int[pageCount];
-    }
+    public abstract Fragment getItem(int position);
 
     @Override
-    public int getCount() {
-        return pageCount;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return tabTitles[position] != 0 ? resources.getString(tabTitles[position]) : null;
-    }
-
-    @Override
-    public void setupTabViews(TabLayout tabLayout) {
-        for (int i = 0; i < pageCount; i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            if (tabIcons[i] != 0) {
-                tab.setIcon(tabIcons[i]);
-            }
-            if (tabTitles[i] != 0) {
-                tab.setText(tabTitles[i]);
-            }
+    public void startUpdate(@NonNull ViewGroup container) {
+        if (container.getId() == -1) {
+            throw new IllegalStateException("ViewPager with adapter " + this + " requires a view id");
         }
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Object object = super.instantiateItem(container, position);
-        if (object instanceof Fragment) {
-            Fragment fragment = (Fragment) object;
-            String tag = fragment.getTag();
-            fragmentTags.put(position, tag);
+    @NonNull
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        if (mCurTransaction == null) {
+            mCurTransaction = mFragmentManager.beginTransaction();
         }
-        return object;
+
+        String name = makeFragmentName(container.getId(), getItemId(position));
+        Fragment fragment = mFragmentManager.findFragmentByTag(name);
+
+        if (fragment != null) {
+            mCurTransaction.attach(fragment);
+        } else {
+            fragment = getItem(position);
+            mCurTransaction.add(container.getId(), fragment, name);
+        }
+
+        if (fragment != mCurrentPrimaryItem) {
+            fragment.setMenuVisibility(false);
+            fragment.setUserVisibleHint(false);
+        }
+        return fragment;
     }
 
-    @Override
-    public Fragment getFragment(int position) {
-        String tag = fragmentTags.get(position);
-        return (tag != null) ? fragmentManager.findFragmentByTag(tag) : null;
-    }
-
-    @Override
-    public void updateFragments() {
-        for (int i = 0; i < pageCount; i++) {
-            Fragment fragment = getFragment(i);
-            if (fragment instanceof Updatable) {
-                ((Updatable) fragment).update();
+    public void removePagerFragments(@NonNull ViewGroup container) {
+        if (mCurTransaction == null) {
+            mCurTransaction = mFragmentManager.beginTransaction();
+        }
+        for (int i = 0; i < getCount(); i++) {
+            String name = makeFragmentName(container.getId(), getItemId(i));
+            Fragment fragment = mFragmentManager.findFragmentByTag(name);
+            if (fragment != null) {
+                mCurTransaction.remove(fragment);
             }
         }
     }
 
+    @Override
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        if (mCurTransaction == null) {
+            mCurTransaction = this.mFragmentManager.beginTransaction();
+        }
+        mCurTransaction.detach((Fragment) object);
+    }
+
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        Fragment fragment = (Fragment) object;
+        if (fragment != mCurrentPrimaryItem) {
+            if (mCurrentPrimaryItem != null) {
+                mCurrentPrimaryItem.setMenuVisibility(false);
+                mCurrentPrimaryItem.setUserVisibleHint(false);
+            }
+
+            fragment.setMenuVisibility(true);
+            fragment.setUserVisibleHint(true);
+            mCurrentPrimaryItem = fragment;
+        }
+
+    }
+
+    @Override
+    public void finishUpdate(@NonNull ViewGroup container) {
+        if (mCurTransaction != null) {
+            mCurTransaction.commitNowAllowingStateLoss();
+            mCurTransaction = null;
+        }
+
+    }
+
+    @Override
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+        return ((Fragment) object).getView() == view;
+    }
+
+    @Override
+    public Parcelable saveState() {
+        return null;
+    }
+
+    @Override
+    public void restoreState(Parcelable state, ClassLoader loader) {
+    }
+
+    public long getItemId(int position) {
+        return (long) position;
+    }
+
+    private static String makeFragmentName(int viewId, long id) {
+        return "android:switcher:" + viewId + ":" + id;
+    }
 }

@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,8 +25,8 @@ import app.mediabrainz.adapter.recycler.ReleaseGroupsAdapter;
 import app.mediabrainz.adapter.recycler.RetryCallback;
 import app.mediabrainz.communicator.GetArtistCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
-import app.mediabrainz.data.Status;
-import app.mediabrainz.ui.ReleaseGroupsViewModel;
+import app.mediabrainz.viewModels.ReleaseGroupsVM;
+import app.mediabrainz.viewModels.Status;
 
 import static app.mediabrainz.account.Preferences.PreferenceName.RELEASE_GROUP_OFFICIAL;
 
@@ -36,8 +37,9 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
 
     private static final String RELEASES_TAB = "RELEASES_TAB";
 
+    private String artistMbid;
     private ReleaseGroupsPagerAdapter.ReleaseTab releaseGroupType;
-    private ReleaseGroupsViewModel releaseGroupsViewModel;
+    private ReleaseGroupsVM releaseGroupsVM;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView pagedRecyclerView;
@@ -49,7 +51,6 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
     private View itemNetworkStateView;
 
     private MutableLiveData<Boolean> mutableIsOfficial = new MutableLiveData<>();
-
 
     public static ReleaseGroupsTabFragment newInstance(int releasesTab) {
         Bundle args = new Bundle();
@@ -74,37 +75,47 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
 
-        loadView();
         return layout;
     }
 
     @Override
-    protected void lazyLoad() {
-        String artistMbid = ((GetArtistCommunicator) getContext()).getArtistMbid();
-        if (!TextUtils.isEmpty(artistMbid)) {
-            adapter = new ReleaseGroupsAdapter(this);
-            adapter.setHolderClickListener(releaseGroup -> ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(releaseGroup.getId()));
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getContext() instanceof GetArtistCommunicator &&
+                !TextUtils.isEmpty((artistMbid = ((GetArtistCommunicator) getContext()).getArtistMbid()))) {
 
-            releaseGroupsViewModel = ViewModelProviders.of(this).get(ReleaseGroupsViewModel.class);
-            mutableIsOfficial.setValue(MediaBrainzApp.getPreferences().isReleaseGroupOfficial());
-            releaseGroupsViewModel.load(artistMbid, releaseGroupType.getAlbumType(), mutableIsOfficial);
-            releaseGroupsViewModel.realeseGroupLiveData.observe(this, adapter::submitList);
-            releaseGroupsViewModel.getNetworkState().observe(this, adapter::setNetworkState);
-
-            pagedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            pagedRecyclerView.setNestedScrollingEnabled(true);
-            pagedRecyclerView.setItemViewCacheSize(100);
-            pagedRecyclerView.setHasFixedSize(true);
-            pagedRecyclerView.setAdapter(adapter);
-
-            MediaBrainzApp.getPreferences().registerOnSharedPreferenceChangeListener(this);
-
-            initSwipeToRefresh();
+            loadView();
         }
     }
 
+    @Override
+    protected void lazyLoad() {
+        adapter = new ReleaseGroupsAdapter(this);
+        adapter.setHolderClickListener(releaseGroup -> {
+            if (getContext() instanceof OnReleaseGroupCommunicator) {
+                ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(releaseGroup.getId());
+            }
+        });
+
+        releaseGroupsVM = ViewModelProviders.of(this).get(ReleaseGroupsVM.class);
+        mutableIsOfficial.setValue(MediaBrainzApp.getPreferences().isReleaseGroupOfficial());
+        releaseGroupsVM.load(artistMbid, releaseGroupType.getAlbumType(), mutableIsOfficial);
+        releaseGroupsVM.realeseGroupLiveData.observe(this, adapter::submitList);
+        releaseGroupsVM.getNetworkState().observe(this, adapter::setNetworkState);
+
+        pagedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        pagedRecyclerView.setNestedScrollingEnabled(true);
+        pagedRecyclerView.setItemViewCacheSize(100);
+        pagedRecyclerView.setHasFixedSize(true);
+        pagedRecyclerView.setAdapter(adapter);
+
+        MediaBrainzApp.getPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        initSwipeToRefresh();
+    }
+
     private void initSwipeToRefresh() {
-        releaseGroupsViewModel.getRefreshState().observe(this, networkState -> {
+        releaseGroupsVM.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
                     itemNetworkStateView.setVisibility(View.VISIBLE);
@@ -114,8 +125,8 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
                         errorMessageTextView.setText(networkState.getMessage());
                     }
 
-                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
                     pagedRecyclerView.scrollToPosition(0);
@@ -124,7 +135,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            releaseGroupsViewModel.refresh();
+            releaseGroupsVM.refresh();
             swipeRefreshLayout.setRefreshing(false);
             pagedRecyclerView.scrollToPosition(0);
         });
@@ -132,8 +143,8 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
 
     @Override
     public void retry() {
-        if (releaseGroupsViewModel != null) {
-            releaseGroupsViewModel.retry();
+        if (releaseGroupsVM != null) {
+            releaseGroupsVM.retry();
         }
     }
 
@@ -147,7 +158,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
             /*
             if (getUserVisibleHint()) {
                 mutableIsOfficial.setValue(MediaBrainzApp.getPreferences().isReleaseGroupOfficial());
-                releaseGroupsViewModel.refresh();
+                releaseGroupsVM.refresh();
                 swipeRefreshLayout.setRefreshing(false);
                 pagedRecycler.scrollToPosition(0);
             } else {

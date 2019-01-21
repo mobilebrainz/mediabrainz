@@ -15,7 +15,7 @@ import static app.mediabrainz.api.model.ReleaseGroup.SecondaryType.COMPILATION;
 import static app.mediabrainz.api.model.ReleaseGroup.SecondaryType.LIVE;
 
 
-public class ReleaseGroupsPagerAdapter extends BaseFragmentPagerAdapter {
+public class ReleaseGroupsPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public enum ReleaseTab {
         ALBUMS(ALBUM, R.string.release_group_albums),

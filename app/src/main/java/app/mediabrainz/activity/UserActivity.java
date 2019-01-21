@@ -1,28 +1,23 @@
 package app.mediabrainz.activity;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.EditText;
-
-import java.util.List;
 
 import app.mediabrainz.R;
-import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
-import app.mediabrainz.adapter.pager.CollectionsPagerAdapter;
+import app.mediabrainz.adapter.pager.UpdatableFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.UserNavigationPagerAdapter;
 import app.mediabrainz.api.model.Collection;
-import app.mediabrainz.api.site.SiteService;
+import app.mediabrainz.api.model.Release;
 import app.mediabrainz.communicator.GetCollectionCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnCollectionCommunicator;
-import app.mediabrainz.communicator.OnCreateCollectionCommunicator;
-import app.mediabrainz.communicator.OnEditCollectionCommunicator;
 import app.mediabrainz.communicator.OnPlayYoutubeCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
@@ -38,7 +33,6 @@ import app.mediabrainz.fragment.ArtistCollectionFragment;
 import app.mediabrainz.fragment.BaseCollectionFragment;
 import app.mediabrainz.fragment.CollectionCreateFragment;
 import app.mediabrainz.fragment.CollectionEditFragment;
-import app.mediabrainz.fragment.CollectionsPagerFragment;
 import app.mediabrainz.fragment.EventCollectionFragment;
 import app.mediabrainz.fragment.LabelCollectionFragment;
 import app.mediabrainz.fragment.PlaceCollectionFragment;
@@ -52,8 +46,8 @@ import app.mediabrainz.fragment.WorkCollectionFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.util.ShowUtil;
+import app.mediabrainz.viewModels.UserActivityVM;
 
-import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_COLLECTIONS_POS;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_PROFILE_POS;
@@ -77,27 +71,22 @@ import static app.mediabrainz.api.model.Collection.WORK_ENTITY_TYPE;
 public class UserActivity extends BaseBottomNavActivity implements
         GetUsernameCommunicator,
         OnArtistCommunicator,
-        OnReleaseGroupCommunicator,
         OnReleaseCommunicator,
         OnRecordingCommunicator,
         OnUserTagCommunicator,
         OnCollectionCommunicator,
         GetCollectionCommunicator,
-        OnCreateCollectionCommunicator,
         ShowFloatingActionButtonCommunicator,
-        OnEditCollectionCommunicator,
-        CollectionsPagerFragment.CollectionTabOrdinalCommunicator,
         OnUserCommunicator,
         UserProfilePagerFragment.UserProfileTabOrdinalCommunicator,
         OnPlayYoutubeCommunicator,
-        BaseCollectionFragment.OnChangeCollection {
+        OnReleaseGroupCommunicator {
 
     public static final String TAG = "UserActivity";
-    public static final String USERNAME = "USERNAME";
+    public static final String USERNAME = "UserActivity.USERNAME";
     public static final int DEFAULT_USER_NAV_VIEW = R.id.user_navigation_profile;
 
-    private int collectionTabOrdinal = -1;
-    private boolean collectionChanged;
+    private UserActivityVM userActivityVM;
 
     private String username;
     private Collection collection;
@@ -116,7 +105,7 @@ public class UserActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    protected BaseFragmentPagerAdapter initBottomNavigationPagerAdapter() {
+    protected UpdatableFragmentPagerAdapter initBottomNavigationPagerAdapter() {
         return new UserNavigationPagerAdapter(getSupportFragmentManager(), getResources(), isPrivate);
     }
 
@@ -132,6 +121,37 @@ public class UserActivity extends BaseBottomNavActivity implements
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
+
+        userActivityVM = ViewModelProviders.of(this).get(UserActivityVM.class);
+        observeData();
+    }
+
+    public void observeData() {
+        userActivityVM.releasesResource.observeEvent(this, resource -> {
+            if (resource == null) return;
+            switch (resource.getStatus()) {
+                case LOADING:
+                    viewProgressLoading(true);
+                    break;
+                case ERROR:
+                    showConnectionWarning(resource.getThrowable());
+                    break;
+                case SUCCESS:
+                    viewProgressLoading(false);
+                    Release.ReleaseBrowse releaseBrowse = resource.getData();
+                    String releaseGroupMbid = userActivityVM.getReleaseGroupMbid();
+                    if (releaseBrowse != null && releaseGroupMbid != null) {
+                        // c автоматическим переходом при 1 релизе альбома засчёт предварительной прогрузки релизов альбома
+                        if (releaseBrowse.getCount() > 1) {
+                            PagedReleaseDialogFragment.newInstance(releaseGroupMbid)
+                                    .show(getSupportFragmentManager(), PagedReleaseDialogFragment.TAG);
+                        } else if (releaseBrowse.getCount() == 1) {
+                            onRelease(releaseBrowse.getReleases().get(0).getId());
+                        }
+                    }
+                    break;
+            }
+        });
     }
 
     @SuppressLint("RestrictedApi")
@@ -203,14 +223,7 @@ public class UserActivity extends BaseBottomNavActivity implements
     @Override
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameContainerView);
-        if (fragment instanceof BaseCollectionFragment) {
-            if (collectionChanged) {
-                collectionChanged = false;
-                ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-            }
-            //((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-            bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
-        } else if (fragment instanceof CollectionCreateFragment) {
+        if (fragment instanceof BaseCollectionFragment || fragment instanceof CollectionCreateFragment) {
             bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
         } else if (fragment instanceof UserTagPagerFragment) {
             bottomNavView.setSelectedItemId(R.id.user_navigation_tags);
@@ -233,34 +246,6 @@ public class UserActivity extends BaseBottomNavActivity implements
         ActivityFactory.startRecordingActivity(this, recordingMbid);
     }
 
-    @Override
-    public void onReleaseGroup(String releaseGroupMbid) {
-        if (!isLoading) {
-            // c автоматическим переходом при 1 релизе альбома засчёт предварительной прогрузки релизов альбома
-            showReleases(releaseGroupMbid);
-            // без автоматического перехода при 1 релизе альбома
-            //PagedReleaseDialogFragment.newInstance(releaseGroupMbid).show(getSupportFragmentManager(), PagedReleaseDialogFragment.TAG);
-        }
-    }
-
-    private void showReleases(String releaseGroupMbid) {
-        viewProgressLoading(true);
-        api.getReleasesByAlbum(
-                releaseGroupMbid,
-                releaseBrowse -> {
-                    viewProgressLoading(false);
-                    if (releaseBrowse.getCount() > 1) {
-                        PagedReleaseDialogFragment.newInstance(releaseGroupMbid).show(getSupportFragmentManager(), PagedReleaseDialogFragment.TAG);
-                    } else if (releaseBrowse.getCount() == 1) {
-                        onRelease(releaseBrowse.getReleases().get(0).getId());
-                    }
-                },
-                t -> {
-                    viewProgressLoading(false);
-                    ShowUtil.showError(this, t);
-                },
-                2, 0);
-    }
 
     @Override
     public void onRelease(String releaseMbid) {
@@ -357,82 +342,12 @@ public class UserActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    public void onCreateCollection(String name, int type, String description, int publ, EditText editText) {
-        if (!isLoading) {
-            viewProgressLoading(true);
-            api.getCollections(
-                    collectionBrowse -> {
-                        boolean existName = false;
-                        if (collectionBrowse.getCount() > 0) {
-                            List<Collection> collections = collectionBrowse.getCollections();
-                            for (Collection collection : collections) {
-                                if (collection.getName().equalsIgnoreCase(name) &&
-                                        collection.getType().equalsIgnoreCase(SiteService.getCollectionTypeFromSpinner(type - 1))) {
-                                    viewProgressLoading(false);
-                                    String errorString = getString(R.string.collection_create_exist_name);
-                                    if (editText != null) {
-                                        editText.setError(errorString);
-                                    } else {
-                                        ShowUtil.showToast(this, errorString);
-                                    }
-                                    existName = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!existName) {
-                            api.createCollection(name, type, description, publ,
-                                    responseBody -> {
-                                        viewProgressLoading(false);
-                                        collectionTabOrdinal = CollectionsPagerAdapter.collectionTabTypeSpinner[type - 1].ordinal();
-                                        ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-                                        bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
-                                    },
-                                    t -> {
-                                        viewProgressLoading(false);
-                                        ShowUtil.showError(this, t);
-                                    });
-                        }
-                    },
-                    t -> {
-                        viewProgressLoading(false);
-                        ShowUtil.showError(this, t);
-                    },
-                    100, 0);
-        }
-    }
-
-    @Override
-    public void onEditCollection(String name, int type, String description, int isPublic) {
-        if (!isLoading) {
-            viewProgressLoading(true);
-            api.editCollection(collection, name, type, description, isPublic,
-                    responseBody -> {
-                        viewProgressLoading(false);
-                        collectionTabOrdinal = CollectionsPagerAdapter.collectionTabTypeSpinner[type - 1].ordinal();
-                        ((BaseFragmentPagerAdapter.Updatable) getBottomNavigationPagerAdapter().getFragment(TAB_COLLECTIONS_POS)).update();
-                        bottomNavView.setSelectedItemId(R.id.user_navigation_collections);
-                    },
-                    t -> {
-                        viewProgressLoading(false);
-                        ShowUtil.showError(this, t);
-                    });
-        }
-    }
-
-    @Override
-    public int getCollectionTabOrdinal() {
-        return collectionTabOrdinal;
-    }
-
-    @Override
     public void onUser(String username) {
         ActivityFactory.startUserActivity(this, username);
     }
 
     @Override
     public int getUserProfileTabOrdinal() {
-        // get tab id
         return getFragmentViewId();
     }
 
@@ -442,7 +357,12 @@ public class UserActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    public void changeCollection() {
-        collectionChanged = true;
+    public void onReleaseGroup(String releaseGroupMbid) {
+        if (!isLoading) {
+            // c автоматическим переходом при 1 релизе альбома засчёт предварительной прогрузки релизов альбома
+            userActivityVM.loadReleases(releaseGroupMbid);
+            // без автоматического перехода при 1 релизе альбома
+            //PagedReleaseDialogFragment.newInstance(releaseGroupMbid).show(getSupportFragmentManager(), PagedReleaseDialogFragment.TAG);
+        }
     }
 }

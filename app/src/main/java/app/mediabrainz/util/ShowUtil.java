@@ -9,7 +9,9 @@ import android.widget.Toast;
 public class ShowUtil {
 
     public static void showError(Context context, Throwable t) {
-        Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+        if (t != null) {
+            Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     public static void showMessage(Activity activity, final String msg) {

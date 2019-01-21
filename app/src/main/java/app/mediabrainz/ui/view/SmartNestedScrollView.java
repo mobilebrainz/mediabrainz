@@ -1,4 +1,4 @@
-package app.mediabrainz.ui;
+package app.mediabrainz.ui.view;
 
 
 import android.content.Context;

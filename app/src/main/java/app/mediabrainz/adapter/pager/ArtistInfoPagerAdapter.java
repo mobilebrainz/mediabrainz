@@ -10,7 +10,7 @@ import app.mediabrainz.fragment.ArtistRelationsTabFragment;
 import app.mediabrainz.fragment.LinksTabFragment;
 
 
-public class ArtistInfoPagerAdapter extends BaseFragmentPagerAdapter {
+public class ArtistInfoPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 3;
     public final static int TAB_WIKI_POS = 0;

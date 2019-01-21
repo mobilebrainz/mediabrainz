@@ -9,7 +9,7 @@ import app.mediabrainz.api.model.Tag;
 import app.mediabrainz.fragment.UserTagsTabFragment;
 
 
-public class UserTagsPagerAdapter extends BaseFragmentPagerAdapter {
+public class UserTagsPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public enum TagsTab {
         GENRE(Tag.TagType.GENRE, R.string.tags_tab_genres),

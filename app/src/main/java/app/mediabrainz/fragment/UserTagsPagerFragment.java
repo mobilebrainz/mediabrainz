@@ -1,13 +1,19 @@
 package app.mediabrainz.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.UserTagsPagerAdapter;
@@ -15,21 +21,20 @@ import app.mediabrainz.api.model.Tag;
 import app.mediabrainz.communicator.GetGenresCommunicator;
 import app.mediabrainz.communicator.GetTagsCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static app.mediabrainz.MediaBrainzApp.api;
+import app.mediabrainz.viewModels.UserTagsPagerVM;
 
 
 public class UserTagsPagerFragment extends LazyFragment implements
         GetGenresCommunicator,
         GetTagsCommunicator {
 
+    private String username;
     private List<Tag> genres = new ArrayList<>();
     private List<Tag> tags = new ArrayList<>();
     private boolean isLoading;
     private boolean isError;
+
+    private UserTagsPagerVM userTagsPagerVM;
 
     private ViewPager pagerView;
     private TabLayout tabsView;
@@ -54,37 +59,65 @@ public class UserTagsPagerFragment extends LazyFragment implements
         pagerView = layout.findViewById(R.id.pagerView);
         tabsView = layout.findViewById(R.id.tabsView);
 
-        loadView();
         return layout;
     }
 
     @Override
-    protected void lazyLoad() {
-        viewError(false);
-        noresultsView.setVisibility(View.GONE);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getContext() instanceof GetUsernameCommunicator &&
+                (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
 
-        String username = ((GetUsernameCommunicator) getContext()).getUsername();
-        if (username != null) {
-            viewProgressLoading(true);
+            userTagsPagerVM = ViewModelProviders
+                    .of(this, new UserTagsPagerVM.Factory(username))
+                    .get(UserTagsPagerVM.class);
 
-            api.getTags(username,
-                    tagMap -> {
+            userTagsPagerVM.userTagsResource.observe(this, resource -> {
+                if (resource == null) return;
+                switch (resource.getStatus()) {
+                    case LOADING:
+                        viewProgressLoading(true);
+                        break;
+                    case ERROR:
+                        showConnectionWarning(resource.getThrowable());
+                        break;
+                    case SUCCESS:
                         viewProgressLoading(false);
-                        if (tagMap.get(Tag.TagType.GENRE).isEmpty() && tagMap.get(Tag.TagType.TAG).isEmpty()) {
-                            noresultsView.setVisibility(View.VISIBLE);
-                        } else {
-                            setGenres(tagMap.get(Tag.TagType.GENRE));
-                            setTags(tagMap.get(Tag.TagType.TAG));
+                        show(resource.getData());
+                        break;
+                    case INVALID:
+                        userTagsPagerVM.load();
+                        break;
+                }
+            });
+            loadView();
+        }
+    }
 
-                            UserTagsPagerAdapter pagerAdapter = new UserTagsPagerAdapter(getChildFragmentManager(), getResources());
-                            pagerView.setAdapter(pagerAdapter);
-                            pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
-                            tabsView.setupWithViewPager(pagerView);
-                            tabsView.setTabMode(TabLayout.MODE_FIXED);
-                            pagerAdapter.setupTabViews(tabsView);
-                        }
-                    },
-                    this::showConnectionWarning);
+    @Override
+    protected void lazyLoad() {
+        noresultsView.setVisibility(View.GONE);
+        viewError(false);
+        viewProgressLoading(false);
+        if (userTagsPagerVM != null) {
+            userTagsPagerVM.lazyLoad();
+        }
+    }
+
+    private void show(Map<Tag.TagType, List<Tag>> tagMap) {
+        if (tagMap == null) return;
+        if (tagMap.get(Tag.TagType.GENRE).isEmpty() && tagMap.get(Tag.TagType.TAG).isEmpty()) {
+            noresultsView.setVisibility(View.VISIBLE);
+        } else {
+            setGenres(tagMap.get(Tag.TagType.GENRE));
+            setTags(tagMap.get(Tag.TagType.TAG));
+
+            UserTagsPagerAdapter pagerAdapter = new UserTagsPagerAdapter(getChildFragmentManager(), getResources());
+            pagerView.setAdapter(pagerAdapter);
+            pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+            tabsView.setupWithViewPager(pagerView);
+            tabsView.setTabMode(TabLayout.MODE_FIXED);
+            pagerAdapter.setupTabViews(tabsView);
         }
     }
 

@@ -146,7 +146,9 @@
 
     <!-- for collections -->
     <string name="collection_add_to_new">Add to a new collection</string>
-    <string name="collection_added">Collection was added successfully!</string>
+    <string name="collection_added">Entity was added to collection successfully!</string>
+    <string name="collection_created">Collection was created successfully!</string>
+    <string name="collection_edited">Collection was edited successfully!</string>
 
     <!-- Collections -->
     <string name="collections_areas">Areas</string>

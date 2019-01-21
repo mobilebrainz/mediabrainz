@@ -1,8 +1,10 @@
 package app.mediabrainz.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -14,13 +16,12 @@ import java.util.Collections;
 import java.util.List;
 
 import app.mediabrainz.R;
-import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.CollectionsPagerAdapter;
 import app.mediabrainz.api.model.Collection;
 import app.mediabrainz.communicator.GetCollectionsCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
+import app.mediabrainz.viewModels.UserCollectionsSharedVM;
 
-import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.adapter.pager.CollectionsPagerAdapter.CollectionTab.AREAS;
 import static app.mediabrainz.adapter.pager.CollectionsPagerAdapter.CollectionTab.ARTISTS;
 import static app.mediabrainz.adapter.pager.CollectionsPagerAdapter.CollectionTab.EVENTS;
@@ -46,16 +47,18 @@ import static app.mediabrainz.api.model.Collection.WORK_ENTITY_TYPE;
 
 
 public class CollectionsPagerFragment extends LazyFragment implements
-        GetCollectionsCommunicator,
-        BaseFragmentPagerAdapter.Updatable {
+        GetCollectionsCommunicator {
 
-    public interface CollectionTabOrdinalCommunicator {
-        int getCollectionTabOrdinal();
-    }
+    public static final String COLLECTION_TAB = "CollectionsPagerFragment.COLLECTION_TAB";
 
     private boolean isLoading;
     private boolean isError;
     private List<Collection> collections;
+
+    private CollectionsPagerAdapter pagerAdapter;
+    private UserCollectionsSharedVM userCollectionsSharedVM;
+    private int collectionTabOrdinal = -1;
+    private List<CollectionsPagerAdapter.CollectionTab> collectionTabs = new ArrayList<>();
 
     private ViewPager pagerView;
     private TabLayout tabsView;
@@ -80,31 +83,48 @@ public class CollectionsPagerFragment extends LazyFragment implements
         progressView = layout.findViewById(R.id.progressView);
         noresultsView = layout.findViewById(R.id.noresultsView);
 
-        loadView();
+        if (savedInstanceState != null) {
+            collectionTabOrdinal = savedInstanceState.getInt(COLLECTION_TAB, -1);
+        }
         return layout;
     }
 
     @Override
-    public void update() {
-        lazyLoad();
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(COLLECTION_TAB, collectionTabOrdinal);
     }
 
-    private void configurePager(List<CollectionsPagerAdapter.CollectionTab> collectionTabs) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        String username;
+        if (getActivity() != null && getContext() instanceof GetUsernameCommunicator &&
+                (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
 
+            userCollectionsSharedVM = ViewModelProviders
+                    .of(getActivity(), new UserCollectionsSharedVM.Factory(username))
+                    .get(UserCollectionsSharedVM.class);
 
-        CollectionsPagerAdapter pagerAdapter = new CollectionsPagerAdapter(getChildFragmentManager(), getResources(), collectionTabs);
-        pagerView.setAdapter(pagerAdapter);
-        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
-        tabsView.setupWithViewPager(pagerView);
-        pagerAdapter.setupTabViews(tabsView);
-
-        int collectionTabOrdinal = ((CollectionTabOrdinalCommunicator) getContext()).getCollectionTabOrdinal();
-
-        for (int i = 0; i < collectionTabs.size(); i++) {
-            if (collectionTabs.get(i).ordinal() == collectionTabOrdinal) {
-                pagerView.setCurrentItem(i);
-                break;
-            }
+            userCollectionsSharedVM.сollectionsLiveData.observe(this, resource -> {
+                if (resource == null) return;
+                switch (resource.getStatus()) {
+                    case LOADING:
+                        viewProgressLoading(true);
+                        break;
+                    case ERROR:
+                        showConnectionWarning(resource.getThrowable());
+                        break;
+                    case SUCCESS:
+                        viewProgressLoading(false);
+                        show(resource.getData());
+                        break;
+                    case INVALID:
+                        userCollectionsSharedVM.loadUserCollections();
+                        break;
+                }
+            });
+            loadView();
         }
     }
 
@@ -112,101 +132,126 @@ public class CollectionsPagerFragment extends LazyFragment implements
     protected void lazyLoad() {
         noresultsView.setVisibility(View.GONE);
         viewError(false);
-        String username = ((GetUsernameCommunicator) getContext()).getUsername();
+        viewProgressLoading(false);
+        if (userCollectionsSharedVM != null && !isLoading) {
+            userCollectionsSharedVM.lazyLoadUserCollections();
+        }
+    }
 
-        //TODO: make .browse(n, m)?
-        viewProgressLoading(true);
-        api.getCollections(
-                username,
-                collectionBrowse -> {
-                    viewProgressLoading(false);
-                    if (collectionBrowse.getCount() > 0) {
-                        collections = collectionBrowse.getCollections();
+    private void show(Collection.CollectionBrowse collectionBrowse) {
+        noresultsView.setVisibility(View.GONE);
 
-                        List<CollectionsPagerAdapter.CollectionTab> collectionTabs = new ArrayList<>();
-                        for (Collection collection : collections) {
-                            switch (collection.getEntityType()) {
-                                case AREA_ENTITY_TYPE:
-                                    collection.setCount(collection.getAreaCount());
-                                    if (!collectionTabs.contains(AREAS)) {
-                                        collectionTabs.add(AREAS);
-                                    }
-                                    break;
-                                case ARTIST_ENTITY_TYPE:
-                                    collection.setCount(collection.getArtistCount());
-                                    if (!collectionTabs.contains(ARTISTS)) {
-                                        collectionTabs.add(ARTISTS);
-                                    }
-                                    break;
-                                case EVENT_ENTITY_TYPE:
-                                    collection.setCount(collection.getEventCount());
-                                    if (!collectionTabs.contains(EVENTS)) {
-                                        collectionTabs.add(EVENTS);
-                                    }
-                                    break;
-                                case INSTRUMENT_ENTITY_TYPE:
-                                    collection.setCount(collection.getInstrumentCount());
-                                    if (!collectionTabs.contains(INSTRUMENTS)) {
-                                        collectionTabs.add(INSTRUMENTS);
-                                    }
-                                    break;
-                                case LABEL_ENTITY_TYPE:
-                                    collection.setCount(collection.getLabelCount());
-                                    if (!collectionTabs.contains(LABELS)) {
-                                        collectionTabs.add(LABELS);
-                                    }
-                                    break;
-                                case PLACE_ENTITY_TYPE:
-                                    collection.setCount(collection.getPlaceCount());
-                                    if (!collectionTabs.contains(PLACES)) {
-                                        collectionTabs.add(PLACES);
-                                    }
-                                    break;
-                                case RECORDING_ENTITY_TYPE:
-                                    collection.setCount(collection.getRecordingCount());
-                                    if (!collectionTabs.contains(RECORDINGS)) {
-                                        collectionTabs.add(RECORDINGS);
-                                    }
-                                    break;
-                                case RELEASE_ENTITY_TYPE:
-                                    collection.setCount(collection.getReleaseCount());
-                                    if (!collectionTabs.contains(RELEASES)) {
-                                        collectionTabs.add(RELEASES);
-                                    }
-                                    break;
-                                case RELEASE_GROUP_ENTITY_TYPE:
-                                    collection.setCount(collection.getReleaseGroupCount());
-                                    if (!collectionTabs.contains(RELEASE_GROUPS)) {
-                                        collectionTabs.add(RELEASE_GROUPS);
-                                    }
-                                    break;
-                                case SERIES_ENTITY_TYPE:
-                                    collection.setCount(collection.getSeriesCount());
-                                    if (!collectionTabs.contains(SERIES)) {
-                                        collectionTabs.add(SERIES);
-                                    }
-                                    break;
-                                case WORK_ENTITY_TYPE:
-                                    collection.setCount(collection.getWorkCount());
-                                    if (!collectionTabs.contains(WORKS)) {
-                                        collectionTabs.add(WORKS);
-                                    }
-                                    break;
-                            }
+        if (collectionBrowse != null && collectionBrowse.getCount() > 0) {
+            collections = collectionBrowse.getCollections();
+
+            if (pagerAdapter != null) {
+                int pos = pagerView.getCurrentItem();
+                if (collectionTabs.size() > pos) {
+                    collectionTabOrdinal = collectionTabs.get(pos).ordinal();
+                }
+            }
+
+            collectionTabs.clear();
+            for (Collection collection : collections) {
+                switch (collection.getEntityType()) {
+                    case AREA_ENTITY_TYPE:
+                        collection.setCount(collection.getAreaCount());
+                        if (!collectionTabs.contains(AREAS)) {
+                            collectionTabs.add(AREAS);
                         }
-                        Collections.sort(collectionTabs, (t1, t2) -> t1.ordinal() - t2.ordinal());
-                        if (collectionTabs.size() < 5) {
-                            tabsView.setTabMode(TabLayout.MODE_FIXED);
-                        } else {
-                            tabsView.setTabMode(TabLayout.MODE_SCROLLABLE);
+                        break;
+                    case ARTIST_ENTITY_TYPE:
+                        collection.setCount(collection.getArtistCount());
+                        if (!collectionTabs.contains(ARTISTS)) {
+                            collectionTabs.add(ARTISTS);
                         }
-                        configurePager(collectionTabs);
-                    } else {
-                        noresultsView.setVisibility(View.VISIBLE);
-                    }
-                },
-                this::showConnectionWarning,
-                100, 0);
+                        break;
+                    case EVENT_ENTITY_TYPE:
+                        collection.setCount(collection.getEventCount());
+                        if (!collectionTabs.contains(EVENTS)) {
+                            collectionTabs.add(EVENTS);
+                        }
+                        break;
+                    case INSTRUMENT_ENTITY_TYPE:
+                        collection.setCount(collection.getInstrumentCount());
+                        if (!collectionTabs.contains(INSTRUMENTS)) {
+                            collectionTabs.add(INSTRUMENTS);
+                        }
+                        break;
+                    case LABEL_ENTITY_TYPE:
+                        collection.setCount(collection.getLabelCount());
+                        if (!collectionTabs.contains(LABELS)) {
+                            collectionTabs.add(LABELS);
+                        }
+                        break;
+                    case PLACE_ENTITY_TYPE:
+                        collection.setCount(collection.getPlaceCount());
+                        if (!collectionTabs.contains(PLACES)) {
+                            collectionTabs.add(PLACES);
+                        }
+                        break;
+                    case RECORDING_ENTITY_TYPE:
+                        collection.setCount(collection.getRecordingCount());
+                        if (!collectionTabs.contains(RECORDINGS)) {
+                            collectionTabs.add(RECORDINGS);
+                        }
+                        break;
+                    case RELEASE_ENTITY_TYPE:
+                        collection.setCount(collection.getReleaseCount());
+                        if (!collectionTabs.contains(RELEASES)) {
+                            collectionTabs.add(RELEASES);
+                        }
+                        break;
+                    case RELEASE_GROUP_ENTITY_TYPE:
+                        collection.setCount(collection.getReleaseGroupCount());
+                        if (!collectionTabs.contains(RELEASE_GROUPS)) {
+                            collectionTabs.add(RELEASE_GROUPS);
+                        }
+                        break;
+                    case SERIES_ENTITY_TYPE:
+                        collection.setCount(collection.getSeriesCount());
+                        if (!collectionTabs.contains(SERIES)) {
+                            collectionTabs.add(SERIES);
+                        }
+                        break;
+                    case WORK_ENTITY_TYPE:
+                        collection.setCount(collection.getWorkCount());
+                        if (!collectionTabs.contains(WORKS)) {
+                            collectionTabs.add(WORKS);
+                        }
+                        break;
+                }
+            }
+            Collections.sort(collectionTabs, (t1, t2) -> t1.ordinal() - t2.ordinal());
+            if (collectionTabs.size() < 5) {
+                tabsView.setTabMode(TabLayout.MODE_FIXED);
+            } else {
+                tabsView.setTabMode(TabLayout.MODE_SCROLLABLE);
+            }
+            configurePager(collectionTabs);
+        } else {
+            noresultsView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void configurePager(List<CollectionsPagerAdapter.CollectionTab> collectionTabs) {
+        if (pagerAdapter != null) {
+            pagerAdapter.removePagerFragments(pagerView);
+        }
+        pagerAdapter = new CollectionsPagerAdapter(getChildFragmentManager(), getResources(), collectionTabs);
+        pagerView.setAdapter(pagerAdapter);
+        pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
+        tabsView.setupWithViewPager(pagerView);
+        pagerAdapter.setupTabViews(tabsView);
+
+        if (collectionTabOrdinal != -1) {
+            for (int i = 0; i < collectionTabs.size(); i++) {
+                if (collectionTabs.get(i).ordinal() == collectionTabOrdinal) {
+                    pagerView.setCurrentItem(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void viewProgressLoading(boolean isView) {
@@ -237,7 +282,7 @@ public class CollectionsPagerFragment extends LazyFragment implements
         //ShowUtil.showError(getContext(), t);
         viewProgressLoading(false);
         viewError(true);
-        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> update());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
 

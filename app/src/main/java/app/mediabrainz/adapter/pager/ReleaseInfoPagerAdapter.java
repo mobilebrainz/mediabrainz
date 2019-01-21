@@ -11,7 +11,7 @@ import app.mediabrainz.fragment.ReleaseCreditsFragment;
 import app.mediabrainz.fragment.ReleaseInfoTabFragment;
 
 
-public class ReleaseInfoPagerAdapter extends BaseFragmentPagerAdapter {
+public class ReleaseInfoPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 4;
     public final static int TAB_BIO_POS = 0;

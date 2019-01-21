@@ -9,7 +9,7 @@ import app.mediabrainz.api.site.TagServiceInterface.TagType;
 import app.mediabrainz.fragment.UserRecommendsTabFragment;
 
 
-public class UserRecommendsPagerAdapter extends BaseFragmentPagerAdapter {
+public class UserRecommendsPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public enum RecommendsTab {
         ARTIST(TagType.ARTIST, R.string.ratings_tab_artists, R.drawable.ic_artist_24_dark),

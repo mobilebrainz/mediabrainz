@@ -1,30 +1,23 @@
-package app.mediabrainz.ui;
+package app.mediabrainz.viewModels;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
-import android.arch.lifecycle.ViewModel;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 
-import io.reactivex.disposables.CompositeDisposable;
 import app.mediabrainz.api.site.TagEntity;
 import app.mediabrainz.api.site.TagServiceInterface;
 import app.mediabrainz.data.NetworkState;
 import app.mediabrainz.data.TagDataSource;
 
 
-public class TagViewModel extends ViewModel {
+public class TagVM extends BaseViewModel {
 
     private static final int PAGE_SIZE = 100;
 
     public LiveData<PagedList<TagEntity>> tagLiveData;
-    private CompositeDisposable compositeDisposable;
     private MutableLiveData<TagDataSource> tagDataSourceMutableLiveData;
-
-    public TagViewModel() {
-        compositeDisposable = new CompositeDisposable();
-    }
 
     public void load(TagServiceInterface.TagType tagType, String tag) {
         TagDataSource.Factory factory = new TagDataSource.Factory(compositeDisposable, tagType, tag);
@@ -36,12 +29,6 @@ public class TagViewModel extends ViewModel {
 
         tagLiveData = new LivePagedListBuilder<>(factory, config).build();
         tagDataSourceMutableLiveData = factory.getTagDataSourceLiveData();
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        compositeDisposable.dispose();
     }
 
     public void retry() {

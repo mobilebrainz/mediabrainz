@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.mediabrainz.R;
-import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
+import app.mediabrainz.adapter.pager.UpdatableFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.RecordingNavigationPagerAdapter;
 import app.mediabrainz.adapter.pager.TagPagerAdapter;
 import app.mediabrainz.api.model.Artist;
@@ -134,7 +134,7 @@ public class RecordingActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    protected BaseFragmentPagerAdapter initBottomNavigationPagerAdapter() {
+    protected UpdatableFragmentPagerAdapter initBottomNavigationPagerAdapter() {
         return new RecordingNavigationPagerAdapter(getSupportFragmentManager(), getResources());
     }
 
@@ -312,7 +312,7 @@ public class RecordingActivity extends BaseBottomNavActivity implements
     @Override
     public void onCollection(String collectionMbid) {
         viewProgressLoading(true);
-        api.addEntityToCollectionOld(
+        api.addEntityToCollection(
                 collectionMbid, RECORDINGS, mbid,
                 metadata -> {
                     viewProgressLoading(false);

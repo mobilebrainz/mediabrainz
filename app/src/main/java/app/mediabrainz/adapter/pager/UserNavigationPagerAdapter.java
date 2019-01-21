@@ -13,7 +13,7 @@ import app.mediabrainz.fragment.UserSendMessageFragment;
 import app.mediabrainz.fragment.UserTagsPagerFragment;
 
 
-public class UserNavigationPagerAdapter extends BaseFragmentPagerAdapter {
+public class UserNavigationPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 6;
     public static final int TAB_PROFILE_POS = 0;

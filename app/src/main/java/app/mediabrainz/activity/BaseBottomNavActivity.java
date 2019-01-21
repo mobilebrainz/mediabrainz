@@ -10,9 +10,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import app.mediabrainz.R;
-import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
+import app.mediabrainz.adapter.pager.UpdatableFragmentPagerAdapter;
 import app.mediabrainz.communicator.ShowTitleCommunicator;
-import app.mediabrainz.ui.CustomViewPager;
+import app.mediabrainz.ui.view.CustomViewPager;
 import app.mediabrainz.util.BottomNavigationBehavior;
 
 
@@ -34,7 +34,7 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
     protected View errorView;
     protected View progressView;
     protected CustomViewPager pagerView;
-    protected BaseFragmentPagerAdapter bottomNavigationPagerAdapter;
+    protected UpdatableFragmentPagerAdapter bottomNavigationPagerAdapter;
 
     @Override
     protected int initContentLayout() {
@@ -97,7 +97,7 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
 
     protected abstract void onCreateActivity(Bundle savedInstanceState);
 
-    protected abstract BaseFragmentPagerAdapter initBottomNavigationPagerAdapter();
+    protected abstract UpdatableFragmentPagerAdapter initBottomNavigationPagerAdapter();
 
     protected abstract int initBottomMenuId();
 
@@ -170,7 +170,7 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
     public int getFragmentViewId() {
         return fragmentViewId;
     }
-    public BaseFragmentPagerAdapter getBottomNavigationPagerAdapter() {
+    public UpdatableFragmentPagerAdapter getBottomNavigationPagerAdapter() {
         return bottomNavigationPagerAdapter;
     }
 }

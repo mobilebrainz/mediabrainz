@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,8 +20,8 @@ import app.mediabrainz.adapter.recycler.PagedReleaseAdapter;
 import app.mediabrainz.adapter.recycler.RetryCallback;
 import app.mediabrainz.api.browse.ReleaseBrowseService;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
-import app.mediabrainz.data.Status;
-import app.mediabrainz.ui.ReleasesViewModel;
+import app.mediabrainz.viewModels.Status;
+import app.mediabrainz.viewModels.ReleasesVM;
 
 
 public class PagedReleaseDialogFragment extends DialogFragment implements
@@ -30,7 +31,7 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
     private static final String RG_MBID = "RG_MBID";
 
     private String albumMbid;
-    private ReleasesViewModel releasesViewModel;
+    private ReleasesVM releasesVM;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView pagedRecyclerView;
@@ -90,21 +91,26 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
     public void onResume() {
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setLayout(width, height);
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            getDialog().getWindow().setLayout(width, height);
+        }
         super.onResume();
     }
 
     public void load() {
         adapter = new PagedReleaseAdapter(this, null);
         adapter.setHolderClickListener(r -> {
-            ((OnReleaseCommunicator) getContext()).onRelease(r.getId());
+            if (getContext() instanceof OnReleaseCommunicator) {
+                ((OnReleaseCommunicator) getContext()).onRelease(r.getId());
+            }
             dismiss();
         });
 
-        releasesViewModel = ViewModelProviders.of(this).get(ReleasesViewModel.class);
-        releasesViewModel.load(albumMbid, ReleaseBrowseService.ReleaseBrowseEntityType.RELEASE_GROUP);
-        releasesViewModel.realeseLiveData.observe(this, adapter::submitList);
-        releasesViewModel.getNetworkState().observe(this, adapter::setNetworkState);
+        releasesVM = ViewModelProviders.of(this).get(ReleasesVM.class);
+        releasesVM.load(albumMbid, ReleaseBrowseService.ReleaseBrowseEntityType.RELEASE_GROUP);
+        releasesVM.realesesLiveData.observe(this, adapter::submitList);
+        releasesVM.getNetworkState().observe(this, adapter::setNetworkState);
 
         pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         pagedRecyclerView.setNestedScrollingEnabled(true);
@@ -117,7 +123,7 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
     }
 
     private void initSwipeToRefresh() {
-        releasesViewModel.getRefreshState().observe(this, networkState -> {
+        releasesVM.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
 
                 if (adapter.getCurrentList() == null || adapter.getCurrentList().size() == 0) {
@@ -127,8 +133,8 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
                     if (networkState.getMessage() != null) {
                         errorMessageTextView.setText(networkState.getMessage());
                     }
-                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
                     pagedRecyclerView.scrollToPosition(0);
@@ -137,7 +143,7 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            releasesViewModel.refresh();
+            releasesVM.refresh();
             swipeRefreshLayout.setRefreshing(false);
             pagedRecyclerView.scrollToPosition(0);
         });
@@ -145,8 +151,8 @@ public class PagedReleaseDialogFragment extends DialogFragment implements
 
     @Override
     public void retry() {
-        if (releasesViewModel != null) {
-            releasesViewModel.retry();
+        if (releasesVM != null) {
+            releasesVM.retry();
         }
     }
 

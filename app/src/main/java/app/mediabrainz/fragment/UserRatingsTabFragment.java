@@ -4,6 +4,7 @@ package app.mediabrainz.fragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,16 +28,17 @@ import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
-import app.mediabrainz.data.Status;
-import app.mediabrainz.ui.RatingsViewModel;
+import app.mediabrainz.viewModels.RatingsVM;
+import app.mediabrainz.viewModels.Status;
 
 
 public class UserRatingsTabFragment extends Fragment implements RetryCallback {
 
     private static final String RATINGS_TAB = "RATINGS_TAB";
 
+    private String username;
     private RatingServiceInterface.RatingType ratingType;
-    private RatingsViewModel ratingsViewModel;
+    private RatingsVM ratingsVM;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView pagedRecyclerView;
@@ -70,49 +72,54 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
 
-        load();
         return layout;
     }
 
-    private void load() {
-        String username = ((GetUsernameCommunicator) getContext()).getUsername();
-        if (username != null) {
-            switch (ratingType) {
-                case ARTIST:
-                    ArtistRatingsAdapter artistRatingsAdapter = new ArtistRatingsAdapter(this);
-                    artistRatingsAdapter.setHolderClickListener(rating -> ((OnArtistCommunicator) getContext()).onArtist(rating.getMbid()));
-                    adapter = artistRatingsAdapter;
-                    break;
-
-                case RELEASE_GROUP:
-                    ReleaseGroupRatingsAdapter releaseGroupRatingsAdapter = new ReleaseGroupRatingsAdapter(this);
-                    releaseGroupRatingsAdapter.setHolderClickListener(rating -> ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(rating.getMbid()));
-                    adapter = releaseGroupRatingsAdapter;
-                    break;
-
-                case RECORDING:
-                    RecordingRatingsAdapter recordingRatingsAdapter = new RecordingRatingsAdapter(this);
-                    recordingRatingsAdapter.setHolderClickListener(rating -> ((OnRecordingCommunicator) getContext()).onRecording(rating.getMbid()));
-                    adapter = recordingRatingsAdapter;
-                    break;
-            }
-
-            ratingsViewModel = ViewModelProviders.of(this).get(RatingsViewModel.class);
-            ratingsViewModel.load(ratingType, username);
-            ratingsViewModel.ratingsLiveData.observe(this, adapter::submitList);
-            ratingsViewModel.getNetworkState().observe(this, adapter::setNetworkState);
-
-            pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            pagedRecyclerView.setNestedScrollingEnabled(true);
-            pagedRecyclerView.setHasFixedSize(true);
-            pagedRecyclerView.setAdapter(adapter);
-
-            initSwipeToRefresh();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity() != null && getContext() instanceof GetUsernameCommunicator &&
+                (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
+            load();
         }
     }
 
+    private void load() {
+        switch (ratingType) {
+            case ARTIST:
+                ArtistRatingsAdapter artistRatingsAdapter = new ArtistRatingsAdapter(this);
+                artistRatingsAdapter.setHolderClickListener(rating -> ((OnArtistCommunicator) getContext()).onArtist(rating.getMbid()));
+                adapter = artistRatingsAdapter;
+                break;
+
+            case RELEASE_GROUP:
+                ReleaseGroupRatingsAdapter releaseGroupRatingsAdapter = new ReleaseGroupRatingsAdapter(this);
+                releaseGroupRatingsAdapter.setHolderClickListener(rating -> ((OnReleaseGroupCommunicator) getContext()).onReleaseGroup(rating.getMbid()));
+                adapter = releaseGroupRatingsAdapter;
+                break;
+
+            case RECORDING:
+                RecordingRatingsAdapter recordingRatingsAdapter = new RecordingRatingsAdapter(this);
+                recordingRatingsAdapter.setHolderClickListener(rating -> ((OnRecordingCommunicator) getContext()).onRecording(rating.getMbid()));
+                adapter = recordingRatingsAdapter;
+                break;
+        }
+
+        ratingsVM = ViewModelProviders.of(this).get(RatingsVM.class);
+        ratingsVM.load(ratingType, username);
+        ratingsVM.ratingsLiveData.observe(this, adapter::submitList);
+        ratingsVM.getNetworkState().observe(this, adapter::setNetworkState);
+
+        pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        pagedRecyclerView.setNestedScrollingEnabled(true);
+        pagedRecyclerView.setHasFixedSize(true);
+        pagedRecyclerView.setAdapter(adapter);
+
+        initSwipeToRefresh();
+    }
+
     private void initSwipeToRefresh() {
-        ratingsViewModel.getRefreshState().observe(this, networkState -> {
+        ratingsVM.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
 
                 //Show the current network state for the first getWikidata when the rating list
@@ -125,8 +132,8 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
                         errorMessageTextView.setText(networkState.getMessage());
                     }
                     //loading and retry
-                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
                     pagedRecyclerView.scrollToPosition(0);
@@ -135,7 +142,7 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            ratingsViewModel.refresh();
+            ratingsVM.refresh();
             swipeRefreshLayout.setRefreshing(false);
             pagedRecyclerView.scrollToPosition(0);
         });
@@ -143,8 +150,8 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
 
     @Override
     public void retry() {
-        if (ratingsViewModel != null) {
-            ratingsViewModel.retry();
+        if (ratingsVM != null) {
+            ratingsVM.retry();
         }
     }
 

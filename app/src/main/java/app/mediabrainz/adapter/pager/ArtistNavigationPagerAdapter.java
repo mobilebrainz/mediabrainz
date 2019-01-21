@@ -12,7 +12,7 @@ import app.mediabrainz.fragment.ReleaseGroupsPagerFragment;
 import static app.mediabrainz.fragment.EditTagsPagerFragment.TagsPagerType.ARTIST;
 
 
-public class ArtistNavigationPagerAdapter extends BaseFragmentPagerAdapter {
+public class ArtistNavigationPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 4;
     public static final int TAB_RELEASES_POS = 0;

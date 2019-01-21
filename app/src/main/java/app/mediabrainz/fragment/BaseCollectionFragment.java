@@ -1,8 +1,10 @@
 package app.mediabrainz.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -19,25 +21,25 @@ import app.mediabrainz.R;
 import app.mediabrainz.adapter.recycler.RetryCallback;
 import app.mediabrainz.api.model.BaseLookupEntity;
 import app.mediabrainz.api.model.Collection;
+import app.mediabrainz.api.other.CollectionService;
+import app.mediabrainz.api.other.CollectionServiceInterface;
 import app.mediabrainz.communicator.GetCollectionCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
 import app.mediabrainz.communicator.ShowTitleCommunicator;
-import app.mediabrainz.functions.Action;
 import app.mediabrainz.util.ShowUtil;
+import app.mediabrainz.viewModels.BaseCollectionVM;
+import app.mediabrainz.viewModels.UserCollectionsSharedVM;
 
-import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
 public abstract class BaseCollectionFragment extends Fragment implements RetryCallback {
 
-    public interface OnChangeCollection {
-        void changeCollection();
-    }
-
     protected boolean isPrivate;
     protected Collection collection;
+    protected UserCollectionsSharedVM userCollectionsSharedVM;
+    private BaseCollectionVM baseCollectionVM;
 
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected RecyclerView pagedRecyclerView;
@@ -51,14 +53,12 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
 
     public abstract void load();
 
+    @NonNull
+    public abstract BaseCollectionVM initViewModel();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
-
-        String username = ((GetUsernameCommunicator) getContext()).getUsername();
-        isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
-        collection = ((GetCollectionCommunicator) getContext()).getCollection();
-        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(collection.getName());
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
@@ -77,50 +77,88 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
         retryLoadingButton = layout.findViewById(R.id.retryLoadingButton);
         retryLoadingButton.setOnClickListener(view -> retry());
 
-        if (collection != null && isPrivate) {
-            ((ShowFloatingActionButtonCommunicator) getContext()).showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.EDIT_COLLECTION);
-        }
-        load();
         return layout;
     }
 
-    public void onDelete(BaseLookupEntity entity, Action action) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity() != null &&
+                getContext() instanceof GetUsernameCommunicator &&
+                getContext() instanceof GetCollectionCommunicator) {
+
+            String username = ((GetUsernameCommunicator) getContext()).getUsername();
+            isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
+
+            collection = ((GetCollectionCommunicator) getContext()).getCollection();
+
+            if (collection != null) {
+                if (getContext() instanceof ShowTitleCommunicator) {
+                    ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(collection.getName());
+
+                }
+                if (getContext() instanceof ShowFloatingActionButtonCommunicator && isPrivate) {
+                    ((ShowFloatingActionButtonCommunicator) getContext())
+                            .showFloatingActionButton(true, ShowFloatingActionButtonCommunicator.FloatingButtonType.EDIT_COLLECTION);
+                }
+
+                userCollectionsSharedVM = ViewModelProviders
+                        .of(getActivity(), new UserCollectionsSharedVM.Factory(oauth.getName()))
+                        .get(UserCollectionsSharedVM.class);
+
+                baseCollectionVM = initViewModel();
+                baseCollectionVM.deleteEntityEvent.observeEvent(this, resource -> {
+                    if (resource == null) return;
+                    switch (resource.getStatus()) {
+                        case LOADING:
+                            progressView.setVisibility(View.VISIBLE);
+                            break;
+                        case ERROR:
+                            showConnectionWarning(resource.getThrowable());
+                            break;
+                        case SUCCESS:
+                            progressView.setVisibility(View.GONE);
+                            if (resource.getData() != null && resource.getData().getMessage().getText().equals("OK")) {
+                                load();
+                                userCollectionsSharedVM.invalidateUserCollections();
+                            } else {
+                                ShowUtil.showMessage(getActivity(), "Error");
+                            }
+                            break;
+                    }
+                });
+                load();
+            }
+        }
+    }
+
+    public void onDelete(BaseLookupEntity entity) {
         View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
         TextView titleTextView = titleView.findViewById(R.id.titleTextView);
         titleTextView.setText(R.string.collection_delete_entity);
 
-        new AlertDialog.Builder(getContext())
-                .setCustomTitle(titleView)
-                .setMessage(getString(R.string.delete_alert_message))
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    progressView.setVisibility(View.VISIBLE);
-                    if (!api.deleteEntityFromCollection(
-                            collection, entity,
-                            metadata -> {
-                                progressView.setVisibility(View.GONE);
-                                if (metadata.getMessage().getText().equals("OK")) {
-                                    if (action != null) {
-                                        action.run();
-                                    } else {
-                                        load();
-                                    }
-                                    ((OnChangeCollection) getContext()).changeCollection();
-                                } else {
-                                    ShowUtil.showMessage(getActivity(), "Error");
-                                }
-                            },
-                            this::showConnectionWarning)) {
-                        progressView.setVisibility(View.GONE);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel())
-                .show();
+        if (getContext() != null) {
+            new AlertDialog.Builder(getContext())
+                    .setCustomTitle(titleView)
+                    .setMessage(getString(R.string.delete_alert_message))
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        CollectionServiceInterface.CollectionType collType = CollectionService.getCollectionType(collection.getEntityType());
+                        if (collType != null) {
+                            baseCollectionVM.deleteEntityFromCollection(collection, entity);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel())
+                    .show();
+        }
     }
 
     private void showConnectionWarning(Throwable t) {
         progressView.setVisibility(View.GONE);
         errorView.setVisibility(View.VISIBLE);
-        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
+        errorView.findViewById(R.id.retryButton).setOnClickListener(v -> {
+            errorView.setVisibility(View.GONE);
+            load();
+        });
     }
 
     @Override

@@ -8,7 +8,7 @@ import app.mediabrainz.R;
 import app.mediabrainz.fragment.UserTagListFragment;
 
 
-public class UserTagPagerAdapter extends BaseFragmentPagerAdapter {
+public class UserTagPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 3;
     public final static int TAB_ARTISTS_POS = 0;

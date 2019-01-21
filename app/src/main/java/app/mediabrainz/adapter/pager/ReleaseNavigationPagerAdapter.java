@@ -13,7 +13,7 @@ import app.mediabrainz.fragment.ReleasesFragment;
 import static app.mediabrainz.fragment.EditTagsPagerFragment.TagsPagerType.RELEASE;
 
 
-public class ReleaseNavigationPagerAdapter extends BaseFragmentPagerAdapter {
+public class ReleaseNavigationPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 5;
     public static final int TAB_TRACKS_POS = 0;

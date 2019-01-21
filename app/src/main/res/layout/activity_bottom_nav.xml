@@ -63,7 +63,7 @@
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <app.mediabrainz.ui.CustomViewPager
+        <app.mediabrainz.ui.view.CustomViewPager
             android:id="@+id/pagerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

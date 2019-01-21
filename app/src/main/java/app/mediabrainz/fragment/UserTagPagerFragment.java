@@ -1,46 +1,42 @@
 package app.mediabrainz.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-import java.util.Map;
-
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.UserTagPagerAdapter;
-import app.mediabrainz.api.site.TagEntity;
-import app.mediabrainz.api.site.TagServiceInterface;
-import app.mediabrainz.communicator.GetUserTagEntitiesCommunicator;
 import app.mediabrainz.communicator.ShowTitleCommunicator;
+import app.mediabrainz.viewModels.UserTagVM;
 
-import static app.mediabrainz.MediaBrainzApp.api;
 
+public class UserTagPagerFragment extends Fragment {
 
-public class UserTagPagerFragment extends Fragment implements
-        GetUserTagEntitiesCommunicator {
-
-    public static final String USERNAME = "USERNAME";
-    public static final String USER_TAG = "USER_TAG";
+    public static final String USERNAME = "UserTagPagerFragment.USERNAME";
+    public static final String USER_TAG = "UserTagPagerFragment.USER_TAG";
 
     private String username;
     private String userTag;
     private boolean isLoading;
     private boolean isError;
-    private Map<TagServiceInterface.UserTagType, List<TagEntity>> entitiesMap;
+
+    private UserTagVM userTagVM;
 
     private ViewPager pagerView;
     private TabLayout tabsView;
     private View errorView;
     private View progressView;
 
-    public static UserTagPagerFragment newInstance(String username, String tag) {
+    public static UserTagPagerFragment newInstance(@NonNull String username, @NonNull String tag) {
         Bundle args = new Bundle();
         args.putString(USERNAME, username);
         args.putString(USER_TAG, tag);
@@ -58,13 +54,56 @@ public class UserTagPagerFragment extends Fragment implements
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
 
-        username = getArguments().getString(USERNAME);
-        userTag = getArguments().getString(USER_TAG);
-
-        ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(userTag);
-
-        load();
         return layout;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(USERNAME, username);
+        outState.putString(USER_TAG, userTag);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (getActivity() != null) {
+            if (getArguments() != null) {
+                username = getArguments().getString(USERNAME);
+                userTag = getArguments().getString(USER_TAG);
+            } else if (savedInstanceState != null) {
+                username = savedInstanceState.getString(USERNAME);
+                userTag = savedInstanceState.getString(USER_TAG);
+            }
+
+            if (!TextUtils.isEmpty(userTag) && !TextUtils.isEmpty(username)) {
+                if (getContext() instanceof ShowTitleCommunicator) {
+                    ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(userTag);
+                }
+                userTagVM = ViewModelProviders.of(getActivity()).get(UserTagVM.class);
+
+                userTagVM.entitiesMapResource.observe(this, resource -> {
+                    if (resource == null) return;
+                    switch (resource.getStatus()) {
+                        case LOADING:
+                            viewProgressLoading(true);
+                            break;
+                        case ERROR:
+                            showConnectionWarning(resource.getThrowable());
+                            break;
+                        case SUCCESS:
+                            viewProgressLoading(false);
+                            configurePager();
+                            break;
+                        case INVALID:
+                            load();
+                            break;
+                    }
+                });
+                load();
+            }
+        }
     }
 
     private void configurePager() {
@@ -77,15 +116,8 @@ public class UserTagPagerFragment extends Fragment implements
 
     private void load() {
         viewError(false);
-
-        viewProgressLoading(true);
-        api.getUserTagEntities(username, userTag,
-                map -> {
-                    viewProgressLoading(false);
-                    entitiesMap = map;
-                    configurePager();
-                },
-                this::showConnectionWarning);
+        viewProgressLoading(false);
+        userTagVM.load(username, userTag);
     }
 
     private void viewProgressLoading(boolean isView) {
@@ -117,14 +149,6 @@ public class UserTagPagerFragment extends Fragment implements
         viewProgressLoading(false);
         viewError(true);
         errorView.findViewById(R.id.retryButton).setOnClickListener(v -> load());
-    }
-
-    @Override
-    public List<TagEntity> getEntities(TagServiceInterface.UserTagType userTagType) {
-        if (entitiesMap != null) {
-            return entitiesMap.get(userTagType);
-        }
-        return null;
     }
 
 }

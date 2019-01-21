@@ -111,7 +111,7 @@ public class Api {
     public Disposable getCollections(Consumer<Collection.CollectionBrowse> consumer, ErrorHandler errorHandler, int limit, int offset) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe503(
-                        new CollectionBrowseService(EDITOR, oauth.getAccount().name)
+                        new CollectionBrowseService(EDITOR, oauth.getName())
                                 .addIncs(USER_COLLECTIONS)
                                 .browse(limit, offset),
                         consumer, errorHandler),
@@ -162,6 +162,7 @@ public class Api {
                 consumer, errorHandler);
     }
 
+    /*
     public boolean deleteEntityFromCollection(Collection collection, BaseLookupEntity entity, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
         CollectionServiceInterface.CollectionType collType = CollectionService.getCollectionType(collection.getEntityType());
         if (collType != null) {
@@ -174,8 +175,17 @@ public class Api {
         }
         return false;
     }
+    */
+    public Disposable deleteEntityFromCollection(Collection collection, BaseLookupEntity entity, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
+        return oauth.refreshToken(
+                () -> ApiHandler.subscribe(
+                        new CollectionService(CLIENT).deleteCollection(
+                                collection.getId(), CollectionService.getCollectionType(collection.getEntityType()), entity.getId()),
+                        consumer, errorHandler),
+                errorHandler);
+    }
 
-    public Disposable addEntityToCollectionOld(String collId, CollectionServiceInterface.CollectionType collType, String id, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
+    public Disposable addEntityToCollection(String collId, CollectionServiceInterface.CollectionType collType, String id, Consumer<Metadata> consumer, ErrorHandler errorHandler) {
         return oauth.refreshToken(
                 () -> ApiHandler.subscribe(
                         new CollectionService(CLIENT).putCollection(collId, collType, id),

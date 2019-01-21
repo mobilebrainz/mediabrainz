@@ -26,8 +26,8 @@ import app.mediabrainz.communicator.GetTagCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
 import app.mediabrainz.communicator.OnRecordingCommunicator;
 import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
-import app.mediabrainz.data.Status;
-import app.mediabrainz.ui.TagViewModel;
+import app.mediabrainz.viewModels.Status;
+import app.mediabrainz.viewModels.TagVM;
 
 
 public class TagTabFragment extends Fragment implements RetryCallback {
@@ -35,7 +35,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
     private static final String TAG_TAB = "TAG_TAB";
 
     private TagServiceInterface.TagType tagType;
-    private TagViewModel tagViewModel;
+    private TagVM tagVM;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView pagedRecyclerView;
@@ -96,10 +96,10 @@ public class TagTabFragment extends Fragment implements RetryCallback {
                     break;
             }
 
-            tagViewModel = ViewModelProviders.of(this).get(TagViewModel.class);
-            tagViewModel.load(tagType, tag);
-            tagViewModel.tagLiveData.observe(this, adapter::submitList);
-            tagViewModel.getNetworkState().observe(this, adapter::setNetworkState);
+            tagVM = ViewModelProviders.of(this).get(TagVM.class);
+            tagVM.load(tagType, tag);
+            tagVM.tagLiveData.observe(this, adapter::submitList);
+            tagVM.getNetworkState().observe(this, adapter::setNetworkState);
 
             pagedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             pagedRecyclerView.setNestedScrollingEnabled(true);
@@ -114,7 +114,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
      * Init swipe to refresh and enable pull to refresh only when there are items in the adapter
      */
     private void initSwipeToRefresh() {
-        tagViewModel.getRefreshState().observe(this, networkState -> {
+        tagVM.getRefreshState().observe(this, networkState -> {
             if (networkState != null) {
 
                 //Show the current network state for the first getWikidata when the rating list
@@ -127,8 +127,8 @@ public class TagTabFragment extends Fragment implements RetryCallback {
                         errorMessageTextView.setText(networkState.getMessage());
                     }
                     //loading and retry
-                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
                     pagedRecyclerView.scrollToPosition(0);
@@ -137,7 +137,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
         });
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            tagViewModel.refresh();
+            tagVM.refresh();
             swipeRefreshLayout.setRefreshing(false);
             pagedRecyclerView.scrollToPosition(0);
         });
@@ -145,8 +145,8 @@ public class TagTabFragment extends Fragment implements RetryCallback {
 
     @Override
     public void retry() {
-        if (tagViewModel != null) {
-            tagViewModel.retry();
+        if (tagVM != null) {
+            tagVM.retry();
         }
     }
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.mediabrainz.R;
-import app.mediabrainz.adapter.pager.BaseFragmentPagerAdapter;
+import app.mediabrainz.adapter.pager.UpdatableFragmentPagerAdapter;
 import app.mediabrainz.adapter.pager.ReleaseNavigationPagerAdapter;
 import app.mediabrainz.adapter.pager.TagPagerAdapter;
 import app.mediabrainz.api.model.Artist;
@@ -151,7 +151,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    protected BaseFragmentPagerAdapter initBottomNavigationPagerAdapter() {
+    protected UpdatableFragmentPagerAdapter initBottomNavigationPagerAdapter() {
         return new ReleaseNavigationPagerAdapter(getSupportFragmentManager(), getResources());
     }
 
@@ -314,12 +314,11 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
         final String mbid = (collectionType.equals(CollectionServiceInterface.CollectionType.RELEASES)) ? releaseMbid : release.getReleaseGroup().getId();
 
         viewProgressLoading(true);
-        api.addEntityToCollectionOld(
+        api.addEntityToCollection(
                 collectionMbid, collectionType, mbid,
                 metadata -> {
                     viewProgressLoading(false);
                     if (metadata.getMessage().getText().equals("OK")) {
-                        //todo: snackbar or toast?
                         ShowUtil.showMessage(this, getString(R.string.collection_added));
                     } else {
                         ShowUtil.showMessage(this, "Error");

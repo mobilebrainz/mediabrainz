@@ -9,7 +9,7 @@ import app.mediabrainz.fragment.UserProfileFragment;
 import app.mediabrainz.fragment.UsersFragment;
 
 
-public class UserProfilePagerAdapter extends BaseFragmentPagerAdapter {
+public class UserProfilePagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 2;
     public final static int TAB_PROFILE_POS = 0;

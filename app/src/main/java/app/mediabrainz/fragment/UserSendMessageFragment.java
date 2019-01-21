@@ -86,6 +86,7 @@ public class UserSendMessageFragment extends LazyFragment {
             focusView.requestFocus();
         } else {
             viewProgressLoading(true);
+            //todo: перенести в ViewModel?
             api.sendEmail(
                     username, subject, message, revealEmailCheckbox.isChecked(),
                     responseBody -> {

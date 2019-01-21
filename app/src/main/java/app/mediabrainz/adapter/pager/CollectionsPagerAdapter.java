@@ -12,7 +12,7 @@ import app.mediabrainz.fragment.CollectionsTabFragment;
 import static app.mediabrainz.adapter.pager.CollectionsPagerAdapter.CollectionTab.*;
 
 
-public class CollectionsPagerAdapter extends BaseFragmentPagerAdapter {
+public class CollectionsPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final CollectionTab[] collectionTabTypeSpinner = {
             RELEASES, RELEASES, RELEASES,

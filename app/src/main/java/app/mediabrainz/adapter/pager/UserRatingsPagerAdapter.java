@@ -11,7 +11,7 @@ import app.mediabrainz.fragment.UserRatingsTabFragment;
 import static app.mediabrainz.api.site.RatingServiceInterface.RatingType;
 
 
-public class UserRatingsPagerAdapter extends BaseFragmentPagerAdapter {
+public class UserRatingsPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public enum RatingsTab {
         ARTIST(RatingType.ARTIST, R.string.ratings_tab_artists, R.drawable.ic_artist_24_dark),

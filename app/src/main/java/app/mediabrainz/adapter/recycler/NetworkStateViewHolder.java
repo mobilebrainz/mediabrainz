@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import app.mediabrainz.R;
 import app.mediabrainz.data.NetworkState;
-import app.mediabrainz.data.Status;
+import app.mediabrainz.viewModels.Status;
 
 
 public class NetworkStateViewHolder extends RecyclerView.ViewHolder {
@@ -37,8 +37,8 @@ public class NetworkStateViewHolder extends RecyclerView.ViewHolder {
         }
 
         //loading and retry
-        retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-        loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+        retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+        loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
     }
 
     public static NetworkStateViewHolder create(ViewGroup parent, RetryCallback retryCallback) {

@@ -1,7 +1,9 @@
 package app.mediabrainz.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +19,10 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.mediabrainz.R;
+import app.mediabrainz.api.site.UserProfile;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.util.StringFormat;
-
-import static app.mediabrainz.MediaBrainzApp.api;
+import app.mediabrainz.viewModels.UserProfileVM;
 
 
 public class UserProfileFragment extends LazyFragment {
@@ -28,6 +30,8 @@ public class UserProfileFragment extends LazyFragment {
     private String username;
     private boolean isLoading;
     private boolean isError;
+
+    private UserProfileVM userProfileVM;
 
     private View errorView;
     private View progressView;
@@ -68,73 +72,102 @@ public class UserProfileFragment extends LazyFragment {
         languagesView = layout.findViewById(R.id.languagesView);
         bioView = layout.findViewById(R.id.bioView);
 
-        loadView();
         return layout;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getContext() instanceof GetUsernameCommunicator &&
+                (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
+
+            userProfileVM = ViewModelProviders
+                    .of(this, new UserProfileVM.Factory(username))
+                    .get(UserProfileVM.class);
+
+            userProfileVM.userProfileResource.observe(this, resource -> {
+                if (resource == null) return;
+                switch (resource.getStatus()) {
+                    case LOADING:
+                        viewProgressLoading(true);
+                        break;
+                    case ERROR:
+                        showConnectionWarning(resource.getThrowable());
+                        break;
+                    case SUCCESS:
+                        viewProgressLoading(false);
+                        show(resource.getData());
+                        break;
+                    case INVALID:
+                        userProfileVM.load();
+                        break;
+                }
+            });
+            loadView();
+        }
     }
 
     @Override
     protected void lazyLoad() {
         viewError(false);
         viewProgressLoading(false);
-        username = ((GetUsernameCommunicator) getContext()).getUsername();
-        if (username != null) {
-            viewProgressLoading(true);
-            api.getUserProfile(username,
-                    userProfile -> {
-                        viewProgressLoading(false);
-                        if (!TextUtils.isEmpty(userProfile.getUserType())) {
-                            userTypeView.setVisibility(View.VISIBLE);
-                            userTypeView.setText(getResources().getString(R.string.user_profile_user_type, userProfile.getUserType()));
-                        }
-                        if (!TextUtils.isEmpty(userProfile.getAge())) {
-                            ageView.setVisibility(View.VISIBLE);
-                            ageView.setText(getResources().getString(R.string.user_profile_age, userProfile.getAge()));
-                        }
-                        if (!TextUtils.isEmpty(userProfile.getGender())) {
-                            genderView.setVisibility(View.VISIBLE);
-                            genderView.setText(getResources().getString(R.string.user_profile_gender, userProfile.getGender()));
-                        }
-                        if (!TextUtils.isEmpty(userProfile.getMemberSince())) {
-                            memberSinceView.setVisibility(View.VISIBLE);
-                            memberSinceView.setText(getResources().getString(R.string.user_profile_member_since, userProfile.getMemberSince()));
-                        }
-                        if (!TextUtils.isEmpty(userProfile.getHomepage()) && !userProfile.getHomepage().contains("content is hidden")) {
-                            homepageView.setVisibility(View.VISIBLE);
-                            homepageView.setText(getResources().getString(R.string.user_profile_homepage, userProfile.getHomepage()));
-                        }
-                        if (!TextUtils.isEmpty(userProfile.getBio())) {
-                            bioView.setVisibility(View.VISIBLE);
-                            bioView.setText(getResources().getString(R.string.user_profile_bio, userProfile.getBio()));
-                        }
-                        List<String> areas = userProfile.getAreas();
-                        if (!areas.isEmpty()) {
-                            locationView.setVisibility(View.VISIBLE);
-                            locationView.setText(getResources().getString(R.string.user_profile_location, StringFormat.join(", ", areas)));
-                        }
-                        List<String> languages = userProfile.getLanguages();
-                        if (!languages.isEmpty()) {
-                            languagesView.setVisibility(View.VISIBLE);
-                            languagesView.setText(getResources().getString(R.string.user_profile_languages, StringFormat.join(", ", languages)));
+        if (userProfileVM != null) {
+            userProfileVM.lazyLoad();
+        }
+    }
+
+    private void show(UserProfile userProfile) {
+        if (userProfile == null) return;
+        if (!TextUtils.isEmpty(userProfile.getUserType())) {
+            userTypeView.setVisibility(View.VISIBLE);
+            userTypeView.setText(getResources().getString(R.string.user_profile_user_type, userProfile.getUserType()));
+        }
+        if (!TextUtils.isEmpty(userProfile.getAge())) {
+            ageView.setVisibility(View.VISIBLE);
+            ageView.setText(getResources().getString(R.string.user_profile_age, userProfile.getAge()));
+        }
+        if (!TextUtils.isEmpty(userProfile.getGender())) {
+            genderView.setVisibility(View.VISIBLE);
+            genderView.setText(getResources().getString(R.string.user_profile_gender, userProfile.getGender()));
+        }
+        if (!TextUtils.isEmpty(userProfile.getMemberSince())) {
+            memberSinceView.setVisibility(View.VISIBLE);
+            memberSinceView.setText(getResources().getString(R.string.user_profile_member_since, userProfile.getMemberSince()));
+        }
+        if (!TextUtils.isEmpty(userProfile.getHomepage()) && !userProfile.getHomepage().contains("content is hidden")) {
+            homepageView.setVisibility(View.VISIBLE);
+            homepageView.setText(getResources().getString(R.string.user_profile_homepage, userProfile.getHomepage()));
+        }
+        if (!TextUtils.isEmpty(userProfile.getBio())) {
+            bioView.setVisibility(View.VISIBLE);
+            bioView.setText(getResources().getString(R.string.user_profile_bio, userProfile.getBio()));
+        }
+        List<String> areas = userProfile.getAreas();
+        if (!areas.isEmpty()) {
+            locationView.setVisibility(View.VISIBLE);
+            locationView.setText(getResources().getString(R.string.user_profile_location, StringFormat.join(", ", areas)));
+        }
+        List<String> languages = userProfile.getLanguages();
+        if (!languages.isEmpty()) {
+            languagesView.setVisibility(View.VISIBLE);
+            languagesView.setText(getResources().getString(R.string.user_profile_languages, StringFormat.join(", ", languages)));
+        }
+
+        if (!userProfile.getGravatar().contains("https://gravatar.com/avatar/placeholder?d=mm&s=108")) {
+            avatarFrameView.setVisibility(View.VISIBLE);
+            avatarLoadingView.setVisibility(View.VISIBLE);
+            Picasso.get().load(userProfile.getGravatar()).fit().centerInside().into(avatarView,
+                    new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            avatarLoadingView.setVisibility(View.GONE);
                         }
 
-                        if (!userProfile.getGravatar().contains("https://gravatar.com/avatar/placeholder?d=mm&s=108")) {
-                            avatarFrameView.setVisibility(View.VISIBLE);
-                            avatarLoadingView.setVisibility(View.VISIBLE);
-                            Picasso.get().load(userProfile.getGravatar()).fit().centerInside().into(avatarView,
-                                    new Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            avatarLoadingView.setVisibility(View.GONE);
-                                        }
-
-                                        @Override
-                                        public void onError(Exception e) {
-                                            avatarFrameView.setVisibility(View.GONE);
-                                        }
-                                    });
+                        @Override
+                        public void onError(Exception e) {
+                            avatarFrameView.setVisibility(View.GONE);
                         }
-                    },
-                    this::showConnectionWarning);
+                    });
         }
     }
 

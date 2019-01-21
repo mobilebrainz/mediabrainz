@@ -1,7 +1,9 @@
 package app.mediabrainz.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +23,8 @@ import app.mediabrainz.communicator.GetCollectionsCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.communicator.OnCollectionCommunicator;
 import app.mediabrainz.util.ShowUtil;
+import app.mediabrainz.viewModels.CollectionsTabVM;
 
-import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 import static app.mediabrainz.adapter.pager.CollectionsPagerAdapter.CollectionTab.AREAS;
 import static app.mediabrainz.adapter.pager.CollectionsPagerAdapter.CollectionTab.ARTISTS;
@@ -52,8 +54,12 @@ public class CollectionsTabFragment extends Fragment {
 
     private static final String COLLECTION_TAB = "COLLECTION_TAB";
 
+    private int deletedPos;
     private int collectionTab;
     private boolean isPrivate;
+    private CollectionsTabVM collectionsTabVM;
+    private CollectionsAdapter adapter;
+    private List<Collection> tabCollections;
 
     private View progressView;
     private RecyclerView recyclerView;
@@ -74,20 +80,55 @@ public class CollectionsTabFragment extends Fragment {
         recyclerView = layout.findViewById(R.id.recyclerView);
         progressView = layout.findViewById(R.id.progressView);
 
-        load();
         return layout;
     }
 
-    public void load() {
-        viewProgressLoading(false);
-        isPrivate = false;
-        if (getContext() instanceof GetUsernameCommunicator) {
-            String username = ((GetUsernameCommunicator) getContext()).getUsername();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        String username;
+        if (getContext() instanceof GetUsernameCommunicator &&
+                (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
+
             isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
+
+            collectionsTabVM = ViewModelProviders
+                    .of(this)
+                    .get(CollectionsTabVM.class);
+
+            collectionsTabVM.deleteEvent.observeEvent(this, resource -> {
+                if (resource == null) return;
+                switch (resource.getStatus()) {
+                    case LOADING:
+                        viewProgressLoading(true);
+                        break;
+                    case ERROR:
+                        viewProgressLoading(false);
+                        ShowUtil.showError(getContext(), resource.getThrowable());
+                        break;
+                    case SUCCESS:
+                        viewProgressLoading(false);
+                        Collection collection = resource.getData();
+                        if (collection != null) {
+                            tabCollections.remove(collection);
+                            if (adapter != null) {
+                                adapter.notifyItemRemoved(deletedPos);
+                            }
+                        }
+                        //userCollectionsSharedVM.invalidateUserCollections();
+                        break;
+                }
+            });
+            show();
         }
+    }
+
+    public void show() {
+        viewProgressLoading(false);
+
         List<Collection> collections = ((GetCollectionsCommunicator) getParentFragment()).getCollections();
+        tabCollections = new ArrayList<>();
         if (collections != null) {
-            List<Collection> tabCollections = new ArrayList<>();
             for (Collection collection : collections) {
                 if ((AREA_ENTITY_TYPE.equals(collection.getEntityType()) && collectionTab == AREAS.ordinal())
                         || (ARTIST_ENTITY_TYPE.equals(collection.getEntityType()) && collectionTab == ARTISTS.ordinal())
@@ -104,7 +145,7 @@ public class CollectionsTabFragment extends Fragment {
                 }
             }
             if (!tabCollections.isEmpty()) {
-                CollectionsAdapter adapter = new CollectionsAdapter(tabCollections, isPrivate);
+                adapter = new CollectionsAdapter(tabCollections, isPrivate);
 
                 adapter.setHolderClickListener(pos ->
                         ((OnCollectionCommunicator) getContext()).onCollection(tabCollections.get(pos)));
@@ -112,6 +153,7 @@ public class CollectionsTabFragment extends Fragment {
                 if (isPrivate) {
                     adapter.setOnDeleteCollectionListener(
                             pos -> {
+                                deletedPos = pos;
                                 Collection collection = tabCollections.get(pos);
                                 View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
                                 TextView titleTextView = titleView.findViewById(R.id.titleTextView);
@@ -120,23 +162,12 @@ public class CollectionsTabFragment extends Fragment {
                                 new AlertDialog.Builder(getContext())
                                         .setCustomTitle(titleView)
                                         .setMessage(getString(R.string.delete_alert_message))
-                                        .setPositiveButton(android.R.string.yes,
-                                                (dialog, which) -> {
-                                                    viewProgressLoading(true);
-                                                    api.deleteCollection(collection,
-                                                            responseBody -> {
-                                                                viewProgressLoading(false);
-                                                                tabCollections.remove(collection);
-                                                                adapter.notifyItemRemoved(pos);
-                                                            },
-                                                            t -> {
-                                                                viewProgressLoading(false);
-                                                                ShowUtil.showError(getContext(), t);
-                                                            });
-                                                })
+                                        .setPositiveButton(android.R.string.yes, (dialog, which) -> collectionsTabVM.deleteCollection(collection))
                                         .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel())
                                         .show();
                             });
+
+
                 }
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setItemViewCacheSize(100);

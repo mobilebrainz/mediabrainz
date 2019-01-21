@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import app.mediabrainz.adapter.recycler.PagedSeriesCollectionAdapter;
-import app.mediabrainz.data.Status;
-import app.mediabrainz.ui.SeriesCollectionViewModel;
+import app.mediabrainz.viewModels.Status;
+import app.mediabrainz.viewModels.BaseCollectionVM;
+import app.mediabrainz.viewModels.SeriesCollectionVM;
 
 
 public class SeriesCollectionFragment extends BaseCollectionFragment {
 
-    private SeriesCollectionViewModel viewModel;
+    private SeriesCollectionVM viewModel;
     private PagedSeriesCollectionAdapter adapter;
 
     public static SeriesCollectionFragment newInstance() {
@@ -23,26 +24,26 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
     }
 
     @Override
+    public BaseCollectionVM initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(SeriesCollectionVM.class);
+        return viewModel;
+    }
+
+    @Override
     public void load() {
-        errorView.setVisibility(View.GONE);
+        adapter = new PagedSeriesCollectionAdapter(this, isPrivate);
+        //adapter.setHolderClickListener(series -> ((OnSeriesCommunicator) getContext()).onSeries(series.getId()));
 
-        if (collection != null) {
-            adapter = new PagedSeriesCollectionAdapter(this, isPrivate);
-            //adapter.setHolderClickListener(series -> ((OnSeriesCommunicator) getContext()).onSeries(series.getId()));
-
-            if (isPrivate) {
-                adapter.setOnDeleteListener(position -> onDelete(adapter.getCurrentList().get(position), null));
-            }
-
-            viewModel = ViewModelProviders.of(this).get(SeriesCollectionViewModel.class);
-            viewModel.load(collection.getId());
-            viewModel.seriesCollectionLiveData.observe(this, adapter::submitList);
-            viewModel.getNetworkState().observe(this, adapter::setNetworkState);
-
-            pagedRecyclerView.setAdapter(adapter);
-
-            initSwipeToRefresh();
+        if (isPrivate) {
+            adapter.setOnDeleteListener(position -> onDelete(adapter.getCurrentList().get(position)));
         }
+        viewModel.load(collection.getId());
+        viewModel.seriesCollections.observe(this, adapter::submitList);
+        viewModel.getNetworkState().observe(this, adapter::setNetworkState);
+
+        pagedRecyclerView.setAdapter(adapter);
+
+        initSwipeToRefresh();
     }
 
     private void initSwipeToRefresh() {
@@ -56,8 +57,8 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
                         errorMessageTextView.setText(networkState.getMessage());
                     }
 
-                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.FAILED ? View.VISIBLE : View.GONE);
-                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.RUNNING ? View.VISIBLE : View.GONE);
+                    retryLoadingButton.setVisibility(networkState.getStatus() == Status.ERROR ? View.VISIBLE : View.GONE);
+                    loadingProgressBar.setVisibility(networkState.getStatus() == Status.LOADING ? View.VISIBLE : View.GONE);
 
                     swipeRefreshLayout.setEnabled(networkState.getStatus() == Status.SUCCESS);
                     pagedRecyclerView.scrollToPosition(0);

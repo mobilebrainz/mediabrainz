@@ -10,7 +10,7 @@ import app.mediabrainz.fragment.RecordingCreditsFragment;
 import app.mediabrainz.fragment.RecordingInfoTabFragment;
 
 
-public class RecordingInfoPagerAdapter extends BaseFragmentPagerAdapter {
+public class RecordingInfoPagerAdapter extends UpdatableFragmentPagerAdapter {
 
     public static final int PAGE_COUNT = 3;
     public final static int TAB_INFO_POS = 0;
