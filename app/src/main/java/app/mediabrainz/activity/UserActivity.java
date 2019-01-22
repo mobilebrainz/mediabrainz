@@ -44,6 +44,7 @@ import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.viewModels.UserActivityVM;
 import app.mediabrainz.viewModels.UsersVM;
+import app.mediabrainz.viewModels.communicator.UsernameCommunicator;
 
 import static app.mediabrainz.MediaBrainzApp.oauth;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_COLLECTIONS_POS;
@@ -111,9 +112,13 @@ public class UserActivity extends BaseBottomNavActivity implements
     @Override
     protected void onCreateActivity(Bundle savedInstanceState) {
         userActivityVM = getViewModel(UserActivityVM.class);
+        UsernameCommunicator usernameCommunicator = getViewModel(UsernameCommunicator.class);
+
         if (userActivityVM.getUsername() == null) {
             username = getIntent().getStringExtra(USERNAME);
             userActivityVM.setUsername(username);
+
+            usernameCommunicator.username.setValue(username);
         } else {
             username = userActivityVM.getUsername();
         }
