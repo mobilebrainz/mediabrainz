@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.UserTagPagerAdapter;
-import app.mediabrainz.communicator.ShowTitleCommunicator;
 import app.mediabrainz.viewModels.UserTagVM;
 
 
@@ -46,12 +45,10 @@ public class UserTagPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflate(R.layout.fragment_pager_with_icons, container);
-
         pagerView = layout.findViewById(R.id.pagerView);
         tabsView = layout.findViewById(R.id.tabsView);
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
-
         return layout;
     }
 
@@ -64,9 +61,6 @@ public class UserTagPagerFragment extends BaseFragment {
             userTag = getArguments().getString(USER_TAG);
 
             if (!TextUtils.isEmpty(userTag) && !TextUtils.isEmpty(username)) {
-                if (getContext() instanceof ShowTitleCommunicator) {
-                    ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(userTag);
-                }
                 userTagVM = getActivityViewModel(UserTagVM.class);
                 userTagVM.entitiesMapResource.observe(this, resource -> {
                     if (resource == null) return;

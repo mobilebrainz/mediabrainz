@@ -67,18 +67,18 @@ import static app.mediabrainz.viewModels.Status.SUCCESS;
 
 
 public class UserActivity extends BaseBottomNavActivity implements
-        GetUsernameCommunicator,
+        OnPlayYoutubeCommunicator,
+        OnReleaseGroupCommunicator,
         OnArtistCommunicator,
         OnReleaseCommunicator,
         OnRecordingCommunicator,
         OnUserTagCommunicator,
         OnCollectionCommunicator,
-        GetCollectionCommunicator,
-        ShowFloatingActionButtonCommunicator,
         OnUserCommunicator,
-        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator,
-        OnPlayYoutubeCommunicator,
-        OnReleaseGroupCommunicator {
+        GetCollectionCommunicator,
+        GetUsernameCommunicator,
+        ShowFloatingActionButtonCommunicator,
+        UserProfilePagerFragment.UserProfileTabOrdinalCommunicator {
 
     public static final String TAG = "UserActivity";
     public static final String USERNAME = "UserActivity.USERNAME";
@@ -229,7 +229,6 @@ public class UserActivity extends BaseBottomNavActivity implements
         super.onBackPressed();
     }
 
-    //todo: remove
     @Override
     public String getUsername() {
         return username;
@@ -254,6 +253,7 @@ public class UserActivity extends BaseBottomNavActivity implements
     @Override
     public void onUserTag(String username, String tag) {
         loadFragment(UserTagPagerFragment.newInstance(username, tag));
+        getToolbarTopTitleView().setText(tag);
     }
 
     @Override

@@ -10,6 +10,7 @@ import app.mediabrainz.api.site.TagEntity;
 import app.mediabrainz.api.site.TagServiceInterface;
 
 import static app.mediabrainz.MediaBrainzApp.api;
+import static app.mediabrainz.viewModels.Status.SUCCESS;
 
 
 public class UserTagVM extends BaseViewModel {
@@ -18,6 +19,18 @@ public class UserTagVM extends BaseViewModel {
             new MutableLiveData<>();
 
     private Map<TagServiceInterface.UserTagType, List<TagEntity>> entitiesMap;
+
+    /*
+    //чтобы использовать, надо инвалидить entitiesMap после каждого теггирования артистов, релизов или зарисей, что
+    //очень трудоёмко, а выгода минимальна
+    public void lazyLoad(String username, String userTag) {
+        Resource<Map<TagServiceInterface.UserTagType, List<TagEntity>>> resource = entitiesMapResource.getValue();
+        if (!username.equals(this.username) || userTag.equals(this.userTag) ||
+            resource == null || resource.getData() == null || resource.getStatus() != SUCCESS) {
+            load(username, userTag);
+        }
+    }
+    */
 
     public void load(String username, String userTag) {
         entitiesMapResource.setValue(Resource.loading());

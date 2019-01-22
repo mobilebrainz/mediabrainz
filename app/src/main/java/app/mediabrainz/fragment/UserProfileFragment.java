@@ -99,7 +99,7 @@ public class UserProfileFragment extends LazyFragment {
                         show(resource.getData());
                         break;
                     case INVALID:
-                        userProfileVM.load();
+                        lazyLoad();
                         break;
                 }
             });
@@ -111,9 +111,7 @@ public class UserProfileFragment extends LazyFragment {
     protected void lazyLoad() {
         viewError(false);
         viewProgressLoading(false);
-        if (userProfileVM != null) {
-            userProfileVM.lazyLoad();
-        }
+        userProfileVM.lazyLoad();
     }
 
     private void show(UserProfile userProfile) {

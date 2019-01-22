@@ -1,15 +1,14 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.view.View;
 
 import app.mediabrainz.adapter.recycler.PagedArtistCollectionAdapter;
-import app.mediabrainz.viewModels.Status;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.viewModels.ArtistCollectionVM;
 import app.mediabrainz.viewModels.BaseCollectionVM;
+import app.mediabrainz.viewModels.Status;
 
 
 public class ArtistCollectionFragment extends BaseCollectionFragment {
