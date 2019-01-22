@@ -20,7 +20,7 @@ import app.mediabrainz.util.ShowUtil;
 import static app.mediabrainz.MediaBrainzApp.api;
 
 
-public class TagActivity extends BaseActivity implements
+public class TagActivity extends BaseNavigationActivity implements
         OnArtistCommunicator,
         OnReleaseGroupCommunicator,
         OnRecordingCommunicator,
@@ -166,7 +166,7 @@ public class TagActivity extends BaseActivity implements
                 },
                 t -> {
                     viewProgressLoading(false);
-                    ShowUtil.showError(this, t);
+                    toast("Error");
                 },
                 2, 0);
     }

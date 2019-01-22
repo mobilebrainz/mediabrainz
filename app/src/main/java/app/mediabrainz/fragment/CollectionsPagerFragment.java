@@ -75,7 +75,7 @@ public class CollectionsPagerFragment extends LazyFragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_collections_pager, container, false);
+        View layout = inflate(R.layout.fragment_collections_pager, container);
 
         pagerView = layout.findViewById(R.id.pagerView);
         tabsView = layout.findViewById(R.id.tabsView);

@@ -24,7 +24,7 @@ import static app.mediabrainz.MediaBrainzApp.YOUTUBE_API_KEY;
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.dialog.LocalSettingsDialogFragment.LocalSettingsType.YOUTUBE_SETTINGS;
 
-public class YoutubeSearchActivity extends BaseActivity implements
+public class YoutubeSearchActivity extends BaseNavigationActivity implements
         LoadingCommunicator {
 
     public static final String KEYWORD = "KEYWORD";

@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
 import app.mediabrainz.viewModels.UserRecommendsTabVM;
 
 
-public class UserRecommendsTabFragment extends Fragment {
+public class UserRecommendsTabFragment extends BaseFragment {
 
     private static final String RECOMMENDS_TAB = "RECOMMENDS_TAB";
 
@@ -53,7 +52,7 @@ public class UserRecommendsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);

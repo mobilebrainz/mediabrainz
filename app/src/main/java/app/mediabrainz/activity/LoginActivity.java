@@ -18,7 +18,7 @@ import app.mediabrainz.util.ShowUtil;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseNavigationActivity {
 
     private final String CREATE_ACCOUNT_URI = "https://musicbrainz.org/register";
     private final String FORGOT_USERNAME_URI = "https://musicbrainz.org/lost-username";
@@ -106,7 +106,7 @@ public class LoginActivity extends BaseActivity {
                             usernameView.setError(getString(R.string.error_invalid_username));
                             passwordView.setError(getString(R.string.error_invalid_password));
                         } else {
-                            ShowUtil.showError(this, t);
+                            toast("Error");
                         }
                     });
         }

@@ -3,7 +3,6 @@ package app.mediabrainz.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.mediabrainz.R;
-import app.mediabrainz.apihandler.StringMapper;
 import app.mediabrainz.api.core.ApiUtils;
 import app.mediabrainz.api.model.Area;
 import app.mediabrainz.api.model.Artist;
@@ -24,12 +22,13 @@ import app.mediabrainz.api.model.Label;
 import app.mediabrainz.api.model.Media;
 import app.mediabrainz.api.model.Release;
 import app.mediabrainz.api.model.ReleaseEvent;
+import app.mediabrainz.apihandler.StringMapper;
 import app.mediabrainz.communicator.GetReleaseCommunicator;
 import app.mediabrainz.util.MbUtils;
 import app.mediabrainz.util.StringFormat;
 
 
-public class ReleaseInformationFragment extends Fragment {
+public class ReleaseInformationFragment extends BaseFragment {
 
     private Release release;
 
@@ -48,7 +47,7 @@ public class ReleaseInformationFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_release_information, container, false);
+        View layout = inflate(R.layout.fragment_release_information, container);
 
         releaseNameView = layout.findViewById(R.id.releaseNameView);
         releaseTypeYearView = layout.findViewById(R.id.releaseTypeYearView);

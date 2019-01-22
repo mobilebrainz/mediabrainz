@@ -39,12 +39,12 @@ import static app.mediabrainz.data.room.entity.Suggestion.SuggestionField.TRACK;
 import static app.mediabrainz.data.room.entity.Suggestion.SuggestionField.USER;
 
 
-public class ResultSearchActivity extends BaseActivity implements
+public class ResultSearchActivity extends BaseNavigationActivity implements
         OnReleaseCommunicator,
         GetReleasesCommunicator,
         LoadingCommunicator {
 
-    // !!! for SearchView.OnQueryTextListener (BaseActivity)
+    // !!! for SearchView.OnQueryTextListener (BaseNavigationActivity)
     public static final String QUERY = "query";
 
     public static final String ALBUM_SEARCH = "ALBUM_SEARCH";
@@ -358,7 +358,7 @@ public class ResultSearchActivity extends BaseActivity implements
                 },
                 t -> {
                     viewProgressLoading(false);
-                    ShowUtil.showError(this, t);
+                    toast("Error");
                 },
                 2, 0);
     }

@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.recycler.UserTagsAdapter;
 import app.mediabrainz.api.model.Tag;
@@ -18,11 +21,8 @@ import app.mediabrainz.communicator.GetTagsCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.communicator.OnUserTagCommunicator;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class UserTagsTabFragment extends Fragment {
+public class UserTagsTabFragment extends BaseFragment {
 
     private static final String TAGS_TAB = "TAGS_TAB";
 
@@ -41,7 +41,7 @@ public class UserTagsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         tagType = Tag.TagType.values()[getArguments().getInt(TAGS_TAB)];
 
@@ -68,7 +68,6 @@ public class UserTagsTabFragment extends Fragment {
             case TAG:
                 tags.addAll(((GetTagsCommunicator) getParentFragment()).getTags());
                 break;
-
             case GENRE:
                 tags.addAll(((GetGenresCommunicator) getParentFragment()).getGenres());
                 break;
@@ -79,8 +78,11 @@ public class UserTagsTabFragment extends Fragment {
             } else {
                 configRecycler();
                 UserTagsAdapter adapter = new UserTagsAdapter(tags);
-                adapter.setHolderClickListener(position ->
-                        ((OnUserTagCommunicator) getContext()).onUserTag(username, tags.get(position).getName()));
+                adapter.setHolderClickListener(position -> {
+                    if (getContext() instanceof OnUserTagCommunicator) {
+                        ((OnUserTagCommunicator) getContext()).onUserTag(username, tags.get(position).getName());
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             }
         }

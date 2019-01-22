@@ -3,7 +3,6 @@ package app.mediabrainz.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +12,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.EditTagsPagerAdapter;
 import app.mediabrainz.adapter.recycler.TagAdapter;
@@ -21,13 +23,10 @@ import app.mediabrainz.api.model.xml.UserTagXML;
 import app.mediabrainz.communicator.OnTagCommunicator;
 import app.mediabrainz.intent.ActivityFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class EditTagsTabFragment extends Fragment {
+public class EditTagsTabFragment extends BaseFragment {
 
     public interface TagInterface {
         void postTag(String tag, UserTagXML.VoteType voteType, int tagsTab);
@@ -58,7 +57,7 @@ public class EditTagsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         tagsTab = getArguments().getInt(TAGS_TAB);
 

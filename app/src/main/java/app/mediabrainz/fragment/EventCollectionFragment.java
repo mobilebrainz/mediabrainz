@@ -25,7 +25,7 @@ public class EventCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(EventCollectionVM.class);
+        viewModel = getViewModel(EventCollectionVM.class);
         return viewModel;
     }
 

@@ -2,7 +2,6 @@ package app.mediabrainz.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.intent.ActivityFactory;
 
 
-public class SelectedSearchFragment extends Fragment {
+public class SelectedSearchFragment extends BaseFragment {
 
     public interface SelectedSearchFragmentListener {
         void searchType(SearchType searchType, String query);
@@ -45,7 +44,7 @@ public class SelectedSearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_selected_search, container, false);
+        View layout = inflate(R.layout.fragment_selected_search, container);
 
         searchSpinner = layout.findViewById(R.id.searchSpinner);
         queryInputView = layout.findViewById(R.id.queryInputView);

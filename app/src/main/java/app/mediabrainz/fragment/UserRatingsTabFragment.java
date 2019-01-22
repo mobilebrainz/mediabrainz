@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +31,7 @@ import app.mediabrainz.viewModels.RatingsVM;
 import app.mediabrainz.viewModels.Status;
 
 
-public class UserRatingsTabFragment extends Fragment implements RetryCallback {
+public class UserRatingsTabFragment extends BaseFragment implements RetryCallback {
 
     private static final String RATINGS_TAB = "RATINGS_TAB";
 
@@ -59,7 +58,7 @@ public class UserRatingsTabFragment extends Fragment implements RetryCallback {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
+        View layout = inflate(R.layout.fragment_paged_recycler, container);
 
         ratingType = RatingServiceInterface.RatingType.values()[getArguments().getInt(RATINGS_TAB)];
 

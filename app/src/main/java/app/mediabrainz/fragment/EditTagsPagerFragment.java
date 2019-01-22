@@ -83,7 +83,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_edit_tags_pager, container, false);
+        View layout = inflate(R.layout.fragment_edit_tags_pager, container);
 
         tagsPagerType = TagsPagerType.values()[getArguments().getInt(TAGS_PAGER_TYPE, 0)];
 
@@ -215,7 +215,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showToast(getContext(), R.string.error_post_tag);
+                        toast(R.string.error_post_tag);
                     }
                 },
                 this::showConnectionWarning
@@ -230,15 +230,15 @@ public class EditTagsPagerFragment extends LazyFragment implements
                                 tag, voteType, releaseGroupSearch.getReleaseGroups(),
                                 metadata1 -> {
                                     if (metadata1.getMessage().getText().equals("OK")) {
-                                        ShowUtil.showToast(getContext(), R.string.tag_propagated_to_albums);
+                                        toast(R.string.tag_propagated_to_albums);
                                     } else {
-                                        ShowUtil.showToast(getContext(), R.string.error_tag_propagation_to_albums);
+                                        toast(R.string.error_tag_propagation_to_albums);
                                     }
                                     lazyLoad();
                                 },
                                 t -> {
                                     lazyLoad();
-                                    ShowUtil.showToast(getContext(), R.string.error_tag_propagation_to_albums);
+                                    toast(R.string.error_tag_propagation_to_albums);
                                 });
                     } else {
                         lazyLoad();
@@ -246,7 +246,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                 },
                 t -> {
                     lazyLoad();
-                    ShowUtil.showToast(getContext(), R.string.error_tag_propagation_to_albums);
+                    toast(R.string.error_tag_propagation_to_albums);
                 },
                 100, 0, ALBUM, NOTHING);
     }
@@ -271,7 +271,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showToast(getContext(), R.string.error_post_tag);
+                        toast(R.string.error_post_tag);
                     }
                 },
                 this::showConnectionWarning
@@ -298,7 +298,7 @@ public class EditTagsPagerFragment extends LazyFragment implements
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showToast(getContext(), R.string.error_post_tag);
+                        toast(R.string.error_post_tag);
                     }
                 },
                 this::showConnectionWarning

@@ -1,10 +1,7 @@
 package app.mediabrainz.fragment;
 
 
-import android.support.v4.app.Fragment;
-
-
-public abstract class LazyFragment extends Fragment {
+public abstract class LazyFragment extends BaseFragment {
 
     private boolean isLoaded;
 

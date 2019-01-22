@@ -4,7 +4,6 @@ package app.mediabrainz.fragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +29,7 @@ import app.mediabrainz.viewModels.Status;
 import app.mediabrainz.viewModels.TagVM;
 
 
-public class TagTabFragment extends Fragment implements RetryCallback {
+public class TagTabFragment extends BaseFragment implements RetryCallback {
 
     private static final String TAG_TAB = "TAG_TAB";
 
@@ -56,7 +55,7 @@ public class TagTabFragment extends Fragment implements RetryCallback {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
+        View layout = inflate(R.layout.fragment_paged_recycler, container);
 
         tagType = TagServiceInterface.TagType.values()[getArguments().getInt(TAG_TAB)];
 

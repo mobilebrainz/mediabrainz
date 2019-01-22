@@ -26,7 +26,7 @@ public class ArtistCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ArtistCollectionVM.class);
+        viewModel = getViewModel(ArtistCollectionVM.class);
         return viewModel;
     }
 

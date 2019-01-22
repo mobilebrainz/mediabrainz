@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import app.mediabrainz.viewModels.UserCollectionsSharedVM;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class CollectionCreateFragment extends Fragment {
+public class CollectionCreateFragment extends BaseFragment {
 
     private UserCollectionsSharedVM userCollectionsSharedVM;
     private CollectionCreateEditVM collectionCreateEditVM;
@@ -53,7 +52,7 @@ public class CollectionCreateFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_collection_create, container, false);
+        View layout = inflate(R.layout.fragment_collection_create, container);
 
         collectionNameView = layout.findViewById(R.id.collectionNameView);
         collectionDescriptionView = layout.findViewById(R.id.collectionDescriptionView);
@@ -127,7 +126,7 @@ public class CollectionCreateFragment extends Fragment {
                     break;
                 case SUCCESS:
                     viewProgressLoading(false);
-                    ShowUtil.showToast(getContext(), R.string.collection_created);
+                    toast(R.string.collection_created);
                     userCollectionsSharedVM.invalidateUserCollections();
                     break;
             }

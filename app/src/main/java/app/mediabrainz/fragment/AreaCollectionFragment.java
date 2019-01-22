@@ -1,14 +1,13 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.view.View;
 
 import app.mediabrainz.adapter.recycler.PagedAreaCollectionAdapter;
-import app.mediabrainz.viewModels.Status;
 import app.mediabrainz.viewModels.AreaCollectionVM;
 import app.mediabrainz.viewModels.BaseCollectionVM;
+import app.mediabrainz.viewModels.Status;
 
 
 public class AreaCollectionFragment extends BaseCollectionFragment {
@@ -25,7 +24,7 @@ public class AreaCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(AreaCollectionVM.class);
+        viewModel = getViewModel(AreaCollectionVM.class);
         return viewModel;
     }
 

@@ -316,11 +316,11 @@ public class RecordingActivity extends BaseBottomNavActivity implements
                 collectionMbid, RECORDINGS, mbid,
                 metadata -> {
                     viewProgressLoading(false);
+                    //todo: snackbar or toast?
                     if (metadata.getMessage().getText().equals("OK")) {
-                        //todo: snackbar or toast?
-                        ShowUtil.showMessage(this, getString(R.string.collection_added));
+                        toast(R.string.collection_added);
                     } else {
-                        ShowUtil.showMessage(this, "Error");
+                        toast("Error");
                     }
                 },
                 this::showConnectionWarning);
@@ -352,7 +352,7 @@ public class RecordingActivity extends BaseBottomNavActivity implements
                                 if (!TextUtils.isEmpty(id)) {
                                     onCollection(id);
                                 } else {
-                                    ShowUtil.showMessage(this, "Error");
+                                    toast("Error");
                                     viewProgressLoading(false);
                                 }
                             },

@@ -1,12 +1,10 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,7 +17,7 @@ import app.mediabrainz.communicator.ShowTitleCommunicator;
 import app.mediabrainz.viewModels.UserTagVM;
 
 
-public class UserTagPagerFragment extends Fragment {
+public class UserTagPagerFragment extends BaseFragment {
 
     public static final String USERNAME = "UserTagPagerFragment.USERNAME";
     public static final String USER_TAG = "UserTagPagerFragment.USER_TAG";
@@ -47,7 +45,7 @@ public class UserTagPagerFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_pager_with_icons, container, false);
+        View layout = inflate(R.layout.fragment_pager_with_icons, container);
 
         pagerView = layout.findViewById(R.id.pagerView);
         tabsView = layout.findViewById(R.id.tabsView);
@@ -58,31 +56,18 @@ public class UserTagPagerFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(USERNAME, username);
-        outState.putString(USER_TAG, userTag);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getActivity() != null) {
-            if (getArguments() != null) {
-                username = getArguments().getString(USERNAME);
-                userTag = getArguments().getString(USER_TAG);
-            } else if (savedInstanceState != null) {
-                username = savedInstanceState.getString(USERNAME);
-                userTag = savedInstanceState.getString(USER_TAG);
-            }
+        if (getActivity() != null && getArguments() != null) {
+            username = getArguments().getString(USERNAME);
+            userTag = getArguments().getString(USER_TAG);
 
             if (!TextUtils.isEmpty(userTag) && !TextUtils.isEmpty(username)) {
                 if (getContext() instanceof ShowTitleCommunicator) {
                     ((ShowTitleCommunicator) getContext()).getToolbarTopTitleView().setText(userTag);
                 }
-                userTagVM = ViewModelProviders.of(getActivity()).get(UserTagVM.class);
-
+                userTagVM = getActivityViewModel(UserTagVM.class);
                 userTagVM.entitiesMapResource.observe(this, resource -> {
                     if (resource == null) return;
                     switch (resource.getStatus()) {

@@ -6,7 +6,7 @@ import app.mediabrainz.R;
 import app.mediabrainz.fragment.SettingsFragment;
 
 
-public class SettingsActivity extends BaseActivity {
+public class SettingsActivity extends BaseNavigationActivity {
 
     @Override
     protected int initContentLayout() {

@@ -56,7 +56,7 @@ public class UserProfileFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        View layout = inflate(R.layout.fragment_user_profile, container);
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);

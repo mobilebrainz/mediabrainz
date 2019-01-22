@@ -1,11 +1,9 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,7 +29,7 @@ import static app.mediabrainz.adapter.pager.UserTagPagerAdapter.TAB_RECORDINGS_P
 import static app.mediabrainz.adapter.pager.UserTagPagerAdapter.TAB_RELEASE_GROUPS_POS;
 
 
-public class UserTagListFragment extends Fragment {
+public class UserTagListFragment extends BaseFragment {
 
     public static final String TAG_TYPE = "UserTagListFragment.TAG_TYPE";
 
@@ -50,28 +48,18 @@ public class UserTagListFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
         noresultsView = layout.findViewById(R.id.noresultsView);
         recyclerView = layout.findViewById(R.id.recyclerView);
         return layout;
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(TAG_TYPE, intTagType);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getActivity() != null) {
-            if (getArguments() != null) {
-                intTagType = getArguments().getInt(TAG_TYPE, -1);
-            } else if (savedInstanceState != null) {
-                intTagType = savedInstanceState.getInt(TAG_TYPE, -1);
-            }
+        if (getActivity() != null && getArguments() != null) {
+            intTagType = getArguments().getInt(TAG_TYPE, -1);
 
             TagServiceInterface.UserTagType userTagType = null;
             switch (intTagType) {
@@ -87,7 +75,7 @@ public class UserTagListFragment extends Fragment {
             }
 
             if (userTagType != null) {
-                UserTagVM userTagVM = ViewModelProviders.of(getActivity()).get(UserTagVM.class);
+                UserTagVM userTagVM = getActivityViewModel(UserTagVM.class);
 
                 Map<TagServiceInterface.UserTagType, List<TagEntity>> entitiesMap = userTagVM.getEntitiesMap();
                 if (entitiesMap != null) {

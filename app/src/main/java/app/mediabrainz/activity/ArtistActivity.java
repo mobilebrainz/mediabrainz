@@ -232,7 +232,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
                 },
                 t -> {
                     viewProgressLoading(false);
-                    ShowUtil.showError(this, t);
+                    toast("Error");
                 },
                 2, 0);
     }
@@ -302,11 +302,11 @@ public class ArtistActivity extends BaseBottomNavActivity implements
                 collectionMbid, ARTISTS, mbid,
                 metadata -> {
                     viewProgressLoading(false);
+                    //todo: snackbar or toast?
                     if (metadata.getMessage().getText().equals("OK")) {
-                        //todo: snackbar or toast?
-                        ShowUtil.showMessage(this, getString(R.string.collection_added));
+                        toast(R.string.collection_added);
                     } else {
-                        ShowUtil.showMessage(this, "Error");
+                        toast("Error");
                     }
                 },
                 this::showConnectionWarning);
@@ -340,7 +340,7 @@ public class ArtistActivity extends BaseBottomNavActivity implements
                                 if (!TextUtils.isEmpty(id)) {
                                     onCollection(id);
                                 } else {
-                                    ShowUtil.showMessage(this, "Error");
+                                    toast("Error");
                                     viewProgressLoading(false);
                                 }
                             },

@@ -3,7 +3,6 @@ package app.mediabrainz.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,7 +22,7 @@ import app.mediabrainz.communicator.GetReleaseCommunicator;
 import app.mediabrainz.communicator.OnArtistCommunicator;
 
 
-public class ReleaseCreditsFragment extends Fragment {
+public class ReleaseCreditsFragment extends BaseFragment {
 
     private List<Relation> artistRelations;
 
@@ -39,7 +38,7 @@ public class ReleaseCreditsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         recyclerView = layout.findViewById(R.id.recyclerView);
         noresultsView = layout.findViewById(R.id.noresultsView);

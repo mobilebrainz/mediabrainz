@@ -1,7 +1,6 @@
 package app.mediabrainz.activity;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
@@ -25,8 +24,6 @@ import app.mediabrainz.communicator.OnReleaseGroupCommunicator;
 import app.mediabrainz.communicator.OnUserCommunicator;
 import app.mediabrainz.communicator.OnUserTagCommunicator;
 import app.mediabrainz.communicator.ShowFloatingActionButtonCommunicator;
-import app.mediabrainz.data.room.entity.User;
-import app.mediabrainz.data.room.repository.UserRepository;
 import app.mediabrainz.dialog.PagedReleaseDialogFragment;
 import app.mediabrainz.fragment.AreaCollectionFragment;
 import app.mediabrainz.fragment.ArtistCollectionFragment;
@@ -45,8 +42,8 @@ import app.mediabrainz.fragment.UserTagPagerFragment;
 import app.mediabrainz.fragment.WorkCollectionFragment;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
-import app.mediabrainz.util.ShowUtil;
 import app.mediabrainz.viewModels.UserActivityVM;
+import app.mediabrainz.viewModels.UsersVM;
 
 import static app.mediabrainz.MediaBrainzApp.oauth;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_COLLECTIONS_POS;
@@ -66,6 +63,7 @@ import static app.mediabrainz.api.model.Collection.RELEASE_ENTITY_TYPE;
 import static app.mediabrainz.api.model.Collection.RELEASE_GROUP_ENTITY_TYPE;
 import static app.mediabrainz.api.model.Collection.SERIES_ENTITY_TYPE;
 import static app.mediabrainz.api.model.Collection.WORK_ENTITY_TYPE;
+import static app.mediabrainz.viewModels.Status.SUCCESS;
 
 
 public class UserActivity extends BaseBottomNavActivity implements
@@ -87,6 +85,7 @@ public class UserActivity extends BaseBottomNavActivity implements
     public static final int DEFAULT_USER_NAV_VIEW = R.id.user_navigation_profile;
 
     private UserActivityVM userActivityVM;
+    private UsersVM usersVM;
 
     private String username;
     private Collection collection;
@@ -111,18 +110,21 @@ public class UserActivity extends BaseBottomNavActivity implements
 
     @Override
     protected void onCreateActivity(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            username = savedInstanceState.getString(USERNAME);
-        } else {
+        userActivityVM = getViewModel(UserActivityVM.class);
+        if (userActivityVM.getUsername() == null) {
             username = getIntent().getStringExtra(USERNAME);
+            userActivityVM.setUsername(username);
+        } else {
+            username = userActivityVM.getUsername();
         }
+        usersVM = getViewModel(UsersVM.class);
+
         isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
         toolbarBottomTitleView.setText(username);
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
 
-        userActivityVM = ViewModelProviders.of(this).get(UserActivityVM.class);
         observeData();
     }
 
@@ -152,6 +154,19 @@ public class UserActivity extends BaseBottomNavActivity implements
                     break;
             }
         });
+
+        usersVM.userEvent.observe(this, resource -> {
+            if (resource == null || (resource.getStatus() == SUCCESS && resource.getData() == null)) {
+                showFloatingActionButton(true, FloatingButtonType.ADD_TO_USERS);
+            }
+        });
+
+        usersVM.insertEvent.observeEvent(this, resource -> {
+            if (resource != null && resource.getStatus() == SUCCESS) {
+                showFloatingActionButton(false, null);
+                toast(R.string.user_added);
+            }
+        });
     }
 
     @SuppressLint("RestrictedApi")
@@ -166,13 +181,8 @@ public class UserActivity extends BaseBottomNavActivity implements
                 case R.id.user_navigation_profile:
                     pagerView.setCurrentItem(TAB_PROFILE_POS);
                     toolbarTopTitleView.setText(R.string.title_user_profile);
-
                     if (!isPrivate && oauth.hasAccount()) {
-                        new UserRepository().findUser(username, user -> {
-                            if (user == null) {
-                                showFloatingActionButton(true, FloatingButtonType.ADD_TO_USERS);
-                            }
-                        });
+                        usersVM.find(username);
                     }
                     break;
 
@@ -209,18 +219,6 @@ public class UserActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(USERNAME, username);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        username = savedInstanceState.getString(USERNAME);
-    }
-
-    @Override
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameContainerView);
         if (fragment instanceof BaseCollectionFragment || fragment instanceof CollectionCreateFragment) {
@@ -231,6 +229,7 @@ public class UserActivity extends BaseBottomNavActivity implements
         super.onBackPressed();
     }
 
+    //todo: remove
     @Override
     public String getUsername() {
         return username;
@@ -319,15 +318,7 @@ public class UserActivity extends BaseBottomNavActivity implements
 
             switch (floatingButtonType) {
                 case ADD_TO_USERS:
-                    floatingActionButton.setOnClickListener(v -> {
-                        viewProgressLoading(true);
-                        new UserRepository().insert(() -> {
-                                    viewProgressLoading(false);
-                                    floatingActionButton.setVisibility(View.GONE);
-                                    ShowUtil.showMessage(this, getString(R.string.user_added));
-                                },
-                                new User(username));
-                    });
+                    floatingActionButton.setOnClickListener(v -> usersVM.insert(username));
                     break;
                 case ADD_TO_COLLECTION:
                     floatingActionButton.setOnClickListener(v -> loadFragment(CollectionCreateFragment.newInstance()));

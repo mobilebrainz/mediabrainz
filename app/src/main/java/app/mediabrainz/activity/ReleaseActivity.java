@@ -319,9 +319,9 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                 metadata -> {
                     viewProgressLoading(false);
                     if (metadata.getMessage().getText().equals("OK")) {
-                        ShowUtil.showMessage(this, getString(R.string.collection_added));
+                        toast(R.string.collection_added);
                     } else {
-                        ShowUtil.showMessage(this, "Error");
+                        toast("Error");
                     }
                 },
                 this::showConnectionWarning
@@ -352,7 +352,7 @@ public class ReleaseActivity extends BaseBottomNavActivity implements
                                     // add entity to collection
                                     onCollection(id);
                                 } else {
-                                    ShowUtil.showMessage(this, "Error");
+                                    toast("Error");
                                     viewProgressLoading(false);
                                 }
                             },

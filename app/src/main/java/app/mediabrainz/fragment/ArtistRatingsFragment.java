@@ -50,7 +50,7 @@ public class ArtistRatingsFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_artist_ratings, container, false);
+        View layout = inflate(R.layout.fragment_artist_ratings, container);
 
         contentView = layout.findViewById(R.id.contentView);
         errorView = layout.findViewById(R.id.errorView);
@@ -171,7 +171,7 @@ public class ArtistRatingsFragment extends LazyFragment {
                         );
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showMessage(getActivity(), "Error");
+                        toast("Error");
                     }
                 },
                 this::showConnectionWarning

@@ -18,7 +18,7 @@ import app.mediabrainz.data.room.entity.Suggestion;
 import app.mediabrainz.adapter.SuggestionListAdapter;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends BaseFragment {
 
     public interface SearchFragmentListener {
         void searchEntity(String artist, String album, String track);
@@ -37,7 +37,7 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_search, container, false);
+        View layout = inflate(R.layout.fragment_search, container);
 
         artistFieldView = layout.findViewById(R.id.artistFieldView);
         albumFieldView = layout.findViewById(R.id.albumFieldView);

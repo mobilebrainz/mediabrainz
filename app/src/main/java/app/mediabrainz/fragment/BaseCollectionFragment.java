@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +33,7 @@ import app.mediabrainz.viewModels.UserCollectionsSharedVM;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public abstract class BaseCollectionFragment extends Fragment implements RetryCallback {
+public abstract class BaseCollectionFragment extends BaseFragment implements RetryCallback {
 
     protected boolean isPrivate;
     protected Collection collection;
@@ -58,7 +57,7 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
+        View layout = inflate(R.layout.fragment_paged_recycler, container);
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
@@ -122,7 +121,7 @@ public abstract class BaseCollectionFragment extends Fragment implements RetryCa
                                 load();
                                 userCollectionsSharedVM.invalidateUserCollections();
                             } else {
-                                ShowUtil.showMessage(getActivity(), "Error");
+                                toast("Error");
                             }
                             break;
                     }

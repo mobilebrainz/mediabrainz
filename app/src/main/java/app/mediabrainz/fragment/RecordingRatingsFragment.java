@@ -54,7 +54,7 @@ public class RecordingRatingsFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recording_ratings, container, false);
+        View layout = inflate(R.layout.fragment_recording_ratings, container);
 
         contentView = layout.findViewById(R.id.contentView);
         errorView = layout.findViewById(R.id.errorView);
@@ -177,7 +177,7 @@ public class RecordingRatingsFragment extends LazyFragment {
                                 this::showConnectionWarning);
                     } else {
                         viewProgressLoading(false);
-                        ShowUtil.showMessage(getActivity(), "Error");
+                        toast("Error");
                     }
                 },
                 this::showConnectionWarning);

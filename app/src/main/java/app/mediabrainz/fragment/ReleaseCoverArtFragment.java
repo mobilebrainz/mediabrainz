@@ -39,7 +39,7 @@ public class ReleaseCoverArtFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_cover_art, container, false);
+        View layout = inflate(R.layout.fragment_cover_art, container);
 
         progressView = layout.findViewById(R.id.progressView);
         noresultsView = layout.findViewById(R.id.noresultsView);

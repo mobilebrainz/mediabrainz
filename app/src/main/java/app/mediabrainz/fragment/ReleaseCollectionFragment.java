@@ -1,15 +1,14 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.view.View;
 
 import app.mediabrainz.adapter.recycler.PagedReleaseCollectionAdapter;
 import app.mediabrainz.communicator.OnReleaseCommunicator;
-import app.mediabrainz.viewModels.Status;
 import app.mediabrainz.viewModels.BaseCollectionVM;
 import app.mediabrainz.viewModels.ReleaseCollectionVM;
+import app.mediabrainz.viewModels.Status;
 
 
 public class ReleaseCollectionFragment extends BaseCollectionFragment {
@@ -26,7 +25,7 @@ public class ReleaseCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ReleaseCollectionVM.class);
+        viewModel = getViewModel(ReleaseCollectionVM.class);
         return viewModel;
     }
 

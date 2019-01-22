@@ -51,7 +51,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_pager_without_icons, container, false);
+        View layout = inflate(R.layout.fragment_pager_without_icons, container);
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);

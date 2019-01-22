@@ -62,7 +62,7 @@ public class ReleaseGroupsTabFragment extends LazyFragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_paged_recycler, container, false);
+        View layout = inflate(R.layout.fragment_paged_recycler, container);
 
         releaseGroupType = ReleaseGroupsPagerAdapter.ReleaseTab.values()[getArguments().getInt(RELEASES_TAB)];
 

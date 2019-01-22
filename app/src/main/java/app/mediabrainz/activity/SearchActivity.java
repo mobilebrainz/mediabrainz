@@ -14,7 +14,7 @@ import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class SearchActivity extends BaseActivity implements
+public class SearchActivity extends BaseNavigationActivity implements
         SearchFragment.SearchFragmentListener,
         SelectedSearchFragment.SelectedSearchFragmentListener {
 

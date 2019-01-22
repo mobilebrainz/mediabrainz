@@ -12,7 +12,7 @@ import app.mediabrainz.R;
 import app.mediabrainz.ui.view.HtmlAssetTextView;
 
 
-public class AboutFragment extends Fragment {
+public class AboutFragment extends BaseFragment {
 
     private TextView appVersionView;
 
@@ -23,22 +23,22 @@ public class AboutFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_about, container);
+        View layout = inflate(R.layout.fragment_about, container);
         appVersionView = layout.findViewById(R.id.appVersionView);
         HtmlAssetTextView aboutView = layout.findViewById(R.id.aboutView);
         aboutView.setAsset("about.html");
         return layout;
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

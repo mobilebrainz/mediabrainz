@@ -25,7 +25,7 @@ public class LabelCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(LabelCollectionVM.class);
+        viewModel = getViewModel(LabelCollectionVM.class);
         return viewModel;
     }
 

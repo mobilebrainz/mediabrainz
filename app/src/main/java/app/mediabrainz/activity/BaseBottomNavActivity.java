@@ -16,7 +16,7 @@ import app.mediabrainz.ui.view.CustomViewPager;
 import app.mediabrainz.util.BottomNavigationBehavior;
 
 
-public abstract class BaseBottomNavActivity extends BaseActivity implements
+public abstract class BaseBottomNavActivity extends BaseNavigationActivity implements
         ShowTitleCommunicator {
 
     public static final String NAV_VIEW = "NAV_VIEW";
@@ -170,6 +170,7 @@ public abstract class BaseBottomNavActivity extends BaseActivity implements
     public int getFragmentViewId() {
         return fragmentViewId;
     }
+
     public UpdatableFragmentPagerAdapter getBottomNavigationPagerAdapter() {
         return bottomNavigationPagerAdapter;
     }

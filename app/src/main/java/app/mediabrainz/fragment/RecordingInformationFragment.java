@@ -3,7 +3,6 @@ package app.mediabrainz.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,7 @@ import app.mediabrainz.communicator.GetRecordingCommunicator;
 import app.mediabrainz.util.MbUtils;
 
 
-public class RecordingInformationFragment extends Fragment {
+public class RecordingInformationFragment extends BaseFragment {
 
     private Recording recording;
 
@@ -38,7 +37,7 @@ public class RecordingInformationFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recording_information, container, false);
+        View layout = inflate(R.layout.fragment_recording_information, container);
 
         recordingNameView = layout.findViewById(R.id.recordingNameView);
         lengthView = layout.findViewById(R.id.lengthView);

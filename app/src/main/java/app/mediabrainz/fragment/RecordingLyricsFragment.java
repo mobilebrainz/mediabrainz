@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.api.model.Artist;
 import app.mediabrainz.api.model.Recording;
 import app.mediabrainz.communicator.GetRecordingCommunicator;
-
-import java.util.List;
 
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.api.externalResources.lyrics.model.LyricsApi.LYRICS_INSTRUMENTAL;
@@ -44,7 +44,7 @@ public class RecordingLyricsFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recording_lyrics, container, false);
+        View layout = inflate(R.layout.fragment_recording_lyrics, container);
 
         contentView = layout.findViewById(R.id.contentView);
         errorView = layout.findViewById(R.id.errorView);

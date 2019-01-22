@@ -25,7 +25,7 @@ public class PlaceCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(PlaceCollectionVM.class);
+        viewModel = getViewModel(PlaceCollectionVM.class);
         return viewModel;
     }
 

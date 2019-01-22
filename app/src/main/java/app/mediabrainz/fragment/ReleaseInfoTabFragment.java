@@ -2,7 +2,6 @@ package app.mediabrainz.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.view.ViewGroup;
 import app.mediabrainz.R;
 
 
-public class ReleaseInfoTabFragment extends Fragment {
+public class ReleaseInfoTabFragment extends BaseFragment {
 
     public static ReleaseInfoTabFragment newInstance() {
         Bundle args = new Bundle();
@@ -23,7 +22,7 @@ public class ReleaseInfoTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_release_info_tab, container, false);
+        return inflate(R.layout.fragment_release_info_tab, container);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class RecordingCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(RecordingCollectionVM.class);
+        viewModel = getViewModel(RecordingCollectionVM.class);
         return viewModel;
     }
 

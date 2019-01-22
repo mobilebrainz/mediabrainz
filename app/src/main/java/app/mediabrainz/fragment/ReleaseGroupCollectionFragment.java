@@ -26,7 +26,7 @@ public class ReleaseGroupCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ReleaseGroupCollectionVM.class);
+        viewModel = getViewModel(ReleaseGroupCollectionVM.class);
         return viewModel;
     }
 

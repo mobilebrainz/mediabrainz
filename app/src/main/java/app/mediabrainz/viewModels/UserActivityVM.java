@@ -8,12 +8,9 @@ import static app.mediabrainz.MediaBrainzApp.api;
 
 public class UserActivityVM extends BaseViewModel {
 
+    private String username;
     private String releaseGroupMbid;
     public final EventLiveData<Resource<Release.ReleaseBrowse>> releasesResource = new EventLiveData<>();
-
-    public String getReleaseGroupMbid() {
-        return releaseGroupMbid;
-    }
 
     public void loadReleases(String releaseGroupMbid) {
         this.releaseGroupMbid = releaseGroupMbid;
@@ -25,4 +22,15 @@ public class UserActivityVM extends BaseViewModel {
                 2, 0));
     }
 
+    public String getReleaseGroupMbid() {
+        return releaseGroupMbid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

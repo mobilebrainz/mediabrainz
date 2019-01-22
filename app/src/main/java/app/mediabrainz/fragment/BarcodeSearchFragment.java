@@ -4,7 +4,6 @@ package app.mediabrainz.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,19 +20,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.recycler.ReleaseAdapter;
 import app.mediabrainz.api.model.Release;
 import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.ShowUtil;
 
-import java.util.List;
-
 import static app.mediabrainz.MediaBrainzApp.api;
 import static app.mediabrainz.MediaBrainzApp.oauth;
 
 
-public class BarcodeSearchFragment extends Fragment implements TextWatcher {
+public class BarcodeSearchFragment extends BaseFragment implements TextWatcher {
 
     private static final String BARCODE = "barcode";
 
@@ -63,7 +62,7 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_barcode_search, container, false);
+        View layout = inflate(R.layout.fragment_barcode_search, container);
 
         releaseSearchView = layout.findViewById(R.id.releaseSearchView);
         artistSearchView = layout.findViewById(R.id.artistSearchView);
@@ -175,13 +174,13 @@ public class BarcodeSearchFragment extends Fragment implements TextWatcher {
                 metadata -> {
                     viewProgressLoading(false);
                     if (metadata.getMessage().getText().equals("OK")) {
-                        Toast.makeText(getContext(), getString(R.string.barcode_added), Toast.LENGTH_SHORT).show();
+                        toast(R.string.barcode_added);
                     } else {
-                        ShowUtil.showMessage(getActivity(), "Error ");
+                        toast("Error ");
                     }
                 },
                 t -> {
-                    ShowUtil.showError(getActivity(), t);
+                    //toast(t.getMessage());
                     viewProgressLoading(false);
                     viewError(true);
                     errorView.findViewById(R.id.retryButton).setOnClickListener(v -> confirmSubmission(releaseMbid));

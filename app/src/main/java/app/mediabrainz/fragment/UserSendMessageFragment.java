@@ -39,7 +39,7 @@ public class UserSendMessageFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_user_send_message, container, false);
+        View layout = inflate(R.layout.fragment_user_send_message, container);
 
         progressView = layout.findViewById(R.id.progressView);
         contentFrameView = layout.findViewById(R.id.contentFrameView);
@@ -91,12 +91,11 @@ public class UserSendMessageFragment extends LazyFragment {
                     username, subject, message, revealEmailCheckbox.isChecked(),
                     responseBody -> {
                         viewProgressLoading(false);
-                        ShowUtil.showToast(getContext(), getString(R.string.send_email_success));
-
+                        toast(R.string.send_email_success);
                     },
                     t -> {
                         viewProgressLoading(false);
-                        ShowUtil.showToast(getContext(), getString(R.string.connection_error));
+                        toast(R.string.connection_error);
                     });
         }
     }

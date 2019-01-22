@@ -25,7 +25,7 @@ public class SeriesCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(SeriesCollectionVM.class);
+        viewModel = getViewModel(SeriesCollectionVM.class);
         return viewModel;
     }
 

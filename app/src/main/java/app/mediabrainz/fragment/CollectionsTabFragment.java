@@ -1,10 +1,8 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +48,7 @@ import static app.mediabrainz.api.model.Collection.SERIES_ENTITY_TYPE;
 import static app.mediabrainz.api.model.Collection.WORK_ENTITY_TYPE;
 
 
-public class CollectionsTabFragment extends Fragment {
+public class CollectionsTabFragment extends BaseFragment {
 
     private static final String COLLECTION_TAB = "COLLECTION_TAB";
 
@@ -74,7 +72,7 @@ public class CollectionsTabFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         collectionTab = getArguments().getInt(COLLECTION_TAB);
         recyclerView = layout.findViewById(R.id.recyclerView);
@@ -92,10 +90,7 @@ public class CollectionsTabFragment extends Fragment {
 
             isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
 
-            collectionsTabVM = ViewModelProviders
-                    .of(this)
-                    .get(CollectionsTabVM.class);
-
+            collectionsTabVM = getViewModel(CollectionsTabVM.class);
             collectionsTabVM.deleteEvent.observeEvent(this, resource -> {
                 if (resource == null) return;
                 switch (resource.getStatus()) {
@@ -104,7 +99,9 @@ public class CollectionsTabFragment extends Fragment {
                         break;
                     case ERROR:
                         viewProgressLoading(false);
-                        ShowUtil.showError(getContext(), resource.getThrowable());
+                        if (resource.getThrowable() != null) {
+                            toast(resource.getThrowable().getMessage());
+                        }
                         break;
                     case SUCCESS:
                         viewProgressLoading(false);

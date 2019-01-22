@@ -29,7 +29,7 @@ import java.util.Map;
 import static app.mediabrainz.MediaBrainzApp.api;
 
 
-public class WikipediaWebViewFragment extends Fragment {
+public class WikipediaWebViewFragment extends BaseFragment {
 
     private String wikidataQ;
     private String lang;
@@ -50,7 +50,7 @@ public class WikipediaWebViewFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_web_view, container, false);
+        View layout = inflate(R.layout.fragment_web_view, container);
 
         progressView = layout.findViewById(R.id.progressView);
         errorView = layout.findViewById(R.id.errorView);

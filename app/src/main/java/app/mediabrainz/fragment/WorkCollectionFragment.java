@@ -25,7 +25,7 @@ public class WorkCollectionFragment extends BaseCollectionFragment {
 
     @Override
     public BaseCollectionVM initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(WorkCollectionVM.class);
+        viewModel = getViewModel(WorkCollectionVM.class);
         return viewModel;
     }
 

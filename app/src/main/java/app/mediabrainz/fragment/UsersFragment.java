@@ -1,6 +1,5 @@
 package app.mediabrainz.fragment;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,15 +17,18 @@ import app.mediabrainz.R;
 import app.mediabrainz.adapter.recycler.UserAdapter;
 import app.mediabrainz.communicator.OnUserCommunicator;
 import app.mediabrainz.data.room.entity.User;
-import app.mediabrainz.data.room.repository.UserRepository;
-import app.mediabrainz.functions.Action;
 import app.mediabrainz.viewModels.UsersVM;
+
+import static app.mediabrainz.viewModels.Status.SUCCESS;
 
 
 public class UsersFragment extends LazyFragment {
 
     private boolean isLoading;
     private boolean isError;
+    private List<User> users;
+    private UserAdapter userAdapter;
+    private int removePos;
 
     private UsersVM usersVM;
 
@@ -44,7 +46,7 @@ public class UsersFragment extends LazyFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         errorView = layout.findViewById(R.id.errorView);
         progressView = layout.findViewById(R.id.progressView);
@@ -58,7 +60,7 @@ public class UsersFragment extends LazyFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        usersVM = ViewModelProviders.of(this).get(UsersVM.class);
+        usersVM = getViewModel(UsersVM.class);
         usersVM.usersResource.observe(this, resource -> {
             if (resource == null) return;
             switch (resource.getStatus()) {
@@ -69,30 +71,47 @@ public class UsersFragment extends LazyFragment {
                     break;
                 case SUCCESS:
                     viewProgressLoading(false);
-                    show(resource.getData());
+                    users = resource.getData();
+                    show();
                     break;
             }
         });
+        usersVM.deleteEvent.observeEvent(this, resource -> {
+            if (resource != null && resource.getStatus() == SUCCESS) {
+                users.remove(removePos);
+                userAdapter.notifyItemRemoved(removePos);
+                if (users.size() == 0) {
+                    noresultsView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         loadView();
     }
 
-    private void show(List<User> users) {
+    private void show() {
         if (users != null && !users.isEmpty()) {
-            UserAdapter userAdapter = new UserAdapter(users);
+            userAdapter = new UserAdapter(users);
             if (getContext() instanceof OnUserCommunicator) {
                 userAdapter.setHolderClickListener(position ->
                         ((OnUserCommunicator) getContext()).onUser(users.get(position).getName()));
             }
             recyclerView.setAdapter(userAdapter);
 
-            userAdapter.setOnDeleteListener(position ->
-                    onDelete(users.get(position), () -> {
-                        users.remove(position);
-                        userAdapter.notifyItemRemoved(position);
-                        if (users.size() == 0) {
-                            noresultsView.setVisibility(View.VISIBLE);
-                        }
-                    }));
+            userAdapter.setOnDeleteListener(position -> {
+                removePos = position;
+
+                View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
+                TextView titleTextView = titleView.findViewById(R.id.titleTextView);
+                titleTextView.setText(R.string.user_delete_user);
+
+                new AlertDialog.Builder(getContext())
+                        .setCustomTitle(titleView)
+                        .setMessage(getString(R.string.delete_alert_message))
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> usersVM.delete(users.get(position)))
+                        .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel())
+                        .show();
+            });
         } else {
             noresultsView.setVisibility(View.VISIBLE);
         }
@@ -110,26 +129,6 @@ public class UsersFragment extends LazyFragment {
         viewError(false);
         viewProgressLoading(false);
         usersVM.lazyLoad();
-    }
-
-    public void onDelete(User user, Action action) {
-        View titleView = getLayoutInflater().inflate(R.layout.layout_custom_alert_dialog_title, null);
-        TextView titleTextView = titleView.findViewById(R.id.titleTextView);
-        titleTextView.setText(R.string.user_delete_user);
-
-        new AlertDialog.Builder(getContext())
-                .setCustomTitle(titleView)
-                .setMessage(getString(R.string.delete_alert_message))
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    viewProgressLoading(true);
-                    //todo: перенести в UsersVM
-                    new UserRepository().delete(() -> {
-                        viewProgressLoading(false);
-                        action.run();
-                    }, user);
-                })
-                .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel())
-                .show();
     }
 
     private void viewProgressLoading(boolean isView) {

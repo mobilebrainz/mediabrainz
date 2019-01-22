@@ -5,7 +5,7 @@ import android.os.Bundle;
 import app.mediabrainz.R;
 
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends BaseNavigationActivity {
 
     @Override
     protected int initContentLayout() {

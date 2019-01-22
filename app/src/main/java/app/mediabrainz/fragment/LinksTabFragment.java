@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,7 +20,7 @@ import app.mediabrainz.api.model.Url;
 import app.mediabrainz.communicator.GetUrlsCommunicator;
 
 
-public class LinksTabFragment extends Fragment {
+public class LinksTabFragment extends BaseFragment {
 
     private View noresultsView;
     private RecyclerView recyclerView;
@@ -36,7 +35,7 @@ public class LinksTabFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View layout = inflate(R.layout.fragment_recycler_view, container);
 
         noresultsView = layout.findViewById(R.id.noresultsView);
         recyclerView = layout.findViewById(R.id.recyclerView);
