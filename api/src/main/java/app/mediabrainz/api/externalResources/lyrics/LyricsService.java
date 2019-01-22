@@ -69,12 +69,6 @@ public class LyricsService implements LyricsServiceInterface {
         }
     }
 
-    /*
-    Парсинг сайта LyricsWikia. Использовать, когда станет недоступен сервис http://lyrics.wikia.com/wikia.php
-    через getLyricsWikia(artist, song).
-    Для предварительной проверки существования песни используется легальный сервис lyrics.wikia.com/api.php.
-    Если проверка положительная, лирика парсится с сайта LyricsWikia по урлу из lyrics.wikia.com/api.php.
-     */
     @Override
     public Flowable<Result<LyricsApi>> getLyricsWikiaApi(@NonNull String artist, @NonNull String song) {
         Map<String, String> params = new HashMap<>();
