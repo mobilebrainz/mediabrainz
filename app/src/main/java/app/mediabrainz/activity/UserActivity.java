@@ -111,17 +111,14 @@ public class UserActivity extends BaseBottomNavActivity implements
 
     @Override
     protected void onCreateActivity(Bundle savedInstanceState) {
-        userActivityVM = getViewModel(UserActivityVM.class);
         UsernameCommunicator usernameCommunicator = getViewModel(UsernameCommunicator.class);
-
-        if (userActivityVM.getUsername() == null) {
+        if (usernameCommunicator.username.getValue() == null) {
             username = getIntent().getStringExtra(USERNAME);
-            userActivityVM.setUsername(username);
-
             usernameCommunicator.username.setValue(username);
         } else {
-            username = userActivityVM.getUsername();
+            username = usernameCommunicator.username.getValue();
         }
+        userActivityVM = getViewModel(UserActivityVM.class);
         usersVM = getViewModel(UsersVM.class);
 
         isPrivate = oauth.hasAccount() && username.equals(oauth.getName());
