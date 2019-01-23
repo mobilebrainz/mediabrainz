@@ -1,7 +1,6 @@
 package app.mediabrainz.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -68,10 +67,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
         if (getContext() instanceof GetUsernameCommunicator &&
                 (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
 
-            userTagsPagerVM = ViewModelProviders
-                    .of(this, new UserTagsPagerVM.Factory(username))
-                    .get(UserTagsPagerVM.class);
-
+            userTagsPagerVM = getViewModel(UserTagsPagerVM.class);
             userTagsPagerVM.userTagsResource.observe(this, resource -> {
                 if (resource == null) return;
                 switch (resource.getStatus()) {
@@ -86,7 +82,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
                         show(resource.getData());
                         break;
                     case INVALID:
-                        userTagsPagerVM.load();
+                        userTagsPagerVM.load(username);
                         break;
                 }
             });
@@ -94,13 +90,14 @@ public class UserTagsPagerFragment extends LazyFragment implements
         }
     }
 
+
     @Override
     protected void lazyLoad() {
         noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(false);
         if (userTagsPagerVM != null) {
-            userTagsPagerVM.lazyLoad();
+            userTagsPagerVM.lazyLoad(username);
         }
     }
 

@@ -44,7 +44,6 @@ import app.mediabrainz.intent.ActivityFactory;
 import app.mediabrainz.util.FloatingActionButtonBehavior;
 import app.mediabrainz.viewModels.UserActivityVM;
 import app.mediabrainz.viewModels.UsersVM;
-import app.mediabrainz.viewModels.communicator.UsernameCommunicator;
 
 import static app.mediabrainz.MediaBrainzApp.oauth;
 import static app.mediabrainz.adapter.pager.UserNavigationPagerAdapter.TAB_COLLECTIONS_POS;
@@ -111,13 +110,12 @@ public class UserActivity extends BaseBottomNavActivity implements
 
     @Override
     protected void onCreateActivity(Bundle savedInstanceState) {
-        UsernameCommunicator usernameCommunicator = getViewModel(UsernameCommunicator.class);
-        if (usernameCommunicator.username.getValue() == null) {
-            username = getIntent().getStringExtra(USERNAME);
-            usernameCommunicator.username.setValue(username);
+        if (savedInstanceState != null) {
+            username = savedInstanceState.getString(USERNAME);
         } else {
-            username = usernameCommunicator.username.getValue();
+            username = getIntent().getStringExtra(USERNAME);
         }
+
         userActivityVM = getViewModel(UserActivityVM.class);
         usersVM = getViewModel(UsersVM.class);
 
@@ -128,6 +126,18 @@ public class UserActivity extends BaseBottomNavActivity implements
         ((CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams()).setBehavior(new FloatingActionButtonBehavior());
 
         observeData();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(USERNAME, username);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        username = savedInstanceState.getString(USERNAME);
     }
 
     public void observeData() {
@@ -253,7 +263,7 @@ public class UserActivity extends BaseBottomNavActivity implements
     }
 
     @Override
-    public void onUserTag(String username, String tag) {
+    public void onUserTag(String tag) {
         loadFragment(UserTagPagerFragment.newInstance(username, tag));
         getToolbarTopTitleView().setText(tag);
     }

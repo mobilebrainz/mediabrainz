@@ -3,7 +3,6 @@ package app.mediabrainz.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import app.mediabrainz.adapter.recycler.UserTagsAdapter;
 import app.mediabrainz.api.model.Tag;
 import app.mediabrainz.communicator.GetGenresCommunicator;
 import app.mediabrainz.communicator.GetTagsCommunicator;
-import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.communicator.OnUserTagCommunicator;
 
 
@@ -61,8 +59,6 @@ public class UserTagsTabFragment extends BaseFragment {
     private void load() {
         noresultsView.setVisibility(View.GONE);
 
-        String username = ((GetUsernameCommunicator) getContext()).getUsername();
-
         final List<Tag> tags = new ArrayList<>();
         switch (tagType) {
             case TAG:
@@ -72,19 +68,17 @@ public class UserTagsTabFragment extends BaseFragment {
                 tags.addAll(((GetGenresCommunicator) getParentFragment()).getGenres());
                 break;
         }
-        if (username != null) {
-            if (tags.isEmpty()) {
-                noresultsView.setVisibility(View.VISIBLE);
-            } else {
-                configRecycler();
-                UserTagsAdapter adapter = new UserTagsAdapter(tags);
-                adapter.setHolderClickListener(position -> {
-                    if (getContext() instanceof OnUserTagCommunicator) {
-                        ((OnUserTagCommunicator) getContext()).onUserTag(username, tags.get(position).getName());
-                    }
-                });
-                recyclerView.setAdapter(adapter);
-            }
+        if (tags.isEmpty()) {
+            noresultsView.setVisibility(View.VISIBLE);
+        } else {
+            configRecycler();
+            UserTagsAdapter adapter = new UserTagsAdapter(tags);
+            adapter.setHolderClickListener(position -> {
+                if (getContext() instanceof OnUserTagCommunicator) {
+                    ((OnUserTagCommunicator) getContext()).onUserTag(tags.get(position).getName());
+                }
+            });
+            recyclerView.setAdapter(adapter);
         }
     }
 
