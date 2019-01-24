@@ -10,26 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import app.mediabrainz.R;
 import app.mediabrainz.adapter.pager.UserTagsPagerAdapter;
 import app.mediabrainz.api.model.Tag;
-import app.mediabrainz.communicator.GetGenresCommunicator;
-import app.mediabrainz.communicator.GetTagsCommunicator;
 import app.mediabrainz.communicator.GetUsernameCommunicator;
 import app.mediabrainz.viewModels.UserTagsPagerVM;
 
 
-public class UserTagsPagerFragment extends LazyFragment implements
-        GetGenresCommunicator,
-        GetTagsCommunicator {
+public class UserTagsPagerFragment extends LazyFragment {
 
     private String username;
-    private List<Tag> genres = new ArrayList<>();
-    private List<Tag> tags = new ArrayList<>();
     private boolean isLoading;
     private boolean isError;
 
@@ -67,7 +60,7 @@ public class UserTagsPagerFragment extends LazyFragment implements
         if (getContext() instanceof GetUsernameCommunicator &&
                 (username = ((GetUsernameCommunicator) getContext()).getUsername()) != null) {
 
-            userTagsPagerVM = getViewModel(UserTagsPagerVM.class);
+            userTagsPagerVM = getActivityViewModel(UserTagsPagerVM.class);
             userTagsPagerVM.userTagsResource.observe(this, resource -> {
                 if (resource == null) return;
                 switch (resource.getStatus()) {
@@ -90,25 +83,18 @@ public class UserTagsPagerFragment extends LazyFragment implements
         }
     }
 
-
     @Override
     protected void lazyLoad() {
         noresultsView.setVisibility(View.GONE);
         viewError(false);
         viewProgressLoading(false);
-        if (userTagsPagerVM != null) {
-            userTagsPagerVM.lazyLoad(username);
-        }
+        userTagsPagerVM.lazyLoad(username);
     }
 
     private void show(Map<Tag.TagType, List<Tag>> tagMap) {
-        if (tagMap == null) return;
-        if (tagMap.get(Tag.TagType.GENRE).isEmpty() && tagMap.get(Tag.TagType.TAG).isEmpty()) {
+        if (tagMap == null || tagMap.isEmpty() || (tagMap.get(Tag.TagType.GENRE).isEmpty() && tagMap.get(Tag.TagType.TAG).isEmpty())) {
             noresultsView.setVisibility(View.VISIBLE);
         } else {
-            setGenres(tagMap.get(Tag.TagType.GENRE));
-            setTags(tagMap.get(Tag.TagType.TAG));
-
             UserTagsPagerAdapter pagerAdapter = new UserTagsPagerAdapter(getChildFragmentManager(), getResources());
             pagerView.setAdapter(pagerAdapter);
             pagerView.setOffscreenPageLimit(pagerAdapter.getCount());
@@ -145,21 +131,4 @@ public class UserTagsPagerFragment extends LazyFragment implements
         errorView.findViewById(R.id.retryButton).setOnClickListener(v -> lazyLoad());
     }
 
-    @Override
-    public List<Tag> getGenres() {
-        return genres;
-    }
-
-    @Override
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setGenres(List<Tag> genres) {
-        this.genres = genres;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
 }
